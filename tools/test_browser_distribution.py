@@ -13,6 +13,18 @@ class BrowserTests(unittest.TestCase):
         paths=json.loads((ROOT/'browser-python-files.json').read_text())
         self.assertTrue(paths)
         for name in paths:self.assertTrue((ROOT/name).is_file(),name)
+    def test_pyodide_module_worker(self):
+        api = (ROOT/'browser-api.js').read_text()
+        worker = (ROOT/'browser-engine-worker.js').read_text()
+        build = (ROOT/'tools/prepare_pyodide.py').read_text()
+        offline = (ROOT/'service-worker.js').read_text()
+        self.assertIn("type:'module'", api)
+        self.assertIn("import { loadPyodide }", worker)
+        self.assertIn("createPyodideModule", worker)
+        self.assertNotIn("importScripts(", worker)
+        self.assertIn("'pyodide.mjs'", build)
+        self.assertIn("'pyodide.mjs'", offline)
+
     def test_status(self):
         self.assertEqual(self.query('/status')['execution_mode'],'browser-pyodide')
     def test_core_physics(self):

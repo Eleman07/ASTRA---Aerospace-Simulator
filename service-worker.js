@@ -1,11 +1,11 @@
-/* ASTRA Browser PWA 1.3.1. Static only; all physics stays on this device. */
-const VERSION='astra-browser-v263';
+/* ASTRA Browser PWA 1.3.3. Static only; all physics stays on this device. */
+const VERSION='astra-browser-v264';
 const SHELL=['./','./index.html','./styles.css','./app.js','./browser-api.js',
   './browser-engine-worker.js','./browser-python-files.json','./browser_bridge.py',
   './i18n.js','./vehicle-glb.js','./disciplines.js','./mission-recorder.js',
   './engineering-studio.js','./flight-frames.js','./pilot-controls.js',
   './manifest.json','./icon.svg','./assets/vehicle-models.json'];
-const PYODIDE=['pyodide.js','pyodide.asm.mjs','pyodide.asm.wasm','python_stdlib.zip','pyodide-lock.json'];
+const PYODIDE=['pyodide.mjs','pyodide.js','pyodide.asm.mjs','pyodide.asm.wasm','python_stdlib.zip','pyodide-lock.json'];
 const CORE_VISUALS=['./assets/space-nebula-2k.webp','./assets/space-nebula-4k.webp',
   './assets/earth-natural-1k.webp','./assets/earth-natural-2k.webp',
   './assets/earth-cape-wide-1k.webp','./assets/earth-cape-near-1k.webp',
@@ -42,7 +42,7 @@ self.addEventListener('message',event=>{
   event.waitUntil((async()=>{
     try{
       // Offline requires a self-hosted Pyodide core. The public CDN is not enough.
-      const probe=await fetch(new URL('./vendor/pyodide/pyodide.js',self.registration.scope),{method:'HEAD'});
+      const probe=await fetch(new URL('./vendor/pyodide/pyodide.mjs',self.registration.scope),{method:'HEAD'});
       if(!probe.ok)throw Error('Pyodide files not bundled: deploy with GitHub Actions or run tools/prepare_pyodide.py');
       const fileList=[...SHELL,...await sources(),...PYODIDE.map(f=>'./vendor/pyodide/'+f),...CORE_VISUALS];
       await putBatch(fileList,source);

@@ -1,7 +1,7 @@
 /** Request/response shim for ASTRA Browser Edition.
     Exactly one worker per tab => isolated mission state per user/browser tab.
     External astra.client HTTP access is NOT available in this static edition. */
-const worker = new Worker(new URL('./browser-engine-worker.js', import.meta.url), {type:'classic'});
+const worker = new Worker(new URL('./browser-engine-worker.js?build=133', import.meta.url), {type:'module'});
 const pending = new Map();
 let nextId = 0;
 let readyResolve, readyReject;
