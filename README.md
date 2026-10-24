@@ -104,35 +104,33 @@ ASTRA includes numerical integration and control/navigation elements such as fou
 
 See [Engineering Studio](ENGINEERING-STUDIO.md) and [Model Readiness](ASTRA-1.3-MODEL-READINESS.md) for detailed scope and limitations.
 
-## Python SDK: how to install and test it
 
-The **original ASTRA Python server** has an HTTP/JSON API, accessible from `astra.client`. The SDK **cannot** connect directly to this GitHub Pages site because physics is running inside each visitor's browser Worker, not at a network listening port.
+## Python SDK & External GNC
 
-To use the SDK, start the **original complete ASTRA server package** (with `astra/server.py` and `astra/__main__.py`) on your PC:
+ASTRA can also be controlled with Python scripts using
+its local HTTP API.
 
-```bash
-python3 -m astra --host 127.0.0.1 --port 8765
-```
+The Python SDK supports:
+- Launch and mission initialization
+- Real-time telemetry access
+- Guidance, Navigation and Control experiments
+- Vehicle commands and simulation stepping
+- External controller integration
 
-Install the wheel in your development environment:
+**[Python SDK — Complete Documentation](docs/SDK_README.md)**
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install ./downloads/astra_simulator_client-1.3.0-py3-none-any.whl
-python -c 'from astra.client import AstraClient; print("SDK installed")'
-```
-
-Test the **original HTTP server** in a second terminal:
+To start the local simulation server:
 
 ```bash
-python tools/test_astra_http.py --url http://127.0.0.1:8765
-python tools/test_astra_http.py --url http://127.0.0.1:8765 --simulate --steps 30
+python server.py --open
 ```
 
-Expected final line: **`ALL TESTS PASSED`**. The second command resets and advances the simulator's shared state; do not run it on a public server with other users.
+Then connect your Python client to:
 
-See [docs/API_TESTING.md](docs/API_TESTING.md) for Windows instructions, a browser-console example, endpoint tables and error explanations.
+`http://127.0.0.1:8765`
+
+Note: The GitHub Pages edition runs independently in
+the browser and does not expose a public HTTP API.
 
 
 ## Links and project documentation
