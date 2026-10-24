@@ -134,28 +134,6 @@ Expected final line: **`ALL TESTS PASSED`**. The second command resets and advan
 
 See [docs/API_TESTING.md](docs/API_TESTING.md) for Windows instructions, a browser-console example, endpoint tables and error explanations.
 
-## Publish with GitHub Pages — no paid hosting
-
-The workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes the static Browser Edition after downloading the required Pyodide WASM files:
-
-1. Push the repository contents to `main`.
-2. Open **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. Open **Actions → Deploy ASTRA Browser to GitHub Pages** and check for a successful deploy.
-4. Visit **https://eleman07.github.io/ASTRA---Aerospace-Simulator/**.
-5. Run [diagnostics](https://eleman07.github.io/ASTRA---Aerospace-Simulator/diagnostics.html) and the [API test page](https://eleman07.github.io/ASTRA---Aerospace-Simulator/api-test.html).
-
-Publishing on GitHub Pages exposes the client-side code, including Python physics files downloaded by visitors. Keep any private algorithms in a separate private backend if you do not want to distribute their source.
-
-## Troubleshooting
-
-| Issue | Action |
-|---|---|
-| **“Retry start” / “Riprova avvio”** | Open **Diagnostics**, inspect the Web Worker error, then retry the mission after a successful Pyodide startup. |
-| **Pyodide `importScripts` or missing WASM file** | Make sure the 1.3.3 ES-module Worker and bundled `vendor/pyodide/` files were deployed. Clear old PWA/service-worker cache. |
-| **GitHub Pages 404** | Confirm **Settings → Pages → GitHub Actions** and inspect the deployment workflow. |
-| **`astra.client` cannot connect** | Do not use the `github.io` URL with the HTTP SDK. Run the original Python HTTP server and use `http://127.0.0.1:8765`. |
-| **3D scene doesn't render** | Check WebGL support, GPU driver, browser console, and model/texture network requests. |
-| **Offline mode incomplete** | Use **SALVA PER OFFLINE** while online and confirm **OFFLINE PRONTO** before disconnecting. |
 
 ## Links and project documentation
 
