@@ -1,0 +1,23 @@
+[
+  "astra/__init__.py",
+  "astra/planetary_6dof.py",
+  "astra/propulsion.py",
+  "astra/robustness.py",
+  "astra/atmosphere.py",
+  "astra/convergence.py",
+  "astra/wind.py",
+  "astra/aerodynamics.py",
+  "astra/nozzle.py",
+  "astra/gnc.py",
+  "astra/advanced.py",
+  "astra/celestial.py",
+  "astra/engine.py",
+  "astra/multirotor.py",
+  "astra/turbulence.py",
+  "astra/attitude.py",
+  "astra/engineering.py",
+  "astra/constants.py",
+  "astra/vehicle_design.py",
+  "astra/verification.py",
+  "browser_bridge.py"
+]

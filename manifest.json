@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "ASTRA Browser — Aerospace Simulation Suite",
+  "short_name": "ASTRA",
+  "description": "Client-side Python/WASM aerospace simulation and GNC. No server backend.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#030812",
+  "theme_color": "#050a12",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
