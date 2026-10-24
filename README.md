@@ -72,23 +72,7 @@ Expected results: **`PASS · READ API`** and **`PASS · ROCKET SIMULATION`**, fo
 
 Read the [**Complete API Testing Guide**](docs/API_TESTING.md) for browser JavaScript examples, original Python HTTP API commands, SDK installation and troubleshooting.
 
-## Install ASTRA on desktop and mobile
-
-ASTRA Browser is a **PWA**: it is installed from the website, not from the Python SDK package. A PWA opens in a standalone application-like window using your browser's engine.
-
-![Steps to install ASTRA on desktop, Android and iOS](docs/images/install-pwa-steps.png)
-
-| Device | Installation |
-|---|---|
-| **Ubuntu / Windows / macOS** | Open ASTRA in **Chrome or Edge** → click the Install icon in the address bar, or open **Menu → Install app** (wording varies). |
-| **Android** | Open ASTRA in **Chrome** → **⋮ → Install app** / **Add to Home screen** → confirm. |
-| **iPhone / iPad** | Open ASTRA in **Safari** → **Share → Add to Home Screen** → **Add**. |
-
-To prepare **offline mode**, visit ASTRA while connected, click **SALVA PER OFFLINE**, and wait for **OFFLINE PRONTO**. Verify offline reopening before relying on it; device storage limits, browser eviction, or optional uncached models can still prevent full offline operation.
-
 ## Demonstration video and telemetry
-
-[![Animated ASTRA ascent telemetry preview](docs/media/astra-ascent-preview.gif)](docs/media/astra-ascent-demo.mp4)
 
 **[Watch the technical ascent demo (MP4)](docs/media/astra-ascent-demo.mp4)** — a 3D visualization generated from an executed ASTRA simulation.
 
