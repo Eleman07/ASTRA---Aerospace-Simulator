@@ -35,7 +35,7 @@ educational experiments, not safety-critical applications.
 Clone the repository:
 
 ```bash
-git clone https://github.com/Eleman07/ASTRA---Aerospace-Simulator.git
+git clone https://github.com/Eleman07/ASTRA-Aerospace-Simulator.git
 cd ASTRA---Aerospace-Simulator
 ```
 
