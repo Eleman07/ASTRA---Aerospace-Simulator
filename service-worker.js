@@ -1,5 +1,5 @@
 /* ASTRA Browser PWA 1.3.1. Static only; all physics stays on this device. */
-const VERSION='astra-browser-v262';
+const VERSION='astra-browser-v263';
 const SHELL=['./','./index.html','./styles.css','./app.js','./browser-api.js',
   './browser-engine-worker.js','./browser-python-files.json','./browser_bridge.py',
   './i18n.js','./vehicle-glb.js','./disciplines.js','./mission-recorder.js',
