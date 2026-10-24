@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#09101f" />
+  <title>ASTRA | Browser API Test</title>
+  <style>
+    :root { color-scheme:dark; font-family:Inter,system-ui,Arial,sans-serif; background:#09101f; color:#e5efff }
+    * { box-sizing:border-box } body { margin:0; padding:34px 20px 100px }
+    main { max-width:1020px; margin:0 auto }
+    .top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:14px }
+    h1 { font-size:clamp(27px,5vw,42px); margin:16px 0 10px; letter-spacing:-.04em }
+    p { line-height:1.65; color:#aac0d7; }
+    .pill { padding:7px 11px; border:1px solid #5d7ca6; border-radius:99px; font-size:12px; color:#a1cfe9 }
+    a { color:#b2a0fa }
+    .panel { border:1px solid #304664; border-radius:18px; background:#101e31; padding:22px; margin:18px 0 }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin:18px 0 }
+    button { color:#eff8ff; background:#304e79; border:1px solid #6f83bd; border-radius:9px; padding:13px 17px; cursor:pointer; font-weight:600; }
+    button.primary { background:linear-gradient(100deg,#4b4b9a,#348f9c) }
+    button:disabled { opacity:.5; cursor:wait }
+    button:focus-visible { outline:3px solid #b2a0fa }
+    #status { display:inline-block; border:1px solid #3f5873; padding:7px 14px; border-radius:9px; font-family:ui-monospace,monospace }
+    pre { background:#081525; border:1px solid #273d56; border-radius:14px; padding:19px; color:#c9f1e7; max-height:600px; min-height:150px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.6 }
+    .warn { border-left:4px solid #d4a76b; padding:8px 18px; background:#382e25; }
+    small { color:#91a8c5 }
+  </style>
+</head>
+<body><main>
+  <div class="top"><strong style="letter-spacing:.17em">ASTRA / ENGINEERING LAB</strong><a href="./">← Back to simulator</a></div>
+  <h1>Browser API Test Console</h1>
+  <p>Test the actual ASTRA Python engine running inside <strong>your browser</strong>, through its Web Worker bridge. No external server, tokens, or credit card are required.</p>
+  <p class="warn">This page creates its own isolated simulation. Running the launch test does <strong>not</strong> animate the separate simulator tab. The external Python SDK requires the original HTTP server, not this GitHub Pages site.</p>
+  <section class="panel">
+    <strong>Engine status</strong>
+    <p id="status" role="status" aria-live="polite">Loading Pyodide…</p>
+    <div class="actions">
+      <button id="read" disabled>1 · Test status / models / state</button>
+      <button id="launch" disabled class="primary">2 · Run rocket launch API test</button>
+      <button id="download" disabled>Download JSON report</button>
+    </div>
+    <small>The first load of Pyodide may use significant device memory. For a failed engine initialization, visit <a href="diagnostics.html">Diagnostics</a>.</small>
+  </section>
+  <section class="panel"><strong>Live result</strong><pre id="log" aria-live="polite">Waiting for the Python engine…</pre></section>
+  <p><a href="docs/API_TESTING.md">Full API testing tutorial</a> · <a href="https://elemanprojects.com">Portfolio</a></p>
+</main>
+<script type="module">
+  import { browserApi, browserReady } from './browser-api.js';
+  const readBtn = document.getElementById('read');
+  const launchBtn = document.getElementById('launch');
+  const downloadBtn = document.getElementById('download');
+  const log = document.getElementById('log');
+  const status = document.getElementById('status');
+  let report = {build:'ASTRA Browser 1.3.3', timestamp:new Date().toISOString(), tests:[]};
+  function display(value){ log.textContent = typeof value === 'string' ? value : JSON.stringify(value,null,2); }
+  function setBusy(busy){readBtn.disabled=busy;launchBtn.disabled=busy;}
+  async function testRead(){
+    setBusy(true); status.textContent='READ TEST RUNNING';
+    try {
+      const s=await browserApi('/status');
+      const m=await browserApi('/models');
+      const st=await browserApi('/state');
+      if(s.execution_mode!=='browser-pyodide') throw new Error('Wrong execution mode: '+s.execution_mode);
+      if(!Number.isFinite(st.time_s)) throw new Error('State has no finite mission time');
+      const result={status:s, modelKeys:Object.keys(m), state:{vehicle:st.vehicle,phase:st.phase,time_s:st.time_s,altitude_m:st.altitude_m}};
+      report.tests.push({kind:'read-only',passed:true,output:result});
+      display(result); status.textContent='PASS · READ API';downloadBtn.disabled=false;
+    } catch(e) {report.tests.push({kind:'read-only',passed:false,error:String(e)});display('FAIL: '+e);status.textContent='FAILED · SEE ERROR';downloadBtn.disabled=false;}
+    finally {setBusy(false);}
+  }
+  async function testLaunch(){
+    setBusy(true); status.textContent='SIMULATION TEST RUNNING';
+    const samples=[];
+    try {
+      let s=await browserApi('/reset',{vehicle:'space',scenario:'mission'});
+      const first=s.time_s;
+      s=await browserApi('/launch',{});
+      for(let i=0;i<30;i++){
+        s=await browserApi('/step',{dt_s:0.5});
+        if(i%5===0 || i===29) {
+          samples.push({time_s:s.time_s,altitude_m:s.altitude_m,speed_m_s:s.speed_m_s,phase:s.phase});
+          display({progress:`${i+1}/30 integration steps`,samples});
+          await new Promise(resolve=>setTimeout(resolve,0));
+        }
+      }
+      if(!(s.time_s>first+1))throw new Error('Simulation time did not advance');
+      const result={kind:'launch-and-step',passed:true,steps:30,final:samples.at(-1),samples};
+      report.tests.push(result);display(result);status.textContent='PASS · ROCKET SIMULATION';downloadBtn.disabled=false;
+    } catch(e){report.tests.push({kind:'launch-and-step',passed:false,error:String(e),samples});display('FAIL: '+e);status.textContent='FAILED · SEE ERROR';downloadBtn.disabled=false;}
+    finally {setBusy(false);}
+  }
+  readBtn.onclick=testRead;
+  launchBtn.onclick=testLaunch;
+  downloadBtn.onclick=()=>{
+    const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='astra-api-test-report.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
+  };
+  browserReady().then(()=>{status.textContent='PYODIDE READY';log.textContent='Engine initialized. Choose a test above.';setBusy(false);}).catch(e=>{status.textContent='PYODIDE FAILED';display(`The browser engine could not start.\n${e}\nOpen diagnostics.html and clear old cache.`)});
+</script></body></html>
