@@ -74,7 +74,7 @@ Read the [**Complete API Testing Guide**](docs/API_TESTING.md) for browser JavaS
 
 ## Demonstration video and telemetry
 
-**[Watch the technical ascent demo (MP4)](docs/media/astra-ascent-demo.mp4)** — a 3D visualization generated from an executed ASTRA simulation.
+**[Watch the technical demo (MP4)](https://youtu.be/t_WcxvVzkis?si=z-Q_HkSsKkSfoqjA)** — a 3D visualization generated from an executed ASTRA simulation.
 
 ## Aerospace algorithms and GNC
 
