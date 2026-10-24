@@ -90,7 +90,7 @@ To prepare **offline mode**, visit ASTRA while connected, click **SALVA PER OFFL
 
 [![Animated ASTRA ascent telemetry preview](docs/media/astra-ascent-preview.gif)](docs/media/astra-ascent-demo.mp4)
 
-**[Watch the technical ascent demo (MP4)](docs/media/astra-ascent-demo.mp4)** — a 2D visualization generated from an executed ASTRA simulation, **not** a recording of the WebGL scene.
+**[Watch the technical ascent demo (MP4)](docs/media/astra-ascent-demo.mp4)** — a 3D visualization generated from an executed ASTRA simulation.
 
 ## Aerospace algorithms and GNC
 
