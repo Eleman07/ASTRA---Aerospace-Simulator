@@ -118,7 +118,7 @@ python tools/test_astra_http.py --url http://127.0.0.1:8765 --simulate --steps 3
 
 Expected final line: **`ALL TESTS PASSED`**. The second command resets and advances the simulator's shared state; do not run it on a public server with other users.
 
-See [docs/API_TESTING.md](docs/API_TESTING.md) for Windows instructions, a browser-console example, endpoint tables and error explanations.
+See [docs/API_TESTING.md](docs/SDK_README.md) for Windows instructions, a browser-console example, endpoint tables and error explanations.
 
 ## Links and project documentation
 
