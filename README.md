@@ -51,7 +51,7 @@ Choose **Aircraft** or **Drone**, select the vehicle in Flight Ops, keep **GNC A
 <details>
 <summary><strong>Show aircraft interface example</strong></summary>
 
-![ASTRA aircraft mission screen, archived preview](docs/images/aircraft-scene-archive.png)
+![ASTRA aircraft mission screen, archived preview](astra2.png)
 
 *Archived interface example, not a current version 1.3.3 benchmark.*
 
