@@ -36,7 +36,7 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/Eleman07/ASTRA-Aerospace-Simulator.git
-cd ASTRA---Aerospace-Simulator
+cd ASTRA-Aerospace-Simulator
 ```
 
 Launch the local server:
