@@ -62,6 +62,8 @@ class Handler(SimpleHTTPRequestHandler):
             with LOCK: reply=json.loads(route_raw(json.dumps(request)))
             status=200 if reply.get('ok') else 400
             data=reply.get('data') if reply.get('ok') else {'error':reply.get('error','Invalid request')}
+            if reply.get('ok') and request['path']=='/status' and isinstance(data,dict):
+                data=dict(data,execution_mode='local-http',api='local-http')
             return self.send_data(json.dumps(data,allow_nan=False),status=status)
         except (ValueError,TypeError) as exc:
             return self.send_data(json.dumps({'error':str(exc)}),status=400)

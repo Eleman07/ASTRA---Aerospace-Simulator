@@ -5,6 +5,7 @@ These analyses are educational and do not automatically alter the flight plant.
 from __future__ import annotations
 import math
 from .atmosphere import atmosphere_isa
+from .wind import surface_layer_factor
 
 G0 = 9.80665
 
@@ -82,18 +83,35 @@ def rocket_nozzle_sweep(p):
             'limitations':['Isentropic ideal gas','No shocks, separated flow or combustion chemistry']}
 
 def wind_shear(p):
+    """Parameterized Monin-Obukhov log wind profile (SI units)."""
     speed=_num(p,'reference_wind_m_s',8,0,80)
     ref=_num(p,'reference_height_m',10,2,200)
     z0=_num(p,'roughness_length_m',.03,.0001,1)
     direction=_num(p,'direction_toward_deg',90,-360,360)
+    stability=p.get('stability_length_m')
+    if stability is not None:
+        stability=_num(p,'stability_length_m',-100,-100000,100000)
+        if abs(stability)<5.0:raise ValueError('Stability length requires |L|>=5m')
     if ref<=z0:raise ValueError('reference height must exceed roughness')
-    factor=speed/math.log(ref/z0);rad=math.radians(direction)
-    samples=[]
+    rad=math.radians(direction);samples=[]
     for h in _values(p,'heights_m',[0,2,5,10,20,50,100,200],0,2000):
-        v=0.0 if h<=z0 else factor*math.log(h/z0)
+        ratio=surface_layer_factor(h,ref,z0,stability)
+        v=speed*ratio
+        if h>z0:
+            dh=max(.001,h*1e-4)
+            left=max(z0*1.001,h-dh);right=h+dh
+            gradient=speed*(surface_layer_factor(right,ref,z0,stability)-
+                            surface_layer_factor(left,ref,z0,stability))/(right-left)
+        else:
+            gradient=None
         samples.append({'height_m':h,'wind_speed_m_s':v,
                         'north_m_s':v*math.cos(rad),'east_m_s':v*math.sin(rad),
-                        'shear_per_s':factor/h if h>z0 else None})
-    return {'solver':'Neutral surface-layer logarithmic wind','model':'NEUTRAL_LOG_WIND_PROFILE',
-            'reference_height_m':ref,'roughness_length_m':z0,'samples':samples,
-            'limitations':['Neutral surface-layer assumption','No real weather, terrain or gusts']}
+                        'shear_per_s':gradient,
+                        'within_surface_layer_domain':h<=200})
+    return {'solver':'Monin-Obukhov surface layer wind',
+            'model':'MONIN_OBUKHOV_WIND_PROFILE',
+            'reference_height_m':ref,'roughness_length_m':z0,
+            'stability_length_m':stability,'samples':samples,
+            'limitations':['Surface-layer theory, not meteorological forecast',
+                           'Profile above 200m is extrapolated in this standalone study',
+                           'No time-dependent weather, gusts, terrain or CFD']}

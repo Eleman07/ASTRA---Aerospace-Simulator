@@ -77,7 +77,20 @@ def run_live_study(engine, payload: dict[str, Any]) -> dict[str, Any]:
             components = [_finite(x) for x in wind[:2]]
             if all(x is not None for x in components):
                 seed("reference_wind_m_s", math.hypot(*components), "state.environment.wind_ned_m_s", 0, 80)
-        notes.append("Log-law profile is an independent near-surface estimate, not the flight turbulence field.")
+        if engine.surface_layer_wind is not None:
+            layer = engine.surface_layer_wind
+            seed("reference_height_m", layer["reference_height_m"],
+                 "state.environment.surface_layer_wind.reference_height_m",2,200)
+            seed("roughness_length_m", layer["roughness_length_m"],
+                 "state.environment.surface_layer_wind.roughness_length_m",0.0001,1)
+            if layer["stability_length_m"] is not None:
+                design["stability_length_m"] = layer["stability_length_m"]
+                evidence["stability_length_m"] = "state.environment.surface_layer_wind.stability_length_m"
+            seed("reference_wind_m_s", math.hypot(*layer["reference_wind_ned_m_s"][:2]),
+                 "state.environment.surface_layer_wind.reference_wind_ned_m_s",0,80)
+            notes.append("This surface layer also drives the live air-relative velocity and aerodynamic forces.")
+        else:
+            notes.append("Log-law profile is a separate near-surface estimate; enable surface_layer_wind at reset to couple it to flight.")
     elif analysis in {"propulsion", "rocket_nozzle_sweep"} and vehicle == "space":
         if analysis == "propulsion":
             seed("altitude_m", altitude, "state.altitude_m", 0, 1e6)
@@ -133,7 +146,13 @@ def run_live_study(engine, payload: dict[str, Any]) -> dict[str, Any]:
         "source": "CURRENT_ASTRO_ENGINE_STATE",
         "mode": "mission_snapshot" if evidence else "independent_design_study",
         "inputs_from_telemetry": evidence,
-        "coupled_into_flight_dynamics": False,
+        # This exact wind law participates in the live flight dynamics.
+        # Other engineering studies remain read-only, even when the live plant
+        # separately models their physical domain (no feedback of study output).
+        "coupled_into_flight_dynamics": (analysis == "wind_shear" and
+                                         engine.surface_layer_wind is not None and
+                                         vehicle in {"aircraft","drone"}),
+        "coupling_explanation": "Underlying physical domain contributes to flight dynamics; the on-demand solver does NOT feed its calculated results back into flight.",
         "notes": notes,
     }
     return result

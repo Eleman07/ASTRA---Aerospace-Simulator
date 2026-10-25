@@ -67,3 +67,27 @@ The `engineering_live()` endpoint extracts suitable parameters from the current 
 - Port busy: `python server.py --port 8877 --open` and `python examples/gnc_demo.py --url http://127.0.0.1:8877`.
 
 The development server binds `127.0.0.1` and has no authentication. Do not expose it to the public Internet. Models are intended for engineering education, not safety-critical deployment.
+
+
+## ASTRA Flight Systems 1.4.1 — surface-layer wind coupling
+
+The surface-layer wind model is optional and runs inside the real 6-DoF
+flight integrator for aircraft and drones, not only the Engineering Studio.
+
+```python
+from astra.client import AstraClient
+sim = AstraClient()
+sim.reset(vehicle="aircraft", scenario="mission", surface_layer_wind={
+    "reference_wind_ned_m_s": [8.0, 0.0, 0.0],
+    "reference_height_m": 10.0,
+    "roughness_length_m": 0.03,
+    "boundary_layer_height_m": 100.0,
+    "stability_length_m": None,
+})
+print(sim.state()["environment"]["wind_profile_model"])
+print(sim.engineering_live("wind_shear"))
+```
+
+Wind similarity theory is a parametric boundary-layer model, not real site
+weather or a certified turbulence model. The optional stability length uses
+Monin–Obukhov similarity with a Businger–Dyer correction.

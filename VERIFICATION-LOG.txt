@@ -1,0 +1,35 @@
+test_aircraft_and_drone (test_browser_distribution.BrowserTests.test_aircraft_and_drone) ... ok
+test_core_physics (test_browser_distribution.BrowserTests.test_core_physics) ... ok
+test_engineering (test_browser_distribution.BrowserTests.test_engineering) ... ok
+test_engineering_execution (test_browser_distribution.BrowserTests.test_engineering_execution) ... ok
+test_manifest_sources (test_browser_distribution.BrowserTests.test_manifest_sources) ... ok
+test_models (test_browser_distribution.BrowserTests.test_models) ... ok
+test_pyodide_module_worker (test_browser_distribution.BrowserTests.test_pyodide_module_worker) ... ok
+test_reject_bad (test_browser_distribution.BrowserTests.test_reject_bad) ... ok
+test_requirements_live (test_browser_distribution.BrowserTests.test_requirements_live) ... ok
+test_status (test_browser_distribution.BrowserTests.test_status) ... ok
+test_18_studies_persist_and_read_only (test_flight_systems_141.FlightSystems141Tests.test_18_studies_persist_and_read_only) ... ok
+test_aircraft_subsonic_compressibility_changes_coefficients (test_flight_systems_141.FlightSystems141Tests.test_aircraft_subsonic_compressibility_changes_coefficients) ... ok
+test_drone_wind_changes_real_forces (test_flight_systems_141.FlightSystems141Tests.test_drone_wind_changes_real_forces) ... ok
+test_neutral_matches_classic_log_law (test_flight_systems_141.FlightSystems141Tests.test_neutral_matches_classic_log_law) ... ok
+test_neutral_wind_reference_and_endpoints (test_flight_systems_141.FlightSystems141Tests.test_neutral_wind_reference_and_endpoints) ... ok
+test_opt_in_surface_wind_changes_real_six_dof_forces (test_flight_systems_141.FlightSystems141Tests.test_opt_in_surface_wind_changes_real_six_dof_forces) ... ok
+test_rocket_thrust_telemetry_matches_plant (test_flight_systems_141.FlightSystems141Tests.test_rocket_thrust_telemetry_matches_plant) ... ok
+test_snapshot_vs_direct_physics_flag_are_honest (test_flight_systems_141.FlightSystems141Tests.test_snapshot_vs_direct_physics_flag_are_honest) ... ok
+test_stability_changes_wind_shear (test_flight_systems_141.FlightSystems141Tests.test_stability_changes_wind_shear) ... ok
+test_version_visible_is_consistent (test_flight_systems_141.FlightSystems141Tests.test_version_visible_is_consistent) ... ok
+test_wind_invalid_conditions_rejected (test_flight_systems_141.FlightSystems141Tests.test_wind_invalid_conditions_rejected) ... ok
+test_local_http_version_and_mode (test_local_http_141.Http141Tests.test_local_http_version_and_mode) ... ok
+test_local_http_wind_active_and_live_solver (test_local_http_141.Http141Tests.test_local_http_wind_active_and_live_solver) ... ok
+test_aircraft_context_seeds_physical_values (test_mission_context.MissionEngineeringTests.test_aircraft_context_seeds_physical_values) ... ok
+test_drone_battery_context (test_mission_context.MissionEngineeringTests.test_drone_battery_context) ... ok
+test_every_solver_live_route (test_mission_context.MissionEngineeringTests.test_every_solver_live_route) ... ok
+test_every_solver_registered (test_mission_context.MissionEngineeringTests.test_every_solver_registered) ... ok
+test_frontend_routes_and_cache (test_mission_context.MissionEngineeringTests.test_frontend_routes_and_cache) ... ok
+test_live_study_does_not_change_state (test_mission_context.MissionEngineeringTests.test_live_study_does_not_change_state) ... ok
+test_unsupported_live_coupling_is_honest (test_mission_context.MissionEngineeringTests.test_unsupported_live_coupling_is_honest) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 0.602s
+
+OK

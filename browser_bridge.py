@@ -71,7 +71,8 @@ def route_raw(raw):
                                   payload.get('scenario','mission'),
                                   payload.get('model_id'),payload.get('custom_design'),
                                   payload.get('wind_ned_m_s'),payload.get('turbulence'),
-                                  payload.get('wind_profile_ned_m_s'))
+                                  payload.get('wind_profile_ned_m_s'),
+                                  payload.get('surface_layer_wind'))
         elif endpoint == '/launch':
             result = engine.launch()
         elif endpoint == '/stage':

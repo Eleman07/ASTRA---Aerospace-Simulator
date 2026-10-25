@@ -83,8 +83,8 @@ class MissionEngineeringTests(unittest.TestCase):
         assert ui.count('id="engineeringRunLive"') == 1
         self.assertIn("'/engineering/live'",studio)
         self.assertIn("'/engineering/live'",api)
-        self.assertIn('mission-ui-14.css?build=284',ui)
-        self.assertIn('astra-browser-v284',sw)
+        self.assertIn('mission-ui-14.css?build=291',ui)
+        self.assertIn('astra-browser-v291',sw)
         self.assertIn('aero_envelope:{',studio)
         self.assertIn('rocket_nozzle_sweep:{',studio)
         self.assertIn('wind_shear:{',studio)

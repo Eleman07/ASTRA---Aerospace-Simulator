@@ -56,7 +56,9 @@ export function initEngineeringStudio(){
  const launcher=$('#openEngineeringStudio'),dialog=$('#engineeringStudioDialog'),select=$('#engineeringAnalysis'),form=$('#engineeringFields'),run=$('#engineeringRun'),summary=$('#engineeringMetrics'),info=$('#engineeringStatus'),canvas=$('#engineeringChart'),download=$('#engineeringDownload');
  if(!launcher||!dialog)return;
  let last=null,runId=0,livePending=false;
+ const applyWind=$('#engineeringApplyWind');
  const selectType=()=>{
+  if(applyWind)applyWind.hidden=select.value!=='wind_shear';
   const spec=studies[select.value];if(!spec)return;
   $('#engineeringSubtitle').textContent=spec.subtitle;
   form.replaceChildren();
@@ -91,9 +93,33 @@ export function initEngineeringStudio(){
    if(spec.route&&Array.isArray(result.waypoints_m)){
     canvas.hidden=false;requestAnimationFrame(()=>plotRoute(canvas,result));
    }else if(spec.series&&Array.isArray(result.samples)&&result.samples.length>1){canvas.hidden=false;requestAnimationFrame(()=>plot(canvas,result.samples,spec.series))}
-   info.textContent=`${result.solver||result.model||result.analysis}. LIMITS: ${Array.isArray(result.limitations)?result.limitations.join(' · '):(result.limits||'See the exported JSON report')}`;if(result.mission_context){const c=result.mission_context;const used=Object.keys(c.inputs_from_telemetry||{});info.textContent+=` | ${c.mode} · t=${Number(c.time_s||0).toFixed(1)} s · ${used.length} telemetry-derived inputs. Does not change flight physics.`;const evidence=document.querySelector('#engineeringLiveContext');if(evidence){evidence.hidden=false;evidence.dataset.coupled=String(used.length>0);evidence.textContent=used.length?`MISSION INPUTS: ${used.join(', ')} · ${c.vehicle} · ${c.phase}`:'DESIGN ONLY: no physically compatible live input for this study.'}}download.disabled=false;
+   info.textContent=`${result.solver||result.model||result.analysis}. LIMITS: ${Array.isArray(result.limitations)?result.limitations.join(' · '):(result.limits||'See the exported JSON report')}`;if(result.mission_context){const c=result.mission_context;const used=Object.keys(c.inputs_from_telemetry||{});info.textContent+=` | ${c.mode} · t=${Number(c.time_s||0).toFixed(1)} s · ${used.length} telemetry-derived inputs. Does not change flight physics.`;const evidence=document.querySelector('#engineeringLiveContext');if(evidence){evidence.hidden=false;evidence.dataset.coupled=String(used.length>0);evidence.textContent=used.length?`MISSION INPUTS: ${used.join(', ')} · ${c.vehicle} · ${c.phase}`:'STUDIO INDIPENDENTE: non applica forze alla missione.'}}download.disabled=false;
   }catch(error){info.textContent='Errore di analisi: '+error.message}
   finally{if(id===runId)run.disabled=false}
+ });
+ // ASTRA_141_APPLY_WIND_TO_FLIGHT: explicit opt-in, resets mission.
+ if(applyWind)applyWind.addEventListener('click',async()=>{
+  try{
+   const snapshot=await browserApi('/state');
+   if(!['aircraft','drone'].includes(snapshot.vehicle)){
+    info.textContent='Seleziona prima AEREO oppure DRONE, non SPAZIO.';
+    return;
+   }
+   const f=name=>Number(form.querySelector(`[name="${name}"]`)?.value);
+   const speed=f('reference_wind_m_s'), zref=f('reference_height_m');
+   const rough=f('roughness_length_m'), degrees=f('direction_toward_deg');
+   if(![speed,zref,rough,degrees].every(Number.isFinite)||zref<=rough){
+    info.textContent='Parametri di vento non validi.';return;
+   }
+   if(!confirm('Questa operazione riavvia la missione '+snapshot.vehicle+' con il vento attivo. Continuare?'))return;
+   const radians=degrees*Math.PI/180;
+   const config={reference_wind_ned_m_s:[speed*Math.cos(radians),speed*Math.sin(radians),0],
+                 reference_height_m:zref,roughness_length_m:rough,boundary_layer_height_m:100};
+   const status=await browserApi('/reset',{vehicle:snapshot.vehicle,scenario:'mission',
+                                             model_id:snapshot.model_id,surface_layer_wind:config});
+   info.textContent='VENTO APPLICATO ALLA DINAMICA · '+status.environment.wind_profile_model+
+                    ' · Premi PLAY nella missione.';
+  }catch(error){info.textContent='Attivazione vento: '+error.message}
  });
  // ASTRA_V14_LIVE_BUTTON
  $('#engineeringRunLive')?.addEventListener('click',()=>{livePending=true;run.click()});
