@@ -1,0 +1,33 @@
+ASTRA Engineering 1.4 — cartella ripristinata
+
+Contiene codice sorgente, documentazione, modelli 3D, server API Python e
+il tema UI Engineering 1.4 gia' applicato. Non contiene la cronologia .git.
+
+PER RIPRISTINARE UNA CARTELLA GIT PUBBLICABILE:
+  cd ~
+  git clone https://github.com/Eleman07/ASTRA-Aerospace-Simulator.git
+  unzip -o ~/Downloads/ASTRA-ENGINEERING-1.4-CARTELLA-COMPLETA.zip -d ~
+  cd ~/ASTRA-Aerospace-Simulator
+  git status
+
+AVVIARE IL SIMULATORE CON API LOCALE:
+  cd ~/ASTRA-Aerospace-Simulator
+  source ~/Aerospace/astrox/bin/activate
+  python server.py --open
+
+In un secondo terminale:
+  cd ~/ASTRA-Aerospace-Simulator
+  source ~/Aerospace/astrox/bin/activate
+  python examples/gnc_demo.py
+
+TEST:
+  python tools/test_browser_distribution.py
+  python -m unittest discover -s tools -p test_mission_context.py -v
+
+Per pubblicare nuove modifiche, eseguire prima i test e poi git add,
+git commit e git push. In caso di conflitti consultare il README.
+
+Il browser pubblico usa Pyodide; i file WebAssembly vengono prelevati durante
+la build GitHub Actions, non sono inclusi nella cartella sorgente.
+
+La visualizzazione WebGL richiede ancora collaudo sul dispositivo.

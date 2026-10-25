@@ -13,6 +13,7 @@ from astra.celestial import celestial_catalog, transfer_plan, transfer_state
 from astra.convergence import run_convergence_study
 from astra.robustness import run_robustness_campaign
 from astra.verification import verify_requirements
+from astra.mission_context import run_live_study
 
 engine = SimulationEngine()
 transfer_cache = {}
@@ -39,6 +40,8 @@ def route_raw(raw):
                                       'browser-local-engine','gnc','engineering-studio']}
         elif endpoint == '/models':
             result = MODEL_CATALOG
+        elif endpoint == '/engineering/live':
+            result = run_live_study(engine, payload)
         elif endpoint == '/engineering' and request.get('method') == 'GET':
             result = {'solvers':list(SOLVERS), 'units':'SI',
                       'mode':'isolated-design-analysis','scope':'educational models'}

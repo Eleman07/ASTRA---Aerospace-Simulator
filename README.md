@@ -51,7 +51,7 @@ Choose **Aircraft** or **Drone**, select the vehicle in Flight Ops, keep **GNC A
 <details>
 <summary><strong>Show aircraft interface example</strong></summary>
 
-![ASTRA aircraft mission screen, archived preview](astra3.png)
+![ASTRA aircraft mission screen, archived preview](docs/images/aircraft-scene-archive.png)
 
 *Archived interface example, not a current version 1.3.3 benchmark.*
 
@@ -72,9 +72,25 @@ Expected results: **`PASS · READ API`** and **`PASS · ROCKET SIMULATION`**, fo
 
 Read the [**Complete API Testing Guide**](docs/API_TESTING.md) for browser JavaScript examples, original Python HTTP API commands, SDK installation and troubleshooting.
 
+## Install ASTRA on desktop and mobile
+
+ASTRA Browser is a **PWA**: it is installed from the website, not from the Python SDK package. A PWA opens in a standalone application-like window using your browser's engine.
+
+![Steps to install ASTRA on desktop, Android and iOS](docs/images/install-pwa-steps.png)
+
+| Device | Installation |
+|---|---|
+| **Ubuntu / Windows / macOS** | Open ASTRA in **Chrome or Edge** → click the Install icon in the address bar, or open **Menu → Install app** (wording varies). |
+| **Android** | Open ASTRA in **Chrome** → **⋮ → Install app** / **Add to Home screen** → confirm. |
+| **iPhone / iPad** | Open ASTRA in **Safari** → **Share → Add to Home Screen** → **Add**. |
+
+To prepare **offline mode**, visit ASTRA while connected, click **SALVA PER OFFLINE**, and wait for **OFFLINE PRONTO**. Verify offline reopening before relying on it; device storage limits, browser eviction, or optional uncached models can still prevent full offline operation.
+
 ## Demonstration video and telemetry
 
-**[Watch the technical demo (MP4)](https://youtu.be/t_WcxvVzkis?si=z-Q_HkSsKkSfoqjA)** — a 3D visualization generated from an executed ASTRA simulation.
+[![Animated ASTRA ascent telemetry preview](docs/media/astra-ascent-preview.gif)](docs/media/astra-ascent-demo.mp4)
+
+**[Watch the technical ascent demo (MP4)](docs/media/astra-ascent-demo.mp4)** — a 2D visualization generated from an executed ASTRA simulation, **not** a recording of the WebGL scene.
 
 ## Aerospace algorithms and GNC
 
@@ -88,34 +104,58 @@ ASTRA includes numerical integration and control/navigation elements such as fou
 
 See [Engineering Studio](ENGINEERING-STUDIO.md) and [Model Readiness](ASTRA-1.3-MODEL-READINESS.md) for detailed scope and limitations.
 
+## Python SDK: how to install and test it
 
-## Python SDK & External GNC
+The **original ASTRA Python server** has an HTTP/JSON API, accessible from `astra.client`. The SDK **cannot** connect directly to this GitHub Pages site because physics is running inside each visitor's browser Worker, not at a network listening port.
 
-ASTRA can also be controlled with Python scripts using
-its local HTTP API.
-
-The Python SDK supports:
-- Launch and mission initialization
-- Real-time telemetry access
-- Guidance, Navigation and Control experiments
-- Vehicle commands and simulation stepping
-- External controller integration
-
-**[Python SDK — Complete Documentation](docs/SDK_README.md)**
-
-To start the local simulation server:
+To use the SDK, start the **original complete ASTRA server package** (with `astra/server.py` and `astra/__main__.py`) on your PC:
 
 ```bash
-python server.py --open
+python3 -m astra --host 127.0.0.1 --port 8765
 ```
 
-Then connect your Python client to:
+Install the wheel in your development environment:
 
-`http://127.0.0.1:8765`
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install ./downloads/astra_simulator_client-1.3.0-py3-none-any.whl
+python -c 'from astra.client import AstraClient; print("SDK installed")'
+```
 
-Note: The GitHub Pages edition runs independently in
-the browser and does not expose a public HTTP API.
+Test the **original HTTP server** in a second terminal:
 
+```bash
+python tools/test_astra_http.py --url http://127.0.0.1:8765
+python tools/test_astra_http.py --url http://127.0.0.1:8765 --simulate --steps 30
+```
+
+Expected final line: **`ALL TESTS PASSED`**. The second command resets and advances the simulator's shared state; do not run it on a public server with other users.
+
+See [docs/API_TESTING.md](docs/API_TESTING.md) for Windows instructions, a browser-console example, endpoint tables and error explanations.
+
+## Publish with GitHub Pages — no paid hosting
+
+The workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes the static Browser Edition after downloading the required Pyodide WASM files:
+
+1. Push the repository contents to `main`.
+2. Open **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. Open **Actions → Deploy ASTRA Browser to GitHub Pages** and check for a successful deploy.
+4. Visit **https://eleman07.github.io/ASTRA---Aerospace-Simulator/**.
+5. Run [diagnostics](https://eleman07.github.io/ASTRA---Aerospace-Simulator/diagnostics.html) and the [API test page](https://eleman07.github.io/ASTRA---Aerospace-Simulator/api-test.html).
+
+Publishing on GitHub Pages exposes the client-side code, including Python physics files downloaded by visitors. Keep any private algorithms in a separate private backend if you do not want to distribute their source.
+
+## Troubleshooting
+
+| Issue | Action |
+|---|---|
+| **“Retry start” / “Riprova avvio”** | Open **Diagnostics**, inspect the Web Worker error, then retry the mission after a successful Pyodide startup. |
+| **Pyodide `importScripts` or missing WASM file** | Make sure the 1.3.3 ES-module Worker and bundled `vendor/pyodide/` files were deployed. Clear old PWA/service-worker cache. |
+| **GitHub Pages 404** | Confirm **Settings → Pages → GitHub Actions** and inspect the deployment workflow. |
+| **`astra.client` cannot connect** | Do not use the `github.io` URL with the HTTP SDK. Run the original Python HTTP server and use `http://127.0.0.1:8765`. |
+| **3D scene doesn't render** | Check WebGL support, GPU driver, browser console, and model/texture network requests. |
+| **Offline mode incomplete** | Use **SALVA PER OFFLINE** while online and confirm **OFFLINE PRONTO** before disconnecting. |
 
 ## Links and project documentation
 

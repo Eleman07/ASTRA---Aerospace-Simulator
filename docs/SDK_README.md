@@ -1,230 +1,69 @@
-# ASTRA Python SDK
+# ASTRA Python SDK — Local HTTP API (Engineering 1.4)
 
-**Local HTTP API for aerospace simulation and experimental GNC.**
+[Main README](../README.md) · [API tests](API_TESTING.md) · [Validation and limitations](../RELEASE-VALIDATION.md)
 
-[Main README](../README.md) ·
-[Live Browser Simulator](https://eleman07.github.io/ASTRA---Aerospace-Simulator/) ·
-[API Testing Guide](API_TESTING.md)
+## Architecture
 
-## 1. Overview
+ASTRA on GitHub Pages runs Pyodide inside the browser and **does not provide a public Python HTTP API**. For external Python GNC scripts, run `python server.py --open` from the repository root and connect `AstraClient` to `http://127.0.0.1:8765`.
 
-ASTRA provides two execution modes:
+The local server and the local 3D viewer share the *same* Python simulation instance. The Python client advances time using `step()`, while the viewer reads `state()` without integrating a second simulation.
 
-| Mode | Execution | External Python SDK |
-|---|---|---|
-| Browser Edition | Pyodide/WebAssembly in a browser Worker | Not supported |
-| Local HTTP Edition | CPython on your computer | Supported |
+## Quick start
 
-The local edition runs the ASTRA Python simulation engine
-and serves the 3D viewer from the same HTTP server.
-
-The Python SDK connects using HTTP/JSON.
-
-The local API is a development interface intended for
-educational experiments, not safety-critical applications.
-
-## 2. Requirements
-
-- Python 3.10 or newer
-- A current web browser
-- The ASTRA source repository
-- No additional Python dependencies
-
-## 3. Start the local simulator
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Eleman07/ASTRA-Aerospace-Simulator.git
-cd ASTRA-Aerospace-Simulator
-```
-
-Launch the local server:
+Open a first terminal in the project folder:
 
 ```bash
 python server.py --open
 ```
 
-Open:
-
-http://127.0.0.1:8765
-
-The Python HTTP API is available at:
-
-http://127.0.0.1:8765/api/v1/status
-
-Keep the server terminal running.
-
-## 4. Test the API
-
-In a second terminal, from the repository root:
+Open a second terminal, also in the project root:
 
 ```bash
-curl http://127.0.0.1:8765/api/v1/status
-```
-
-Then run:
-
-```bash
-python -m tools.test_astra_http --simulate --steps 30
-```
-
-The test reads status, models and state, then launches and
-integrates the spacecraft simulation.
-
-## 5. Python SDK quick start
-
-The client implementation lives in `astra/client.py`.
-
-Run Python from the repository root:
-
-```python
-from astra.client import AstraClient
-
-sim = AstraClient("http://127.0.0.1:8765")
-
-print(sim.status())
-print(sim.models())
-
-sim.reset(vehicle="space", scenario="mission")
-sim.launch()
-
-for _ in range(20):
-    state = sim.step(0.1)
-    print(state["time_s"], state["altitude_m"])
-```
-
-The SDK has no third-party dependencies.
-
-For projects outside this repository, install or package
-the SDK separately, or add the repository root to PYTHONPATH.
-
-## 6. GNC demonstration with live 3D visualization
-
-Start the local server:
-
-```bash
-python server.py --open
-```
-
-Wait until the 3D viewer loads and select the Space environment.
-
-In a second terminal:
-
-```bash
+python tools/test_astra_http.py --simulate --steps 30
 python examples/gnc_demo.py
 ```
 
-The demo starts the launch mission and applies a basic
-closed-loop throttle controller using dynamic pressure:
+The GNC example controls rocket throttle based on dynamic pressure. It is an educational P-controller, not a flight-certified 6-DoF controller. Do not run the automatic API test and GNC demo simultaneously; both modify mission state.
 
-q = 0.5 * rho * V^2
-
-The controller aims to reduce excessive dynamic pressure
-by adjusting the commanded throttle.
-
-The Python script advances the physical simulation,
-while the viewer displays the same simulation state.
-
-Do not start another simulation integration loop while
-the GNC demo is running.
-
-This is an educational throttle-control example, not a
-validated full six-degree-of-freedom GNC controller.
-
-## 7. Supported API methods
-
-| Python method | HTTP endpoint | Purpose |
-|---|---|---|
-| `sim.status()` | GET `/api/v1/status` | Version and engine status |
-| `sim.models()` | GET `/api/v1/models` | Vehicle model catalog |
-| `sim.state()` | GET `/api/v1/state` | Current telemetry |
-| `sim.reset(...)` | POST `/api/v1/reset` | Reset mission |
-| `sim.launch()` | POST `/api/v1/launch` | Launch mission |
-| `sim.command(...)` | POST `/api/v1/command` | Send vehicle commands |
-| `sim.step(dt_s)` | POST `/api/v1/step` | Advance physics |
-| `sim.stage()` | POST `/api/v1/stage` | Stage separation |
-| `sim.engineering(...)` | POST `/api/v1/engineering` | Engineering analysis |
-| `sim.inject_fault(...)` | POST `/api/v1/fault` | Fault injection |
-| `sim.clear_faults()` | POST `/api/v1/fault/clear` | Clear faults |
-
-See `browser_bridge.py` for the current dispatcher contract.
-
-## 8. Command example
+## Python example
 
 ```python
 from astra.client import AstraClient
 
-sim = AstraClient()
-
-sim.reset(vehicle="space", scenario="mission")
+sim = AstraClient('http://127.0.0.1:8765')
+print(sim.status())
+sim.reset(vehicle='space', scenario='mission')
 sim.launch()
-
-sim.command(
-    mode="python",
-    throttle_pct=85.0
-)
-
-for _ in range(100):
+for _ in range(30):
+    sim.command(mode='python', throttle_pct=85)
     state = sim.step(0.1)
-
-print("Altitude:", state["altitude_m"])
-print("Phase:", state["phase"])
+    print(state['time_s'], state['altitude_m'])
 ```
 
-For externally driven missions, issue commands regularly
-to maintain the Python-control watchdog heartbeat.
+## Engineering Studio API
 
-## 9. Troubleshooting
+18 solvers are registered in the local backend:
 
-### Connection refused
-
-The HTTP server is not running or is listening on a
-different port. Run `python server.py --open`.
-
-### No module named `astra.__main__`
-
-This repository does not use `python -m astra` to start
-the HTTP server. Run `python server.py` instead.
-
-### No module named `browser_bridge`
-
-Run the server from the repository root and verify that
-`browser_bridge.py` exists.
-
-### The browser is not moving
-
-Open the local address, not GitHub Pages:
-
-http://127.0.0.1:8765
-
-Wait for the scene to load, then run the Python demo.
-Refresh the local viewer if a previous service worker
-or cached script is still active.
-
-### GitHub Pages API connection fails
-
-GitHub Pages cannot run the Python HTTP server.
-The hosted Browser Edition uses an independent on-device
-Pyodide Worker.
-
-### Port already in use
-
-Stop the previous process or start with another port:
-
-```bash
-python server.py --port 8877 --open
-python examples/gnc_demo.py --url http://127.0.0.1:8877
+```python
+print(sim.engineering_solvers())
+print(sim.engineering('aero_envelope'))
+report = sim.engineering_live('aero_envelope')
+print(report['mission_context'])
 ```
 
-## 10. Security and limitations
+The `engineering_live()` endpoint extracts suitable parameters from the current mission and executes the requested engineering analysis. It reports source fields and applicability. **It does not force-couple all independent solvers into flight dynamics**. In particular FEM, radio links, thermal design, EDL studies and trajectory design remain engineering analyses unless a separately validated physical coupling is implemented.
 
-The server listens on `127.0.0.1` by default and has
-no authentication. Do not expose it to the public Internet.
+## Available methods
 
-The browser and Python client share a single simulation
-state. Concurrent reset, launch or integration commands
-from multiple clients can interrupt a mission.
+`status()`, `models()`, `state()`, `reset()`, `launch()`, `command()`, `step()`, `stage()`, `engineering()`, `engineering_live()`, `engineering_solvers()`, `vehicle_parts()`, `inject_fault()`, `clear_faults()`.
 
-ASTRA is intended for learning, prototyping and experiments,
-not certified flight simulation.
+## Troubleshooting
+
+- `Connection refused`: Start `python server.py` and keep its terminal open.
+- `No module named browser_bridge`: Run from the directory containing `server.py` and `browser_bridge.py`.
+- `No module named tools`: Execute tests from the repository root, not `~`.
+- `No module named astra.__main__`: This project uses `python server.py`, not `python -m astra`.
+- No vehicle movement: Open the **local** viewer at `http://127.0.0.1:8765`, then run the GNC demo in the second terminal. Avoid pressing Reset during externally controlled flight.
+- Port busy: `python server.py --port 8877 --open` and `python examples/gnc_demo.py --url http://127.0.0.1:8877`.
+
+The development server binds `127.0.0.1` and has no authentication. Do not expose it to the public Internet. Models are intended for engineering education, not safety-critical deployment.

@@ -1,6 +1,6 @@
 /* ASTRA Browser PWA 1.3.3. Static only; all physics stays on this device. */
-const VERSION='astra-browser-v270';
-const SHELL=['./','./index.html','./styles.css','./professional-ui.css','./app.js','./browser-api.js',
+const VERSION='astra-browser-v284';
+const SHELL=['./','./index.html','./styles.css','./mission-ui-14.css','./app.js','./browser-api.js',
   './browser-engine-worker.js','./browser-python-files.json','./browser_bridge.py',
   './i18n.js','./vehicle-glb.js','./disciplines.js','./mission-recorder.js',
   './engineering-studio.js','./flight-frames.js','./pilot-controls.js',

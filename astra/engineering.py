@@ -630,12 +630,7 @@ SOLVERS={'planetary_landing_6dof':planetary_landing_6dof,'rocket_cycle':rocket_c
          'robotics_route':robotic_route_plan,'planetary_descent':planetary_descent}
 
 
-
-SOLVERS.update({
-    "aero_envelope": aerodynamic_envelope,
-    "rocket_nozzle_sweep": rocket_nozzle_sweep,
-    "wind_shear": wind_shear,
-})
+SOLVERS.update({"aero_envelope": aerodynamic_envelope, "rocket_nozzle_sweep":rocket_nozzle_sweep,"wind_shear": wind_shear})
 
 def run_engineering_analysis(payload:dict) -> dict:
     if not isinstance(payload,dict):raise ValueError('analysis request must be a JSON object')
