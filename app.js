@@ -267,15 +267,9 @@ function bodyQuaternionSceneFrame(q){if(!Array.isArray(q)||q.length!==4||!q.ever
 function drawParachuteLines(root,scale,size,canopyY){const positions=[],normals=[],uvs=[],indices=[],count=12;for(let i=0;i<count;i++){const angle=i/count*Math.PI*2,c=Math.cos(angle),s=Math.sin(angle),index=i*2;positions.push(c*scale*.16,s*scale*.16,scale*1.22,c*size*.94,s*size*.94,canopyY+size*.035);normals.push(0,0,1,0,0,1);uvs.push(0,0,0,0);indices.push(index,index+1)}if(!parachuteLineMesh)parachuteLineMesh=geo(positions,normals,uvs,indices,gl.LINES);else{gl.bindBuffer(gl.ARRAY_BUFFER,parachuteLineMesh.buffers[0]);gl.bufferSubData(gl.ARRAY_BUFFER,0,new Float32Array(positions))}gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);drawMesh(parachuteLineMesh,root,[.86,.78,.61],null,false);gl.depthMask(true);gl.disable(gl.BLEND)}
 function drawLauncher(x,y,z,direction,e){
  const phase=e.phase||"READY",attitudeFrame=bodyQuaternionSceneFrame(e.attitude_quaternion_body_to_eci),model=catalogModelFor("space"),catalogSpacecraft=catalogVehicleFor("space");
- const altitude=Math.max(0,e.altitude_m||0),recoveryPhase=["REENTRY","AEROSHELL","DROGUE","PARACHUTE","LANDED","CRASHED"].includes(phase),padBlend=model?.role==="modern-launcher"&&!recoveryPhase?Math.max(0,1-altitude/1000):0,launchOffset=model?.role==="modern-launcher"?launchSiteVisualOffset(state.seconds,padBlend):[0,0,0],frameRoot=mul(T(x+launchOffset[0],y+launchOffset[1],z+launchOffset[2]),attitudeFrame||alignZ(direction));
- if(state.modelId==="astra-custom-stack"){
-  // The procedural mesh is authored nose-forward on +Z, matching the trajectory
-  // axis directly instead of any imported GLB's convention for its longitudinal axis.
-  drawParametricStack(mul(T(x+launchOffset[0],y+launchOffset[1],z+launchOffset[2]),alignZ(direction)),e);
-  return;
- }
  if(state.userVehicles.space){drawImportedVehicle(mul(T(x,y,z),attitudeFrame||alignY(direction)),"space",true);return}
  if(!model)return;
+ const altitude=Math.max(0,e.altitude_m||0),recoveryPhase=["REENTRY","AEROSHELL","DROGUE","PARACHUTE","LANDED","CRASHED"].includes(phase),padBlend=model.role==="modern-launcher"&&!recoveryPhase?Math.max(0,1-altitude/1000):0,launchOffset=launchSiteVisualOffset(state.seconds,padBlend),frameRoot=mul(T(x+launchOffset[0],y+launchOffset[1],z+launchOffset[2]),attitudeFrame||alignZ(direction));
  if(model.role==="modern-launcher"){
   const recovery=["REENTRY","AEROSHELL","DROGUE","PARACHUTE","LANDED","CRASHED"].includes(phase),orbital=["ORBIT_COAST","STATION_KEEPING","RENDEZVOUS","DEORBIT_ALIGN","DEORBIT_BURN","DEORBIT_COAST"].includes(phase),separations=e.mission_started?(e.stage_events||[]).filter(event=>event.event==="STAGE_SEPARATION"||event.event==="STAGE_JETTISON").length:0;
   let variant=null,scale=model.scale||.3;
@@ -292,67 +286,6 @@ function drawLauncher(x,y,z,direction,e){
  }
  if(catalogSpacecraft&&model.role==="full")drawVehicleAsset(frameRoot,"space",catalogSpacecraft,visualScale("space"),[0,0,0],model.orientation,true);
  // No procedural vehicle fallback: a missing GLB stays visibly missing and is reported in the model status.
-}
-function drawParametricStack(root,e={}){
- const design=state.customDesign,stages=design?.stages||[];
- if(!stages.length)return;
- const m=EARTH_RENDER_SCALE,metal=[.68,.76,.79],white=[.83,.86,.82],gold=[.88,.65,.27],dark=[.12,.18,.22],blue=[.19,.38,.48];
- const cyl=(z,r,h,color,radial=[0,0,0],mesh=cylinderMesh)=>drawMesh(mesh,mul(root,mul(T(radial[0]*m,radial[1]*m,z*m),S(r*m,r*m,h*m))),color,null,false);
- const ball=(x,y,z,s,color)=>drawMesh(globe,mul(root,mul(T(x*m,y*m,z*m),S(s*m,s*m,s*m))),color,null,false);
- const activeSeparations=e.mission_started?(e.stage_events||[]).filter(event=>event.event==="STAGE_SEPARATION"||event.event==="STAGE_JETTISON").length:0;
- // A separated lower stage is no longer part of the vehicle. Keep the capsule and
- // the currently attached upper stages in the exact configuration used by physics.
- const firstVisible=Math.min(activeSeparations,stages.length-1),visible=stages.slice(firstVisible);
- const recovery=["REENTRY","AEROSHELL","DROGUE","PARACHUTE","LANDED","CRASHED"].includes(e.phase);
- const capsuleLength=3.4,capsuleR=1.8,totalLength=capsuleLength+visible.length*3.5;
- // The propagator position is the launch point, while this mesh is authored around
- // its geometric center. Lift the full stack so its engine bells sit on the pad.
- root=mul(root,T(0,0,totalLength*.5*m));
- let z=totalLength/2;
- cyl(z-capsuleLength*.50,capsuleR*.70,capsuleLength*.455,white);
- cyl(z-capsuleLength*.12,capsuleR*.88,.18,metal);
- // Rounded nose and a dark forward window make the capsule readable at orbit scale.
- ball(0,0,z+.05,capsuleR*.70,white);
- ball(0,0,z+.63,capsuleR*.30,[.20,.48,.58]);
- cyl(z-capsuleLength*.51,capsuleR*.77,.12,gold);
- z-=capsuleLength;
- for(let i=visible.length-1;i>=0;i--){
-  const stage=visible[i],radius=1.25*Math.sqrt(stage.tank_count),length=3.5,top=z;
-  // Each tank is an individual pressure vessel arranged around the thrust axis.
-  for(let tank=0;tank<stage.tank_count;tank++){
-   const a=tank/stage.tank_count*Math.PI*2,off=stage.tank_count===1?0:radius*.48;
-   const pos=[Math.cos(a)*off,Math.sin(a)*off,top-length*.51];
-   cyl(pos[2],radius*.53,length*.43,i===0?blue:[.31,.40,.45],[pos[0],pos[1],0]);
-   cyl(pos[2]+length*.25,radius*.54,.08,metal,[pos[0],pos[1],0]);
-   cyl(pos[2]-length*.25,radius*.54,.08,metal,[pos[0],pos[1],0]);
-  }
-  cyl(top-length*.03,radius*.74,.10,gold);
-  // Engine bells follow the configured engine count, with a restrained active plume.
-  for(let engine=0;engine<stage.engine_count;engine++){
-   const a=engine/stage.engine_count*Math.PI*2,ring=stage.engine_count===1?0:Math.min(radius*.52,.62),ex=Math.cos(a)*ring,ey=Math.sin(a)*ring;
-   const noz=top-length+.39;
-   cyl(noz,.34,.64,dark,[ex,ey,0]);cyl(noz-.34,.25,.12,metal,[ex,ey,0]);
-   if(i===0&&e.phase==="ASCENT"&&(e.command?.throttle_pct||0)>0){
-    const plume=.48+.09*Math.sin(state.seconds*34+engine),px=ex,py=ey;
-    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
-    drawMesh(globe,mul(root,mul(T(px*m,py*m,(noz-.58-plume*.55)*m),S(.13*m,.13*m,plume*m))),[1,.40,.12,.82],null,false);
-    drawMesh(globe,mul(root,mul(T(px*m,py*m,(noz-.60-plume*.35)*m),S(.065*m,.065*m,plume*.72*m))),[.35,.72,1,.8],null,false);
-    gl.disable(gl.BLEND);
-   }
-  }
-  // Small aerodynamic fins on the first stage provide silhouette and scale cues.
-  if(i===0)for(let fin=0;fin<4;fin++){
-   const a=fin*Math.PI/2,fx=Math.cos(a)*(radius+.34),fy=Math.sin(a)*(radius+.34),finRoot=mul(root,mul(T(fx*m,fy*m,(top-length*.77)*m),RY(a)));
-   drawMesh(cube,mul(finRoot,S(.18*m,.11*m,.73*m)),gold,null,false);
-  }
-  z-=length;
- }
- if(recovery&&(e.phase==="PARACHUTE"||e.phase==="DROGUE")){
-  const open=Math.min(1,(e.phase_time_s||0)/(e.phase==="DROGUE"?2:5)),size=(e.phase==="DROGUE"?.35:.75)*open;
-  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
-  drawMesh(dishMesh,mul(root,mul(T(0,0,(totalLength/2+capsuleLength*.85)*m),S(size*2.3,size*2.3,size*1.4))),e.phase==="DROGUE"?[.76,.78,.75]:[.94,.84,.65],null,false);
-  gl.disable(gl.BLEND);
- }
 }
 function loadTexture(url,fallback,maxTextureSize=deviceProfile.textureMax,onError=null,onLoad=null){const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array(fallback));gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);const img=new Image();const resolvedUrl=new URL(url,location.href);if(resolvedUrl.origin!==location.origin)img.crossOrigin="anonymous";img.onload=()=>{try{const max=Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE),maxTextureSize);let src=img;if(img.width>max||img.height>max){const c=document.createElement("canvas"),scale=Math.min(max/img.width,max/img.height);c.width=Math.max(1,Math.floor(img.width*scale));c.height=Math.max(1,Math.floor(img.height*scale));c.getContext("2d").drawImage(img,0,0,c.width,c.height);src=c}gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);gl.generateMipmap(gl.TEXTURE_2D)}catch(error){if(onError)onError(error,t);return}finally{gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false)}if(onLoad)onLoad(t)};img.onerror=error=>{if(onError)onError(error,t)};const textureUrl=resolvedUrl.origin===location.origin?`${url}${url.includes("?")?"&":"?"}v=${TEXTURE_BUILD_ID}`:url;img.src=textureUrl;return t}
 function launchGroundTexture(centerLat=state.launchSiteGeo.latitude,centerLon=state.launchSiteGeo.longitude){const epoch=++launchGroundTextureEpoch;for(const texture of [launchGroundTex,launchGroundNearTex])if(texture)gl.deleteTexture(texture);launchGroundTex=launchGroundNearTex=null;const offsetNorth=(centerLat-LAUNCH_SITE_LATITUDE)*EARTH_RADIUS,offsetEast=(centerLon-LAUNCH_SITE_LONGITUDE)*EARTH_RADIUS*Math.cos(LAUNCH_SITE_LATITUDE);if(Math.hypot(offsetNorth,offsetEast)>100)return;const nearLevel=deviceProfile.tier==="low"?"1k":deviceProfile.tier==="balanced"?"2k":"4k",farLevel=deviceProfile.tier==="low"?"1k":"2k",maxTextureSize=deviceProfile.tier==="high"?4096:deviceProfile.textureMax,loadLayer=(url,near)=>loadTexture(url,[10,45,75,255],maxTextureSize,(error,texture)=>{gl.deleteTexture(texture);if(epoch===launchGroundTextureEpoch){if(near)launchGroundNearTex=null;else launchGroundTex=null}},texture=>{if(epoch===launchGroundTextureEpoch){if(near)launchGroundNearTex=texture;else launchGroundTex=texture}else gl.deleteTexture(texture)});loadLayer("assets/earth-cape-wide-"+farLevel+".webp",false);loadLayer("assets/earth-cape-near-"+nearLevel+".webp",true)}
@@ -432,13 +365,6 @@ function cameraSet(){
    else if(separationCount>=1&&model.stage_url){scale=model.stage_scale||scale;variantKey=model.id+"-stage"}
    if(!recovery&&!orbital&&!separationCount)scale*=asset?.visualScaleCorrection||1;
    spaceZoom*=Math.max(.035,Math.min(1,scale/(model.scale||scale)));if(phase==="DROGUE")spaceZoom*=1.6;else if(phase==="PARACHUTE")spaceZoom*=2.1;r=spaceZoom;
-  }
-  if(state.modelId==="astra-custom-stack"){
-   const stages=Math.max(1,(state.customDesign.stages||[]).length-separationCount),bodyLength=3.4+stages*3.5;
-   // Match the camera to this stack's physical dimensions so small custom launchers
-   // retain the same screen presence as catalogue vehicles.
-   spaceZoom*=Math.max(.08,Math.min(1,bodyLength/115.8));r=spaceZoom;
-   anchorLift=bodyLength*.5*EARTH_RENDER_SCALE;
   }
   const axis=userAsset?null:recovery?(model?.recovery_orientation||model?.orientation):model?.orientation;
   if(variantKey)asset=state.catalogVehicles[variantKey]||null;

@@ -112,8 +112,8 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <dialog id="vehicleLab" class="vehicle-lab-dialog">
   <button class="close" id="closeVehicleLab" aria-label="Chiudi Vehicle Lab">×</button>
-  <small>ASTRA VEHICLE LAB · MODELLO PARAMETRICO</small>
-  <h2>Progetta lo stack.<br><em>Osservane la geometria in volo.</em></h2>
+  <small>ASTRA VEHICLE LAB · ASSEMBLY BAY</small>
+  <h2>Assembla il veicolo.<br><em>Simula ogni chilogrammo.</em></h2>
   <p>Assembla fino a quattro stadi con serbatoi e motori indipendenti. A esaurimento, il propagatore separa la massa secca dello stadio e accende il successivo. La Δv ideale usa Tsiolkovsky stadio per stadio; gravità e aerodinamica restano perdite della traiettoria simulata.</p>
   <div class="vehicle-lab-layout">
     <section class="vehicle-lab-controls">
@@ -123,8 +123,8 @@
       <button id="loadGuidedStack" class="design-stage-guided" type="button">CARICA STACK DIDATTICO · 2 STADI · PROFILO DI RIENTRO</button>
       <button id="loadLeoReturnStack" class="design-stage-guided" type="button">CARICA STACK LEO · 4 STADI · CIRCOLARIZZAZIONE · UN GIRO · RIENTRO</button>
       <div class="design-stage-controls" id="designStageControls"></div>
-      <div class="design-stack-preview" aria-label="Schema parametrico del veicolo generato dai componenti selezionati">
-        <b>MODELLO PARAMETRICO · CAPSULA, SERBATOI E MOTORI</b>
+      <div class="design-stack-preview" aria-label="Schema dei componenti assemblati">
+        <b>STACK · DALL'ALTO VERSO IL BASSO</b>
         <div class="stack-capsule" id="designCapsuleModule">CAPSULA · 2.800 kg</div>
         <div id="designStagePreview"></div>
       </div>
@@ -235,5 +235,5 @@
    <pre id="engineeringVerificationResult" role="status"></pre>
   </details>
 </dialog>
-<script type="module" src="i18n.js?build=291"></script><script type="module" src="app.js?build=292"></script><script type="module">import {initEngineeringStudio} from "./engineering-studio.js?build=291";initEngineeringStudio();</script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js?build=292").catch(()=>{});</script>
+<script type="module" src="i18n.js?build=291"></script><script type="module" src="app.js?build=291"></script><script type="module">import {initEngineeringStudio} from "./engineering-studio.js?build=291";initEngineeringStudio();</script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js?build=291").catch(()=>{});</script>
 </body></html>
