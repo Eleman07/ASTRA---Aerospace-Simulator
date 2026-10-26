@@ -21,5 +21,7 @@
   "astra/verification.py",
   "browser_bridge.py",
   "astra/fidelity_models.py",
-  "astra/mission_context.py"
+  "astra/mission_context.py",
+  "astra/live_systems.py",
+  "astra/mission_route.py"
 ]

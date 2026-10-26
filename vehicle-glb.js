@@ -109,7 +109,11 @@ export function parseGlb(buffer, { maxTriangles = 180_000, maxPrimitives = 96, m
     const textureRef = pbr.baseColorTexture?.index;
     const imageIndex = textureRef === undefined ? null : doc.textures?.[textureRef]?.source;
     if (textureRef !== undefined && imageIndex === undefined) throw new Error("Riferimento texture glTF non valido.");
-    return { color: pbr.baseColorFactor || [1, 1, 1, 1], textureIndex: imageIndex, alphaMode: material.alphaMode || "OPAQUE", alphaCutoff: material.alphaCutoff ?? 0.5, doubleSided: !!material.doubleSided };
+    const mrRef=pbr.metallicRoughnessTexture?.index;
+    const mrImage=mrRef===undefined?null:doc.textures?.[mrRef]?.source;
+    if(mrRef!==undefined && (!Number.isInteger(mrImage)||!imageBlobs[mrImage])) throw new Error("Texture metallic/roughness GLB non valida.");
+    return { metallicFactor:pbr.metallicFactor??1, roughnessFactor:pbr.roughnessFactor??1,
+      metalRoughTextureIndex:mrImage, emissiveFactor:material.emissiveFactor||[0,0,0], color: pbr.baseColorFactor || [1, 1, 1, 1], textureIndex: imageIndex, alphaMode: material.alphaMode || "OPAQUE", alphaCutoff: material.alphaCutoff ?? 0.5, doubleSided: !!material.doubleSided };
   });
   const rawPrimitives = [], bounds = [[Infinity, Infinity, Infinity], [-Infinity, -Infinity, -Infinity]];
   let totalTriangles = 0, totalVertices = 0;

@@ -73,6 +73,13 @@ def route_raw(raw):
                                   payload.get('wind_ned_m_s'),payload.get('turbulence'),
                                   payload.get('wind_profile_ned_m_s'),
                                   payload.get('surface_layer_wind'))
+        elif endpoint == '/mission/route':
+            if engine.vehicle != 'drone' or engine.mission_started:
+                raise ValueError('Select a ready UAV mission before applying a route')
+            plan = run_engineering_analysis(dict(payload, analysis='robotics_route'))
+            result = engine.configure_route(plan)
+        elif endpoint == '/systems/configure':
+            result = engine.configure_systems(payload)
         elif endpoint == '/launch':
             result = engine.launch()
         elif endpoint == '/stage':

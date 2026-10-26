@@ -214,6 +214,10 @@ def _add(a: list[float], b: list[float], scale: float) -> list[float]:
     return [x + scale * y for x, y in zip(a, b)]
 
 
+from .live_systems import LiveSystems
+from .mission_route import MissionRoute
+
+
 class SimulationEngine:
     """One deterministic ASTRA vehicle simulation, safe for a local API."""
 
@@ -305,6 +309,8 @@ class SimulationEngine:
         self.guidance_update_period_s: float | None = None
         self._next_guidance_update_s: float | None = None
         self.t = 0.0
+        self.live_systems = LiveSystems()
+        self.mission_route = None
         self.launch_t = None
         self.mission_started = scenario == "orbital"
         self.phase = "RENDEZVOUS" if scenario == "orbital" else "READY"
@@ -1463,6 +1469,7 @@ class SimulationEngine:
                 self.phase_time_s = 0.0
             else:
                 self.phase_time_s += h
+            self.live_systems.advance(self, h, self.t + advanced_s + h)
             advanced_s += h
             self._update_fdir(self.t + advanced_s)
             if self.phase in {"LANDED", "CRASHED", "ABORTED"}:
@@ -1747,11 +1754,20 @@ class SimulationEngine:
                 self.phase = "INSPECT"
         elif self.phase == "INSPECT":
             target_altitude = 30.0
-            angle = 0.10 * self.phase_time_s
-            target_position = [2.5 * math.sin(angle),
-                               2.5 * (1.0 - math.cos(angle))]
-            if elapsed > 35.0:
-                self.phase = "RETURN"
+            if self.mission_route is not None:
+                position = ([self.horizontal_nav.x[i][0] for i in range(2)]
+                            if self.horizontal_nav is not None else self.flight[:2])
+                velocity = ([self.horizontal_nav.x[i][1] for i in range(2)]
+                            if self.horizontal_nav is not None else self._ned_velocity(self.flight)[:2])
+                target_position = self.mission_route.target(position, velocity)
+                if self.mission_route.finished:
+                    self.phase = "RETURN"
+            else:
+                angle = 0.10 * self.phase_time_s
+                target_position = [2.5 * math.sin(angle),
+                                   2.5 * (1.0 - math.cos(angle))]
+                if elapsed > 35.0:
+                    self.phase = "RETURN"
         elif self.phase == "RETURN":
             target_altitude = 18.0
             target_position = [0.0, 0.0]
@@ -3113,7 +3129,30 @@ class SimulationEngine:
                 "periapsis_altitude_m": periapsis-EARTH_RADIUS,
                 "apoapsis_altitude_m": apoapsis-EARTH_RADIUS if apoapsis is not None else None}
 
+    def configure_route(self, plan: dict[str, Any]) -> dict[str, Any]:
+        if self.vehicle != "drone" or self.mission_started:
+            raise ValueError("Select a ready UAV mission before applying the route")
+        self.mission_route = MissionRoute(plan)
+        return self.state()
+
+    def configure_systems(self, payload: dict[str, Any]) -> dict[str, Any]:
+        if self.mission_started:
+            raise ValueError("Reset the mission before changing subsystem assumptions")
+        candidate = LiveSystems(payload)
+        candidate.advance(self, 0.0, self.t)
+        self.live_systems = candidate
+        return self.state()
+
     def state(self) -> dict[str, Any]:
+        result = self._flight_state()
+        if not self.live_systems.snapshot():
+            self.live_systems.advance(self, 0.0, self.t)
+        result["live_systems"] = self.live_systems.snapshot()
+        if self.mission_route is not None:
+            result["mission_route"] = self.mission_route.snapshot()
+        return result
+
+    def _flight_state(self) -> dict[str, Any]:
         if self.vehicle == "space":
             remaining_propellant_capacity = (
                 sum(stage["propellant_capacity_kg"]

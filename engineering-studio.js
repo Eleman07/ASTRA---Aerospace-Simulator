@@ -57,8 +57,16 @@ export function initEngineeringStudio(){
  if(!launcher||!dialog)return;
  let last=null,runId=0,livePending=false;
  const applyWind=$('#engineeringApplyWind');
+ const applyRoute=document.createElement('button');applyRoute.type='button';applyRoute.id='engineeringApplyRoute';applyRoute.textContent='APPLICA ROTTA AL DRONE';applyRoute.hidden=true;run.parentElement.append(applyRoute);
+ applyRoute.addEventListener('click',async()=>{
+  if(!last||last.request.analysis!=='robotics_route'||!last.result.found){info.textContent='Calcola prima una rotta A* valida.';return}
+  applyRoute.disabled=true;
+  try{const state=await browserApi('/mission/route',last.request);document.dispatchEvent(new CustomEvent('astra:engine-state',{detail:state}));info.textContent='ROTTA APPLICATA AL GNC UAV · andata e ritorno a 30 m. Chiudi il laboratorio e avvia la missione. Ostacoli sintetici: nessuna garanzia anticollisione.'}
+  catch(error){info.textContent=error.message}finally{applyRoute.disabled=false}
+ });
  const selectType=()=>{
   if(applyWind)applyWind.hidden=select.value!=='wind_shear';
+  applyRoute.hidden=select.value!=='robotics_route';
   const spec=studies[select.value];if(!spec)return;
   $('#engineeringSubtitle').textContent=spec.subtitle;
   form.replaceChildren();
