@@ -40,7 +40,7 @@ async function initialize(){
     }));
     for (const [p,source] of items) pyodide.FS.writeFile('/home/pyodide/'+p,source);
     pyodide.runPython('import sys; sys.path.insert(0,"/home/pyodide"); from browser_bridge import route_raw');
-    self.postMessage({kind:'ready', version:'1.3.3', python:pyodide.runPython('import sys; sys.version.split()[0]')});
+    self.postMessage({kind:'ready', version:'1.4.1', python:pyodide.runPython('import sys; sys.version.split()[0]')});
   }catch(error){
     bootError=error;
     self.postMessage({kind:'boot_error',error:String(error?.stack||error)});

@@ -18,6 +18,13 @@ const studies={
  planetary_descent:{name:'Planetary EDL · discesa propulsa',subtitle:'Modello verticale RK4 con massa variabile, gravità e controllo di frenata',inputs:[['surface_gravity_m_s2','Gravità superficiale · m/s²',1.62,.01,30],['initial_altitude_m','Quota iniziale · m',1200,1,1000000],['initial_vertical_speed_m_s','Velocità verticale · m/s',-35,-10000,10000],['initial_mass_kg','Massa iniziale · kg',1000,10,10000000],['dry_mass_kg','Massa a secco · kg',650,1,10000000],['maximum_thrust_N','Spinta max · N',14500,1,1000000000],['isp_s','Isp · s',310,20,10000],['surface_density_kg_m3','Densità atmosfera · kg/m³',0,0,15]],metrics:[['landing_status','Esito'],['touchdown_speed_m_s','Velocità impatto · m/s'],['propellant_consumed_kg','Propellente usato · kg'],['elapsed_s','Tempo · s']],series:[['altitude_m','Quota (m)'],['vertical_speed_m_s','Velocità verticale (m/s)']]},
  link:{name:'Comunicazioni · link budget',subtitle:'Friis, rumore termico, Eb/N₀, capacità Shannon',inputs:[['range_m','Distanza · m',4e5,1,1e13],['frequency_Hz','Frequenza · Hz',2.2e9,1000,1e12],['tx_power_dBm','Potenza trasmettitore · dBm',30,-100,100],['tx_gain_dBi','Guadagno antenna Tx · dBi',15,-100,100],['rx_gain_dBi','Guadagno antenna Rx · dBi',20,-100,100],['data_rate_bps','Data rate · bit/s',100000,1,1e11]],metrics:[['received_power_dBm','Potenza ricevuta · dBm'],['ebn0_dB','Eb/N₀ · dB'],['link_margin_dB','Margine · dB'],['shannon_capacity_bps','Capacità teorica · bit/s'],['passes_link_budget','Link budget verificato']]}
 };
+// ASTRA_V14_STUDIES: tested scientific analysis UI entries.
+Object.assign(studies, {
+  aero_envelope:{name:'Aerodynamics / Performance envelope',subtitle:'Finite wing, stall boundary and Mach-corrected quasi-steady drag',inputs:[['mass_kg','Mass · kg',1250,1,1e7],['wing_area_m2','Wing area · m²',16.2,.1,2000],['aspect_ratio','Aspect ratio',7.4,2,30],['oswald_efficiency','Oswald efficiency',.8,.3,1],['CL_max','CL max',1.5,.2,4],['CD0','Parasite drag CD0',.027,.001,.3],['altitude_m','Altitude · m',2000,-500,20000]],metrics:[['stall_speed_estimate_m_s','Stall speed estimate · m/s'],['induced_drag_factor','Induced-drag factor']],series:[['drag_N','Drag · N']]},
+  rocket_nozzle_sweep:{name:'Propulsion / Nozzle altitude sweep',subtitle:'Choked mass flow, supersonic expansion and altitude-dependent thrust',inputs:[['chamber_pressure_Pa','Chamber pressure · Pa',7e6,1e5,1e9],['chamber_temperature_K','Chamber temperature · K',3500,300,10000],['gamma','Isentropic gamma',1.22,1.05,1.67],['throat_diameter_m','Throat diameter · m',.16,.005,10],['expansion_ratio','Expansion ratio',12,1,2000]],metrics:[['mass_flow_kg_s','Mass flow · kg/s'],['exit_mach','Nozzle exit Mach'],['exit_pressure_Pa','Exit pressure · Pa'],['exit_velocity_m_s','Exit speed · m/s']],series:[['thrust_N','Thrust · N']]},
+  wind_shear:{name:'Atmosphere / Boundary-layer wind shear',subtitle:'Neutral surface-layer log profile with wind gradient and ground roughness',inputs:[['reference_wind_m_s','Wind speed at reference · m/s',8,0,80],['reference_height_m','Reference height · m',10,2,200],['roughness_length_m','Surface roughness · m',.03,.0001,1],['direction_toward_deg','Wind direction toward · °',90,-360,360]],metrics:[['reference_height_m','Reference height · m'],['roughness_length_m','Roughness · m']],series:[['wind_speed_m_s','Wind · m/s']]}
+});
+
 const $=selector=>document.querySelector(selector);
 const fmt=value=>typeof value==='boolean'?(value?'SÌ':'NO'):typeof value==='number'?(Math.abs(value)>=100000||Math.abs(value)<.001&&value!==0?value.toExponential(3):value.toLocaleString('it-IT',{maximumFractionDigits:5})):String(value??'—');
 function plot(canvas,data,keys){
@@ -48,8 +55,10 @@ function plotRoute(canvas,result){
 export function initEngineeringStudio(){
  const launcher=$('#openEngineeringStudio'),dialog=$('#engineeringStudioDialog'),select=$('#engineeringAnalysis'),form=$('#engineeringFields'),run=$('#engineeringRun'),summary=$('#engineeringMetrics'),info=$('#engineeringStatus'),canvas=$('#engineeringChart'),download=$('#engineeringDownload');
  if(!launcher||!dialog)return;
- let last=null,runId=0;
+ let last=null,runId=0,livePending=false;
+ const applyWind=$('#engineeringApplyWind');
  const selectType=()=>{
+  if(applyWind)applyWind.hidden=select.value!=='wind_shear';
   const spec=studies[select.value];if(!spec)return;
   $('#engineeringSubtitle').textContent=spec.subtitle;
   form.replaceChildren();
@@ -62,7 +71,7 @@ export function initEngineeringStudio(){
     input.value=String(value);input.step='any';input.required=true;wrap.append(input);form.append(wrap);
    }
   }
-  summary.replaceChildren();canvas.hidden=true;download.disabled=true;last=null;info.textContent='Imposta i parametri e avvia il solver. La simulazione di volo attiva non viene modificata.';
+  summary.replaceChildren();canvas.hidden=true;download.disabled=true;last=null;const current=$('#engineeringLiveContext');if(current)current.hidden=true;info.textContent='Imposta i parametri e avvia il solver. La simulazione di volo attiva non viene modificata.';
  };
  for(const [key,spec] of Object.entries(studies)){const option=document.createElement('option');option.value=key;option.textContent=spec.name;select.append(option)}
  select.addEventListener('change',selectType);selectType();
@@ -71,12 +80,12 @@ export function initEngineeringStudio(){
  dialog.addEventListener('close',()=>launcher.classList.remove('rail-active'));
  run.addEventListener('click',async()=>{
   if(![...form.querySelectorAll('input')].every(input=>input.reportValidity())){info.textContent='Controlla i parametri: uno o più valori non sono validi.';return;}
-  const id=++runId,spec=studies[select.value],request={analysis:select.value};
+  const liveMode=livePending;livePending=false;const id=++runId,spec=studies[select.value],request={analysis:select.value};
   for(const input of form.querySelectorAll('input')){const val=Number(input.value);if(!input.value.trim()||!Number.isFinite(val)){info.textContent='Inserire valori numerici finiti.';return}request[input.name]=val}
   for(const [key] of spec.vectors||[]){request[key]=['x','y','z'].map(axis=>{const id=`${key}_${axis}`,v=request[id];delete request[id];return v})}
   run.disabled=true;info.textContent='Calcolo scientifico in esecuzione…';download.disabled=true;
   try{
-   const result=await browserApi('/engineering',request);
+   const result=await browserApi(liveMode?'/engineering/live':'/engineering',request);
    if(id!==runId)return;
    last={request,result};summary.replaceChildren();
    for(const [key,label] of spec.metrics){if(!(key in result))continue;const item=document.createElement('div'),caption=document.createElement('small'),value=document.createElement('strong');caption.textContent=label;value.textContent=fmt(result[key]);item.append(caption,value);summary.append(item)}
@@ -84,10 +93,36 @@ export function initEngineeringStudio(){
    if(spec.route&&Array.isArray(result.waypoints_m)){
     canvas.hidden=false;requestAnimationFrame(()=>plotRoute(canvas,result));
    }else if(spec.series&&Array.isArray(result.samples)&&result.samples.length>1){canvas.hidden=false;requestAnimationFrame(()=>plot(canvas,result.samples,spec.series))}
-   info.textContent=`${result.solver}. LIMITI: ${result.limits}`;download.disabled=false;
+   info.textContent=`${result.solver||result.model||result.analysis}. LIMITS: ${Array.isArray(result.limitations)?result.limitations.join(' · '):(result.limits||'See the exported JSON report')}`;if(result.mission_context){const c=result.mission_context;const used=Object.keys(c.inputs_from_telemetry||{});info.textContent+=` | ${c.mode} · t=${Number(c.time_s||0).toFixed(1)} s · ${used.length} telemetry-derived inputs. Does not change flight physics.`;const evidence=document.querySelector('#engineeringLiveContext');if(evidence){evidence.hidden=false;evidence.dataset.coupled=String(used.length>0);evidence.textContent=used.length?`MISSION INPUTS: ${used.join(', ')} · ${c.vehicle} · ${c.phase}`:'STUDIO INDIPENDENTE: non applica forze alla missione.'}}download.disabled=false;
   }catch(error){info.textContent='Errore di analisi: '+error.message}
   finally{if(id===runId)run.disabled=false}
  });
+ // ASTRA_141_APPLY_WIND_TO_FLIGHT: explicit opt-in, resets mission.
+ if(applyWind)applyWind.addEventListener('click',async()=>{
+  try{
+   const snapshot=await browserApi('/state');
+   if(!['aircraft','drone'].includes(snapshot.vehicle)){
+    info.textContent='Seleziona prima AEREO oppure DRONE, non SPAZIO.';
+    return;
+   }
+   const f=name=>Number(form.querySelector(`[name="${name}"]`)?.value);
+   const speed=f('reference_wind_m_s'), zref=f('reference_height_m');
+   const rough=f('roughness_length_m'), degrees=f('direction_toward_deg');
+   if(![speed,zref,rough,degrees].every(Number.isFinite)||zref<=rough){
+    info.textContent='Parametri di vento non validi.';return;
+   }
+   if(!confirm('Questa operazione riavvia la missione '+snapshot.vehicle+' con il vento attivo. Continuare?'))return;
+   const radians=degrees*Math.PI/180;
+   const config={reference_wind_ned_m_s:[speed*Math.cos(radians),speed*Math.sin(radians),0],
+                 reference_height_m:zref,roughness_length_m:rough,boundary_layer_height_m:100};
+   const status=await browserApi('/reset',{vehicle:snapshot.vehicle,scenario:'mission',
+                                             model_id:snapshot.model_id,surface_layer_wind:config});
+   info.textContent='VENTO APPLICATO ALLA DINAMICA · '+status.environment.wind_profile_model+
+                    ' · Premi PLAY nella missione.';
+  }catch(error){info.textContent='Attivazione vento: '+error.message}
+ });
+ // ASTRA_V14_LIVE_BUTTON
+ $('#engineeringRunLive')?.addEventListener('click',()=>{livePending=true;run.click()});
  const verifyButton=$('#engineeringVerifyLive'),verifyText=$('#engineeringRequirements'),verifyOutput=$('#engineeringVerificationResult');
  if(verifyButton&&verifyText&&verifyOutput){verifyButton.addEventListener('click',async()=>{
   try{

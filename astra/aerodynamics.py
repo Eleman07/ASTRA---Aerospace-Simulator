@@ -7,15 +7,15 @@ from typing import Any
 
 
 def fixed_wing_coefficients(aero: dict[str, Any], alpha_rad: float,
-                            beta_rad: float) -> dict[str, float | bool]:
+                            beta_rad: float, mach: float = 0.0) -> dict[str, float | bool]:
     """Return lift, drag and side-force coefficients for a smoothed stall polar.
 
-    The attached-flow lift curve is linear. Beyond the configured stall angle it
+    The attached-flow lift curve is linear with an optional bounded low-Mach correction. Beyond the configured stall angle it
     blends smoothly into a decaying post-stall lift curve while a quadratic
     separated-flow drag term is added. This is a low-order engineering model;
-    it does not represent dynamic stall, hysteresis, or Reynolds/Mach effects.
+    it does not represent dynamic stall, hysteresis, or Reynolds effects or transonic/shock aerodynamics.
     """
-    if not math.isfinite(alpha_rad) or not math.isfinite(beta_rad):
+    if not math.isfinite(alpha_rad) or not math.isfinite(beta_rad) or not math.isfinite(mach):
         raise ValueError("angles of attack and sideslip must be finite")
 
     alpha_stall = float(aero.get("alpha_stall_rad", math.radians(15.0)))
@@ -26,6 +26,15 @@ def fixed_wing_coefficients(aero: dict[str, Any], alpha_rad: float,
 
     cl0 = float(aero["CL0"])
     cl_alpha = float(aero["CLalpha_rad"])
+    if mach < 0.0:
+        raise ValueError("Mach must be non-negative")
+    # Subsonic Prandtl-Glauert slope correction, tapered off outside
+    # its calibrated low-Mach domain instead of extrapolating to M=1.
+    # The catalog CLalpha already describes a finite wing: do not
+    # apply a second aspect-ratio correction.
+    m = min(mach,0.7)
+    correction = min(1.4, 1.0/math.sqrt(1.0-m*m))
+    cl_alpha *= correction
     alpha_abs = abs(alpha_rad)
     excess = max(0.0, alpha_abs - alpha_stall)
     linear_cl = cl0 + cl_alpha * alpha_rad
@@ -48,7 +57,10 @@ def fixed_wing_coefficients(aero: dict[str, Any], alpha_rad: float,
     return {"CL": cl, "CD": cd, "CY": cy,
             "stall_margin_rad": alpha_stall - alpha_abs,
             "stall_margin_deg": math.degrees(alpha_stall - alpha_abs),
-            "stall_state": alpha_abs > alpha_stall}
+            "stall_state": alpha_abs > alpha_stall,
+            "mach": mach,
+            "compressibility_factor": correction,
+            "compressibility_in_model_domain": mach <= 0.7}
 
 
 def fixed_wing_moment_coefficients(

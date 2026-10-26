@@ -24,6 +24,6 @@ export const aerospaceDisciplines = [
 
 export const disciplineStatuses = {
   active: { label: "NEL MOTORE", explanation: "Calcolato dal modello ASTRA corrente." },
-  approx: { label: "MODELLO SEMPLIFICATO", explanation: "Disponibile con limiti dichiarati; non è una soluzione di alta fedeltà." },
+  approx: { label: "MODELLO PARAMETRICO", explanation: "Solutore analitico o numerico implementato, con ipotesi e limiti dichiarati; non equivale a un modello validato di alta fedeltà." },
   roadmap: { label: "DA INTEGRARE", explanation: "Disciplina rilevante, ma il suo solutore non è ancora implementato." }
 };

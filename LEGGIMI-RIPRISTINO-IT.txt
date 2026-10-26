@@ -1,0 +1,9 @@
+ASTRA Flight Systems 1.4.1
+
+Per aggiornare il progetto esistente senza perdere .git, usa
+ASTRA-FLIGHT-SYSTEMS-1.4.1-PATCH.zip e consulta GITHUB-1.4.1-TUTORIAL-IT.md.
+
+Se non hai piu il progetto locale: git clone
+https://github.com/Eleman07/ASTRA-Aerospace-Simulator.git
+e poi estrai ASTRA-FLIGHT-SYSTEMS-1.4.1-COMPLETO.zip
+all'interno della nuova cartella clonata.

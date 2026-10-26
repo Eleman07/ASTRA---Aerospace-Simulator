@@ -13,6 +13,7 @@ import copy
 import math
 from typing import Any
 
+from . import __version__
 from .attitude import LaunchVehicleAttitude, SpacecraftAttitude
 from .aerodynamics import (fixed_wing_coefficients,
                            fixed_wing_moment_coefficients)
@@ -33,7 +34,8 @@ from .turbulence import (DRYDEN_MODEL, DrydenTurbulence,
                          validate_turbulence_settings)
 from .vehicle_design import (ACS_PROPELLANT_FRACTION,
                              build_spacecraft_design)
-from .wind import validate_wind_profile, wind_at_altitude
+from .wind import (validate_wind_profile, wind_at_altitude,
+                   validate_surface_layer, surface_layer_wind_at_altitude)
 
 MU_EARTH = 3.986004418e14
 EARTH_RADIUS = 6_378_137.0
@@ -223,12 +225,16 @@ class SimulationEngine:
               custom_design: dict[str, Any] | None = None,
               wind_ned_m_s: list[float] | tuple[float, float, float] | None = None,
               turbulence: dict[str, Any] | None = None,
-              wind_profile_ned_m_s: list[dict[str, Any]] | None = None
+              wind_profile_ned_m_s: list[dict[str, Any]] | None = None,
+              surface_layer_wind: dict[str, Any] | None = None
               ) -> dict[str, Any]:
         if vehicle not in VEHICLES:
             raise ValueError(f"vehicle must be one of {sorted(VEHICLES)}")
         wind = self._validate_wind(wind_ned_m_s)
         wind_profile = validate_wind_profile(wind_profile_ned_m_s, vehicle)
+        surface_layer = validate_surface_layer(surface_layer_wind, vehicle)
+        if surface_layer is not None and (wind_profile is not None or _norm3(wind) > 0):
+            raise ValueError("surface_layer_wind replaces uniform wind and wind_profile_ned_m_s")
         if wind_profile is not None and _norm3(wind) > 0.0:
             raise ValueError(
                 "wind_profile_ned_m_s replaces wind_ned_m_s; provide a zero uniform wind vector")
@@ -284,6 +290,7 @@ class SimulationEngine:
         self.scenario = scenario
         self.wind_ned_m_s = wind
         self.wind_profile_ned_m_s = wind_profile
+        self.surface_layer_wind = surface_layer
         self.turbulence_settings = turbulence_settings
         self.turbulence_model = (
             DrydenTurbulence(turbulence_settings["sigma_uvw_m_s"],
@@ -1942,11 +1949,15 @@ class SimulationEngine:
 
     def _mean_wind_velocity_ned(self, y: list[float]) -> list[float]:
         """Return the local steady NED wind at the state's geometric altitude."""
+        if self.surface_layer_wind is not None:
+            return surface_layer_wind_at_altitude(self.surface_layer_wind, -float(y[2]))[0]
         if self.wind_profile_ned_m_s is None:
             return list(self.wind_ned_m_s)
         return wind_at_altitude(self.wind_profile_ned_m_s, -float(y[2]))[0]
 
     def _wind_telemetry_state(self, altitude_m: float) -> tuple[list[float], bool]:
+        if self.surface_layer_wind is not None:
+            return surface_layer_wind_at_altitude(self.surface_layer_wind, altitude_m)
         if self.wind_profile_ned_m_s is None:
             return list(self.wind_ned_m_s), False
         return wind_at_altitude(self.wind_profile_ned_m_s, altitude_m)
@@ -2944,7 +2955,8 @@ class SimulationEngine:
             alpha = math.atan2(air_w, max(abs(air_u), 0.1))
             beta = math.asin(_clamp(air_v/speed, -0.99, 0.99))
             qbar = 0.5 * atm["density_kg_m3"] * speed * speed
-            coefficients = fixed_wing_coefficients(a, alpha, beta)
+            coefficients = fixed_wing_coefficients(
+                a, alpha, beta, mach=speed/max(1.0, atm["speed_of_sound_m_s"]))
             _surface_targets, surface_rates = self._aircraft_surface_actuators(y)
             cl, cd = coefficients["CL"], coefficients["CD"]
             drag = qbar * a["S_m2"] * cd
@@ -3119,7 +3131,7 @@ class SimulationEngine:
             dx = self.target_orbit[0]-x
             dy = self.target_orbit[1]-y
             dz = self.target_orbit[2]-z
-            return {"version": "1.3.0", "vehicle": self.vehicle, "time_s": self.t,
+            return {"version": __version__, "vehicle": self.vehicle, "time_s": self.t,
                     "scenario": self.scenario,
                     "mission_profile": ("Lancio, orbita LEO e rientro con atterraggio" if self.scenario == "leo-return"
                                         else "Rendezvous LEO e mantenimento a 20 m" if self.scenario == "orbital"
@@ -3162,6 +3174,16 @@ class SimulationEngine:
                         if self.space_navigation is not None else None),
                     **(self._rendezvous_telemetry() if self.scenario == "orbital" else {}),
                     "mission_metrics": dict(self.mission_metrics),
+                    "propulsion": {"model": "VACUUM_THRUST_MINUS_AMBIENT_PRESSURE_AREA",
+                                   "vacuum_thrust_N": self.max_thrust_N,
+                                   "net_thrust_N": self._thrust_at_altitude(altitude),
+                                   "pressure_correction_N": self.max_thrust_N - self._thrust_at_altitude(altitude),
+                                   "nozzle_exit_area_m2": self.nozzle_exit_area_m2,
+                                   "reference_mass_flow_kg_s": (self.max_thrust_N/(self.isp_s*G0)
+                                                                if self.isp_s>0 else 0),
+                                   "effective_isp_s": (self._thrust_at_altitude(altitude)*self.isp_s/self.max_thrust_N
+                                                       if self.max_thrust_N>0 else 0),
+                                   "note": "Pressure correction drives live acceleration; chamber chemistry is not identified"},
                     "environment": {"mu_earth_m3_s2": MU_EARTH, "earth_radius_m": EARTH_RADIUS,
                                     "J2": EARTH_J2, "earth_rotation_rad_s": OMEGA_EARTH,
                                     "temperature_K": atmosphere["temperature_K"],
@@ -3226,7 +3248,10 @@ class SimulationEngine:
                     "wind_velocity_ned_m_s": total_wind_ned,
                     "mean_wind_velocity_ned_m_s": mean_wind_ned,
                     "wind_profile_ned_m_s": copy.deepcopy(self.wind_profile_ned_m_s),
+                    "surface_layer_wind": copy.deepcopy(self.surface_layer_wind),
                     "wind_profile_model": (
+                        "MONIN_OBUKHOV_SURFACE_LAYER"
+                        if self.surface_layer_wind is not None else
                         "LINEAR_ALTITUDE_NED_WITH_ENDPOINT_CLAMP"
                         if self.wind_profile_ned_m_s is not None else "UNIFORM_NED"),
                     "wind_profile_endpoint_clamped": wind_profile_clamped,
@@ -3243,7 +3268,7 @@ class SimulationEngine:
                         "along_field_distance_m": self.flight[-3],
                         "assumption": ("TAYLOR_FROZEN_FIELD_1D_NO_GUST_GRADIENTS"
                                        if self.turbulence_model is not None else "NONE")}})
-        result = {"version": "1.3.0", "vehicle": self.vehicle, "time_s": self.t,
+        result = {"version": __version__, "vehicle": self.vehicle, "time_s": self.t,
                 "scenario": self.scenario, "phase": self.phase,
                 "phase_time_s": self.phase_time_s,
                 "mission_started": self.mission_started, "fault": self.fault,
@@ -3297,7 +3322,9 @@ class SimulationEngine:
             result["propulsion"] = self._aircraft_propulsion_state(self.flight)
             alpha = math.atan2(air_velocity[2], max(abs(air_velocity[0]), 0.1))
             beta = math.asin(_clamp(air_velocity[1] / max(airspeed, 0.1), -0.99, 0.99))
-            coefficients = fixed_wing_coefficients(self.aero, alpha, beta)
+            coefficients = fixed_wing_coefficients(
+                self.aero, alpha, beta,
+                mach=airspeed/max(1.0, env["speed_of_sound_m_s"]))
             moment_coefficients = fixed_wing_moment_coefficients(
                 self.aero, alpha, beta, (p, q, r), max(airspeed, 0.11),
                 (delta_a, delta_e, delta_r))

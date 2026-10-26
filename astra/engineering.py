@@ -621,12 +621,16 @@ def planetary_descent(p: dict) -> dict:
 from .advanced import lifting_line, lambert_transfer, orbit_eclipse_power, radio_link, rocket_cycle
 from .planetary_6dof import planetary_landing_6dof
 
+from .fidelity_models import aerodynamic_envelope, rocket_nozzle_sweep, wind_shear
+
 SOLVERS={'planetary_landing_6dof':planetary_landing_6dof,'rocket_cycle':rocket_cycle,'lifting_line':lifting_line,'lambert':lambert_transfer,
          'orbit_eclipse_power':orbit_eclipse_power,'radio_link':radio_link,
          'propulsion':nozzle_design,'beam':beam_fem,'thermal':thermal_fvm,'link':link_budget,
          'aircraft_trim':aircraft_trim,'power':electrical_power,'orbit':orbital_propagation,
          'robotics_route':robotic_route_plan,'planetary_descent':planetary_descent}
 
+
+SOLVERS.update({"aero_envelope": aerodynamic_envelope, "rocket_nozzle_sweep":rocket_nozzle_sweep,"wind_shear": wind_shear})
 
 def run_engineering_analysis(payload:dict) -> dict:
     if not isinstance(payload,dict):raise ValueError('analysis request must be a JSON object')

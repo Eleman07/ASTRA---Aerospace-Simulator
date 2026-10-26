@@ -23,8 +23,10 @@ jobs:
         run: python3 tools/prepare_pyodide.py
       - name: Check assets and JavaScript syntax
         run: |
-          python3 tools/test_browser_distribution.py
+          python3 -m unittest discover -s tools -p 'test_*.py' -q
           node --check app.js
+          node --check engineering-studio.js
+          node --check disciplines.js
           node --check browser-api.js
           node --check browser-engine-worker.js
           node --check service-worker.js

@@ -19,5 +19,7 @@
   "astra/constants.py",
   "astra/vehicle_design.py",
   "astra/verification.py",
-  "browser_bridge.py"
+  "browser_bridge.py",
+  "astra/fidelity_models.py",
+  "astra/mission_context.py"
 ]

@@ -1,0 +1,262 @@
+/*
+ * ASTRA Professional UI
+ * Non-destructive visual overrides.
+ * Retains all existing controls and layouts.
+ */
+
+:root {
+  --mint: #92c7b7;
+  --cyan: #9bbfcf;
+  --gold: #dbbd87;
+  --ink: #e6edf2;
+  --muted: #a3b0bd;
+  --dim: #8092a1;
+  --line: #bccdd31f;
+  --glass: #101821e8;
+  --sans: Inter, Manrope, system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, monospace;
+}
+
+html, body {
+  background: #090e15;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell {
+  background: #090e15;
+}
+
+.topbar {
+  background: #0c131bec;
+  border-bottom: 1px solid #9fbbc129;
+  box-shadow: none;
+  backdrop-filter: blur(15px);
+}
+
+.wordmark {
+  letter-spacing: .105em;
+  font-weight: 750;
+}
+
+.glyph i {
+  box-shadow: none;
+}
+
+.stage {
+  background:
+    radial-gradient(
+      ellipse at 52% 47%,
+      #182a36 0%,
+      #0b1520 48%,
+      #080d15 100%
+    );
+}
+
+/* Reduce heavy artificial vignetting. */
+.scene-vignette {
+  background:
+    linear-gradient(
+      180deg,
+      #050b1114 0%,
+      transparent 38%,
+      transparent 74%,
+      #050b115a 100%
+    );
+}
+
+.scene-heading h1 {
+  font-weight: 580;
+  font-size: clamp(21px, 2.3vw, 28px);
+  letter-spacing: -.035em;
+  text-shadow: 0 2px 14px #0008;
+}
+
+.scene-heading p,
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.right-hud {
+  background: #0d1720e8;
+  border: 1px solid #a9bec32e;
+  border-radius: 11px;
+  box-shadow: 0 14px 35px #0005;
+  backdrop-filter: blur(16px);
+}
+
+.hud-top {
+  border-bottom: 1px solid #c4d7df22;
+}
+
+.hud-brand small {
+  font-size: 9px;
+  letter-spacing: .09em;
+}
+
+.hud-brand b {
+  font-size: 11px;
+}
+
+.control-deck {
+  border: 1px solid #b7cbd12c;
+  border-radius: 11px;
+  background: #0c1720ed;
+  box-shadow: 0 15px 38px #0005;
+  backdrop-filter: blur(15px);
+}
+
+.deck-top {
+  border-color: #c4d7df20;
+}
+
+.deck-top small {
+  font-size: 9px;
+  letter-spacing: .07em;
+}
+
+.deck-top b {
+  font-size: 11px;
+}
+
+button, select, input {
+  transition:
+    background-color .18s ease,
+    border-color .18s ease,
+    color .18s ease;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid #9abdcf;
+  outline-offset: 2px;
+}
+
+/* Scientific coverage library */
+
+.discipline-dialog {
+  border: 1px solid #a5b7c43d;
+  border-radius: 13px;
+  background: #101820fa;
+  box-shadow: 0 22px 75px #000b;
+}
+
+.discipline-dialog::backdrop {
+  background: #060b12cc;
+  backdrop-filter: blur(5px);
+}
+
+.discipline-dialog h2 {
+  color: #e8eef1;
+  font-weight: 650;
+  line-height: 1.17;
+}
+
+.discipline-dialog h2 em {
+  color: #adc3ca;
+}
+
+.discipline-kicker {
+  font-size: 10px;
+  color: #a6c0c5;
+}
+
+.discipline-card {
+  padding: 17px;
+  border: 1px solid #afc0cb29;
+  border-radius: 10px;
+  background: #151e28;
+  box-shadow: none;
+}
+
+.discipline-card:hover {
+  border-color: #afc4cf63;
+  background: #19242f;
+}
+
+.discipline-card h3 {
+  color: #edf2f5;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.discipline-card-domain {
+  color: #abb8c3;
+  font-size: 10px;
+}
+
+.discipline-status {
+  max-width: 165px;
+  padding: 6px 9px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .015em;
+}
+
+.discipline-card[data-status="active"]
+.discipline-status {
+  color: #a9d5c2;
+  background: #1b332b;
+  border-color: #4b857164;
+}
+
+.discipline-card[data-status="approx"]
+.discipline-status {
+  color: #e1c99f;
+  background: #30291d;
+  border-color: #987e4d72;
+}
+
+.discipline-card[data-status="roadmap"]
+.discipline-status {
+  color: #bac4cd;
+  background: #202a35;
+  border-color: #82919d4d;
+}
+
+/* Engineering Studio */
+
+.engineering-verification {
+  background: #111e28;
+  border-color: #67818b68;
+  border-radius: 10px;
+}
+
+.engineering-verification summary {
+  color: #c2dedb;
+  font-size: 12px;
+  letter-spacing: .01em;
+}
+
+.engineering-verification button {
+  background: #2a564e;
+  border-color: #5d9687;
+  border-radius: 7px;
+}
+
+/* Respect smaller screens. */
+
+@media (max-width: 760px) {
+  .topbar {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .discipline-dialog {
+    padding: 17px;
+  }
+
+  .discipline-card {
+    padding: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button, select, input {
+    transition: none;
+  }
+}

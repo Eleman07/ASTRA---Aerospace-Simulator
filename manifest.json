@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "ASTRA Browser — Aerospace Simulation Suite",
+  "name": "ASTRA Flight Systems 1.4.1 — Aerospace Simulation Suite",
   "short_name": "ASTRA",
   "description": "Client-side Python/WASM aerospace simulation and GNC. No server backend.",
   "start_url": "./",

@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050a12"><meta name="description" content="ASTRA Browser 1.3.3 — simulatore aerospaziale 3D gratuito con motore fisico locale e API Python."><meta name="application-name" content="ASTRA Browser 1.3.3"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>ASTRA Browser 1.3.3 · Aerospace Simulation Suite</title>
+<meta name="theme-color" content="#050a12"><meta name="description" content="ASTRA Flight Systems 1.4.1 — simulatore aerospaziale 3D gratuito con motore fisico locale e API Python."><meta name="application-name" content="ASTRA Flight Systems 1.4.1"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>ASTRA Flight Systems 1.4.1 · Aerospace Simulation Suite</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="mission-ui-14.css?build=291">
 <style>.asset-notice{margin:12px 0 15px;padding:10px 11px;border:1px solid #63e7ff30;border-radius:4px;background:#081521}.asset-notice summary{cursor:pointer;color:#63e7ff;font:8px var(--mono);letter-spacing:.09em}.asset-notice p{margin:9px 0;color:#9eb0bb;font-size:9px;line-height:1.55}.asset-notice a{font:8px var(--mono);color:#8ee8ce;text-decoration:none}.asset-notice a:hover{text-decoration:underline}</style>
 </head>
 <body>
 <div class="shell">
   <header class="topbar">
     <a class="brand" href="#"><span class="glyph"><i></i><i></i><i></i></span><span class="wordmark">ASTRA<span>®</span></span><span class="brand-rule"></span><span class="brand-sub">MISSION SIMULATION</span></a>
-    <div class="top-center"><span class="session-dot"></span> ASTRA BROWSER <span class="top-sep">/</span><b>VERSION 1.3.1</b></div>
+    <div class="top-center"><span class="session-dot"></span> ASTRA BROWSER <span class="top-sep">/</span><b>FLIGHT SYSTEMS 1.4.1</b></div>
     <div class="top-actions"><div class="product-modes" role="group" aria-label="Esperienza ASTRA"><button class="product-mode active" data-product="sim" aria-pressed="true">SIM</button><button class="product-mode" data-product="game" aria-pressed="false">GIOCA</button></div><label class="locale-picker" for="astraLocale"><span class="locale-icon" aria-hidden="true">◎</span><select id="astraLocale" aria-label="Interface language"><option value="auto">AUTO</option><option value="it">IT</option><option value="en">EN</option><option value="es">ES</option><option value="fr">FR</option><option value="de">DE</option><option value="pt">PT</option></select></label><button type="button" class="tech-toggle" id="techToggle" aria-pressed="true" title="Hide technical telemetry"><span class="tech-toggle-icon" aria-hidden="true">▤</span><span id="techToggleLabel">HIDE DATA</span></button><button class="learn-toggle" id="learnToggle" aria-pressed="true">GUIDA ON</button><span class="free-tag"><i></i> GRATIS · OPEN SIM</span><button class="round-btn mobile-system-explorer" id="systemExplorerMobile" aria-label="Esplora il sistema solare" title="Esplora il sistema solare"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-25 12 12)"/><circle cx="19" cy="8" r="1.5"/></svg></button><button class="round-btn" id="help" aria-label="Informazioni">?</button><span class="profile">G</span></div>
   </header>
   <aside id="gamePilotDock" class="game-pilot-dock" hidden aria-label="Game pilot controls"><div class="game-pilot-header"><div><small>ASTRA · PILOT STATION</small><strong>FLIGHT CONTROLS</strong></div><div class="game-pilot-actions"><button id="gameTakeoff" type="button" hidden>PREPARE TAKEOFF</button><button id="gameTakeControl" type="button" aria-pressed="false">TAKE CONTROL</button></div></div><div id="gameStickMount"></div><small class="game-pilot-shortcuts">W/S PITCH · A/D ROLL · Q/E YAW · R/F THROTTLE · SPACE PAUSE · C CAMERA · GAMEPAD</small></aside>
@@ -33,7 +34,7 @@
       <div class="flight-pfd-footer"><div><small>HDG</small><b id="pfdHeading">000°</b></div><div><small>V/S</small><b id="pfdVs">+0.0</b><small>m/s</small></div><div><small>G</small><b id="pfdG">1.00</b></div><div><small>Q</small><b id="pfdQ">0</b><small>Pa</small></div></div>
       <div class="flight-takeoff-status" id="pfdTakeoffStatus" hidden></div><div class="flight-pfd-caution" id="pfdCaution" hidden>FLIGHT ENVELOPE WARNING</div>
     </aside>
-    <section class="scene-heading"><div class="eyebrow"><span></span> ASTRA Browser 1.3.3 · SIMULATION ENVIRONMENT</div><h1 id="heroTitle">Orbita bassa terrestre</h1><p id="heroSub">AVVICINAMENTO · RENDEZVOUS · LEO</p></section>
+    <section class="scene-heading"><div class="eyebrow"><span></span> ASTRA Flight Systems 1.4.1 · SIMULATION ENVIRONMENT</div><h1 id="heroTitle">Orbita bassa terrestre</h1><p id="heroSub">AVVICINAMENTO · RENDEZVOUS · LEO</p></section>
     <div class="scene-coords"><span>FRAME</span><b id="frame">ECI · INERZIALE</b><i></i><span>CLOCK</span><b>SIMULATION T₀</b></div>
     <aside class="learning-card" id="learningCard" aria-live="polite"><div class="learning-kicker"><span>ASTRA LAB · IMPARA FACENDO</span><i>14+</i></div><b id="lessonTitle">La missione in breve</b><p id="lessonText">Seleziona un veicolo, poi avvia la missione. Segui le fasi e osserva come cambiano quota, velocità e spinta.</p><details><summary>Perché succede?</summary><p id="lessonWhy">Il simulatore aggiorna il movimento a piccoli intervalli usando le forze e i parametri mostrati nei pannelli tecnici.</p></details></aside>
     <aside class="career-card" id="careerCard" aria-live="polite" hidden>
@@ -139,7 +140,7 @@
   <p class="vehicle-lab-note">Parti di riferimento ASTRA assemblabili in stack multistadio. La spinta cala con la pressione ambiente usando l'area d'uscita dell'ugello; il T/W mostrato è una stima conservativa al livello del mare per ogni stadio; in volo la spinta segue la pressione locale. Il Δv ideale usa Isp nel vuoto e non sottrae perdite gravitazionali o aerodinamiche.</p>
   <button id="applyVehicleDesign" class="vehicle-lab-apply" type="button">USA QUESTO STACK NELLA MISSIONE</button>
 </dialog>
-  <dialog id="info"><button class="close" id="closeInfo">×</button><small>ASTRA · VERSIONE 1.0.0</small><h2>Physics in the loop.<br><em>State in SI.</em></h2><p>Ogni missione atmosferica o di lancio parte dalla piazzola o pista e termina con il recupero a terra; il rendezvous LEO parte in orbita. Il modello spacecraft orbitale include dinamica d’assetto LVLH, quaternion, coppia gravitazionale e ruote di reazione. Aereo e UAV completano circuito o ispezione e atterrano.</p><div><b>GRATUITO · OPEN SOURCE · SENZA DIPENDENZE</b><span>Le equazioni e i parametri sono esposti; gli aeromobili sono modelli di riferimento. La missione suborbitale è un profilo educativo, non un lanciatore certificato per uso reale. Aereo e UAV usano filtri sintetici IMU/GNSS/barometro; i profili di lancio spacecraft fondono accelerometro, gravità J2 e GNSS ECI e usano la stima per guidare. Il riferimento d’assetto inerziale è ideale e non include errore giroscopico. I modelli non sono certificati per uso reale.</span></div><details class="asset-notice"><summary>FONTI E LICENZE GRAFICHE</summary><p>Codice ASTRA con licenza MIT. La Terra usa i compositi NASA Blue Marble e la Via Lattea il mosaico infrarosso 2MASS, con crediti documentati; le texture sono solo visuali e non cambiano la fisica.</p><a href="ASSET-CREDITS.md" target="_blank" rel="noreferrer">Leggi crediti e fonti ↗</a></details><button class="dialog-ok" id="okInfo">CAPITO</button></dialog>
+  <dialog id="info"><button class="close" id="closeInfo">×</button><small>ASTRA · VERSIONE 1.4.1</small><h2>Physics in the loop.<br><em>State in SI.</em></h2><p>Ogni missione atmosferica o di lancio parte dalla piazzola o pista e termina con il recupero a terra; il rendezvous LEO parte in orbita. Il modello spacecraft orbitale include dinamica d’assetto LVLH, quaternion, coppia gravitazionale e ruote di reazione. Aereo e UAV completano circuito o ispezione e atterrano.</p><div><b>GRATUITO · OPEN SOURCE · SENZA DIPENDENZE</b><span>Le equazioni e i parametri sono esposti; gli aeromobili sono modelli di riferimento. La missione suborbitale è un profilo educativo, non un lanciatore certificato per uso reale. Aereo e UAV usano filtri sintetici IMU/GNSS/barometro; i profili di lancio spacecraft fondono accelerometro, gravità J2 e GNSS ECI e usano la stima per guidare. Il riferimento d’assetto inerziale è ideale e non include errore giroscopico. I modelli non sono certificati per uso reale.</span></div><details class="asset-notice"><summary>FONTI E LICENZE GRAFICHE</summary><p>Codice ASTRA con licenza MIT. La Terra usa i compositi NASA Blue Marble e la Via Lattea il mosaico infrarosso 2MASS, con crediti documentati; le texture sono solo visuali e non cambiano la fisica.</p><a href="ASSET-CREDITS.md" target="_blank" rel="noreferrer">Leggi crediti e fonti ↗</a></details><button class="dialog-ok" id="okInfo">CAPITO</button></dialog>
 <dialog id="celestialDialog" class="celestial-dialog">
   <button class="close" id="closeCelestial">×</button><small>ASTRA NAVIGATOR · SOLAR SYSTEM</small>
   <h2>Da un mondo all’altro.<br><em>Con le orbite del Sistema Solare.</em></h2>
@@ -158,11 +159,11 @@
 </dialog>
 <dialog id="disciplineDialog" class="discipline-dialog">
   <button class="close" id="closeDisciplines" aria-label="Chiudi discipline">×</button>
-  <small class="discipline-kicker">ASTRA BROWSERERING LIBRARY · COPERTURA REALE DEL MOTORE</small>
-  <h2>Le discipline del volo.<br><em>Una fisica alla volta.</em></h2>
-  <p class="discipline-intro">Consulta i modelli disponibili per il veicolo selezionato. Ogni scheda dichiara cosa viene calcolato e quali limiti conserva: le discipline future non sono presentate come funzioni già attive.</p>
+  <small class="discipline-kicker">ASTRA ENGINEERING LIBRARY · COPERTURA REALE DEL MOTORE</small>
+  <h2>Le discipline del volo.<br><em>Equazioni, dati, validazione.</em></h2>
+  <p class="discipline-intro">Esplora i modelli matematici applicati al volo e gli studi ingegneristici disponibili. Ogni scheda dichiara cosa viene calcolato e quali limiti conserva: le discipline future non sono presentate come funzioni già attive.</p>
   <div class="discipline-filters" role="group" aria-label="Filtra discipline">
-    <button class="discipline-filter active" data-discipline-filter="all">TUTTE</button><button class="discipline-filter" data-discipline-filter="active">NEL MOTORE</button><button class="discipline-filter" data-discipline-filter="approx">SEMPLIFICATE</button><button class="discipline-filter" data-discipline-filter="roadmap">DA INTEGRARE</button>
+    <button class="discipline-filter active" data-discipline-filter="all">TUTTE</button><button class="discipline-filter" data-discipline-filter="active">NEL MOTORE</button><button class="discipline-filter" data-discipline-filter="approx">MODELLI PARAMETRICI</button><button class="discipline-filter" data-discipline-filter="roadmap">DA INTEGRARE</button>
   </div>
   <div class="discipline-summary"><b id="disciplineCount">—</b><span id="disciplineScope">—</span><span>STATO E LIMITI DAL CATALOGO ASTRA</span></div>
   <section class="discipline-grid" id="disciplineGrid" aria-live="polite"></section>
@@ -214,14 +215,14 @@
 </dialog>
 <dialog id="engineeringStudioDialog" class="engineering-studio-dialog">
   <button class="close" id="engineeringClose" type="button" aria-label="Chiudi Engineering Studio">×</button>
-  <small class="discipline-kicker">ASTRA BROWSERERING STUDIO · SCIENTIFIC LABORATORY</small>
+  <small class="discipline-kicker">ASTRA ENGINEERING STUDIO · SCIENTIFIC LABORATORY</small>
   <h2>Progetta. Propaga.<br><em>Verifica la fisica.</em></h2>
-  <p>Sette solutori scientifici in unità SI, completamente locali. I risultati sono analisi indipendenti e <strong>non</strong> cambiano la missione 3D attiva. Modelli educativi con limiti dichiarati, non certificati.</p>
+  <p>18 solutori scientifici in unità SI, completamente locali. I risultati sono analisi indipendenti e <strong>non</strong> cambiano la missione 3D attiva. Modelli educativi con limiti dichiarati, non certificati.</p>
   <label class="engineering-main-select">DISCIPLINA<select id="engineeringAnalysis" aria-label="Seleziona la disciplina"></select></label>
   <p id="engineeringSubtitle" class="engineering-subtitle"></p>
   <div id="engineeringFields" class="engineering-fields"></div>
-  <div class="engineering-actions"><button id="engineeringRun" type="button">CALCOLA MODELLO</button><button id="engineeringDownload" type="button" disabled>ESPORTA JSON</button></div>
-  <section class="engineering-metrics" id="engineeringMetrics" aria-live="polite"></section>
+  <div class="engineering-actions"><button id="engineeringRun" type="button">CALCOLA MODELLO</button><button id="engineeringRunLive" type="button">ANALYZE CURRENT MISSION</button><button id="engineeringApplyWind" type="button" hidden>ATTIVA VENTO NELLA MISSIONE</button><button id="engineeringDownload" type="button" disabled>ESPORTA JSON</button></div>
+  <p id="engineeringLiveContext" class="engineering-live-context" hidden></p><section class="engineering-metrics" id="engineeringMetrics" aria-live="polite"></section>
   <canvas id="engineeringChart" class="engineering-chart" height="220" hidden aria-label="Grafico dei risultati ingegneristici"></canvas>
   <p id="engineeringStatus" class="engineering-note" role="status">Imposta i parametri e avvia il solver.</p>
   <details class="engineering-verification"><summary>REQUIREMENTS & VERIFICATION · STATO REALE DEL SIMULATORE</summary>
@@ -234,5 +235,5 @@
    <pre id="engineeringVerificationResult" role="status"></pre>
   </details>
 </dialog>
-<script type="module" src="i18n.js?build=267"></script><script type="module" src="app.js?build=267"></script><script type="module">import {initEngineeringStudio} from "./engineering-studio.js?build=267";initEngineeringStudio();</script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js?build=267").catch(()=>{});</script>
+<script type="module" src="i18n.js?build=291"></script><script type="module" src="app.js?build=292"></script><script type="module">import {initEngineeringStudio} from "./engineering-studio.js?build=291";initEngineeringStudio();</script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js?build=292").catch(()=>{});</script>
 </body></html>
