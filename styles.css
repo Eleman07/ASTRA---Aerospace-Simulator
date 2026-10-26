@@ -317,3 +317,42 @@ button:focus-visible,select:focus-visible{outline:2px solid #63e7ff;outline-offs
 .engineering-verification button{margin-top:9px;background:#1e706e;color:#f2fff9;padding:10px;border:1px solid #75dac7;border-radius:8px;cursor:pointer}
 .engineering-verification button:disabled{opacity:.6}
 .engineering-verification pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:200px;overflow:auto;color:#bce8e5;font-size:10px}
+.right-hud{border-color:#a9c6d32b;background:linear-gradient(155deg,#09131feF,#07111bf2);box-shadow:0 22px 72px #0008,inset 0 1px #fff0}
+.hud-top,.scenario-select,.hud-section{border-color:#b9d5e01b}
+.hud-brand b{letter-spacing:.09em}
+.section-title{font-size:8px;letter-spacing:.10em;color:#a5b8c2}
+.scenario-select{padding-top:15px;padding-bottom:15px}
+.scenario-select>small,.model-label,.vehicle-import>label{font-size:8px;letter-spacing:.11em;color:#9aadb8}
+.select-value{font-size:9px}
+.model-summary{font-size:8px;line-height:1.5;color:#8296a2}
+.readout>div>small{font-size:8px;color:#91a4af}
+.readout>div>b{font-size:18px}
+.vehicle-lab-dialog{width:min(940px,calc(100vw - 28px));padding:clamp(22px,3vw,34px);border-color:#7ae5c65c;border-radius:14px;background:radial-gradient(ellipse at 16% 0%,#16352f66,transparent 42%),linear-gradient(145deg,#09131ff9,#101d2af9 70%,#0a1520fa);box-shadow:0 40px 140px #000e,0 0 72px #3ce0b51c}
+.vehicle-lab-dialog>small{font-size:9px;letter-spacing:.18em}
+.vehicle-lab-dialog>h2{font-size:clamp(28px,4vw,38px);letter-spacing:-.04em;line-height:1.08;margin:15px 0}
+.vehicle-lab-dialog>h2 em{color:#7af0ca}
+.vehicle-lab-dialog>p{max-width:760px;font-size:12px;line-height:1.65}
+.vehicle-lab-layout{grid-template-columns:minmax(0,1fr) minmax(250px,300px);gap:24px;margin:24px 0}
+.vehicle-lab-controls>label,.design-counts label{font-size:8px}
+.design-stage-toolbar{font-size:8px}
+.design-stage-toolbar button,.design-stage-remove{border-color:#69d5b551;border-radius:6px;background:#10211f;color:#9ce9ce;padding:8px 10px}
+.design-stage-controls{gap:8px}
+.design-stage-control{grid-template-columns:minmax(130px,1fr) 1fr 1fr auto;gap:12px;padding:11px 12px;border-color:#bed9df21;border-radius:8px;background:linear-gradient(100deg,#121e29,#0b151f)}
+.design-stage-control>strong{font-size:8px;color:#dce8eb}
+.design-stage-control label{font-size:8px;color:#9aafb8}
+.design-stack-preview{min-height:210px;padding:16px;border-color:#b7ded929;border-radius:10px;background:radial-gradient(ellipse at 50% 28%,#28695a4d,#0a141de8 70%);box-shadow:inset 0 1px #fff1}
+.design-stack-preview>b{font-size:8px;letter-spacing:.13em;color:#9dc8bb}
+.stack-capsule,.stack-tank,.stack-engine{filter:drop-shadow(0 4px 7px #0008);}
+.stack-capsule{height:38px}
+.stage-preview-unit{margin:9px auto}
+.stage-preview-label{font-size:7px;color:#b7c8cb}
+.stage-preview-tanks i{width:29px;height:20px;border-color:#b7c9c474}
+.stage-preview-engines i{width:17px;height:13px}
+.vehicle-lab-results{gap:10px}
+.vehicle-lab-results>div{min-height:76px;padding:13px;border-color:#b8ded925;border-radius:8px;background:linear-gradient(145deg,#0e1a25,#09131d)}
+.vehicle-lab-results small{font-size:7px}
+.vehicle-lab-results b{font-size:14px}
+.vehicle-lab-results p{padding:12px;border-radius:0 7px 7px 0;font-size:10px}
+.vehicle-lab-dialog>p.vehicle-lab-note{font:8px/1.65 var(--mono);color:#91a5ae}
+.vehicle-lab-apply{min-height:46px;border-radius:7px;font-size:9px;letter-spacing:.11em;box-shadow:0 10px 30px #52dcba22}
+@media(max-width:700px){.vehicle-lab-layout{grid-template-columns:1fr}.vehicle-lab-dialog{border-radius:12px}.vehicle-lab-dialog>p{font-size:11px}}
