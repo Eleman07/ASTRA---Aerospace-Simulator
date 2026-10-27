@@ -108,15 +108,15 @@ function stateFieldCatalog(samples) {
 }
 
 const SIGNALS = {
-  altitude_m: { label: "ALTITUDINE", unit: "m", color: "#70e8ff" },
-  speed_m_s: { label: "VELOCITÀ", unit: "m/s", color: "#9c8cff" },
-  dynamic_pressure_Pa: { label: "PRESSIONE DINAMICA", unit: "Pa", color: "#ffc06e" },
-  load_factor_g: { label: "FATTORE DI CARICO", unit: "g", color: "#ff9c78" },
-  stagnation_point_convective_heat_flux_W_m2: { label: "FLUSSO TERMICO DI RISTAGNO", unit: "W/m²", color: "#ff8b72" },
-  stagnation_point_convective_heat_load_J_m2: { label: "CARICO TERMICO CONVETTIVO", unit: "J/m²", color: "#ffbf69" },
-  attitude_error_deg: { label: "ERRORE D’ASSETTO", unit: "deg", color: "#ff85c8" },
-  acs_propellant_kg: { label: "RISERVA ACS", unit: "kg", color: "#72f0c7" },
-  resource_percent: { label: "RISORSA", unit: "%", color: "#70e6b7" },
+  altitude_m: { label: "ALTITUDINE", unit: "m", color: "#b9aff3" },
+  speed_m_s: { label: "VELOCITÀ", unit: "m/s", color: "#8997d0" },
+  dynamic_pressure_Pa: { label: "PRESSIONE DINAMICA", unit: "Pa", color: "#d1c4ef" },
+  load_factor_g: { label: "FATTORE DI CARICO", unit: "g", color: "#9ea5de" },
+  stagnation_point_convective_heat_flux_W_m2: { label: "FLUSSO TERMICO DI RISTAGNO", unit: "W/m²", color: "#c0b1e5" },
+  stagnation_point_convective_heat_load_J_m2: { label: "CARICO TERMICO CONVETTIVO", unit: "J/m²", color: "#858dc1" },
+  attitude_error_deg: { label: "ERRORE D’ASSETTO", unit: "deg", color: "#d4c9f8" },
+  acs_propellant_kg: { label: "RISERVA ACS", unit: "kg", color: "#abb3e1" },
+  resource_percent: { label: "RISORSA", unit: "%", color: "#c5beef" },
 };
 
 const finite = value => Number.isFinite(value) ? value : null;
@@ -772,7 +772,7 @@ export function bindMissionDataLab(recorder, options = {}) {
     const context = canvas.getContext("2d");
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
     context.clearRect(0, 0, rect.width, rect.height);
-    context.fillStyle = "#080d16";
+    context.fillStyle = "#0d1027";
     context.fillRect(0, 0, rect.width, rect.height);
     if (!data.length) return;
 
@@ -789,8 +789,8 @@ export function bindMissionDataLab(recorder, options = {}) {
     const y = value => pad.top + plotHeight * (1 - (value - low) / (scaleHigh - low));
     context.font = "10px ui-monospace, monospace";
     context.textBaseline = "middle";
-    context.strokeStyle = "#a7c3d01b";
-    context.fillStyle = "#91a8ba";
+    context.strokeStyle = "#8189b52d";
+    context.fillStyle = "#b9bcdf";
     context.lineWidth = 1;
     for (let tick = 0; tick <= 4; tick++) {
       const yy = pad.top + plotHeight * tick / 4;
@@ -801,14 +801,14 @@ export function bindMissionDataLab(recorder, options = {}) {
     }
     context.textAlign = "left";
     context.textBaseline = "top";
-    context.fillStyle = "#64798d";
+    context.fillStyle = "#8f96bf";
     context.fillText(spec.unit, 8, 5);
     context.textAlign = "left";
     context.fillText(timeLabel(data[0].time_s), pad.left, rect.height - 17);
     context.textAlign = "right";
     context.fillText(timeLabel(data[data.length - 1].time_s), rect.width - pad.right, rect.height - 17);
 
-    context.strokeStyle = "#9ec9d033";
+    context.strokeStyle = "#8c90bd55";
     context.setLineDash([3, 5]);
     for (let i = 1; i < data.length; i++) {
       if (data[i].phase === data[i - 1].phase) continue;
@@ -834,7 +834,7 @@ export function bindMissionDataLab(recorder, options = {}) {
 
     const selectedValue = data[selected]?.[key];
     const selectedX = x(selected);
-    context.strokeStyle = "#f3fbffb0";
+    context.strokeStyle = "#e5ddf9b0";
     context.setLineDash([3, 4]);
     context.beginPath(); context.moveTo(selectedX, pad.top); context.lineTo(selectedX, pad.top + plotHeight); context.stroke();
     context.setLineDash([]);

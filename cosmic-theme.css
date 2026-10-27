@@ -483,3 +483,409 @@ a {
     transform: none !important;
   }
 }
+
+/* COSMIC TELEMETRY V2 START */
+/* Technical interface: Cosmic Navy */
+/* Warning and failure semantics deliberately preserved. */
+
+:root {
+  --cosmic-data-bg: #111431;
+  --cosmic-data-surface: #1e244a;
+  --cosmic-data-raised: #3d4168;
+  --cosmic-data-border: #60628f85;
+  --cosmic-data-value: #efeaff;
+  --cosmic-data-label: #b9bcdf;
+  --cosmic-data-accent: #b9aff3;
+}
+
+/* Telemetry values and labels */
+.right-hud .section-title,
+.right-hud .section-title span,
+.right-hud .model-label,
+.right-hud .panel-kicker {
+  color: #b9aff3;
+}
+
+.right-hud .readout > div {
+  border-color: #60628f55;
+}
+
+.right-hud .readout > div > small,
+.right-hud .readout > div > i,
+.right-hud .readout > div > b small {
+  color: #b9bcdf;
+}
+
+.right-hud .readout > div > b,
+.right-hud .readout > div > b > span {
+  color: #f1efff;
+  font-variant-numeric: tabular-nums;
+}
+
+.right-hud .environment-readout {
+  color: #b8badc !important;
+  border-top: 1px solid #60628f55;
+  padding-top: 12px;
+}
+
+.resource-bar {
+  background: #0b0e29;
+  border-color: #60628f66;
+}
+
+.resource-bar > i {
+  background: linear-gradient(90deg,#60628f,#aaa2e5);
+  box-shadow: none;
+}
+
+/* Orbital elements */
+.orbit-readout {
+  background: linear-gradient(140deg,#222747,#131735);
+  border: 1px solid #7276a477;
+  border-radius: 8px;
+}
+
+.orbit-readout summary,
+.orbit-readout-grid small {
+  color: #b7b9dc;
+}
+
+.orbit-readout summary::after {
+  color: #b9aff3;
+}
+
+.orbit-readout-grid b {
+  color: #f0edff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Guidance, navigation and control */
+.stack-row {
+  border-color: #62689850;
+}
+
+.stack-row > span {
+  background: #353a64;
+  border: 1px solid #8286b77a;
+  color: #d7d0fa;
+}
+
+.stack-row b,
+.gnc-confidence b,
+.nav-solution-head b {
+  color: #edeaff;
+}
+
+.stack-row small,
+.gnc-note,
+.gnc-confidence,
+.nav-solution-position,
+.nav-solution small {
+  color: #b1b5d7 !important;
+}
+
+.stack-row > i,
+.mode-state {
+  color: #b9aff3;
+}
+
+.nav-solution {
+  background: #1a2040;
+  border-color: #7075a273;
+  border-radius: 7px;
+}
+
+.workspace-tabs {
+  background: #121733;
+  border-bottom-color: #60628f77;
+}
+
+.workspace-tabs button {
+  color: #b2b5d7;
+}
+
+.workspace-tabs button[aria-selected="true"] {
+  color: #e7e2ff;
+  border-bottom-color: #b5abf1;
+}
+
+.systems-panel h3,
+.system-metric strong {
+  color: #f0edff;
+}
+
+.systems-intro,
+.system-assumptions p,
+.system-metric p {
+  color: #b5b8d7;
+}
+
+.system-metric {
+  background: #1b2042;
+  border: 1px solid #696e9b7d;
+}
+
+.system-metric small {
+  color: #b3b7db;
+}
+
+.system-metric span:not([data-check="FAIL"]) {
+  color: #b9aff3;
+}
+
+#systemsConfig input,
+.right-hud select {
+  background: #111530;
+  color: #edeaff;
+  border-color: #7074a16f;
+}
+
+#systemsConfig button,
+.workspace-link {
+  background: #363d6c;
+  color: #e7e2ff;
+  border-color: #8387c2;
+}
+
+/* Flight ribbon and primary instruments */
+.flight-ribbon {
+  background: #111632df;
+  border: 1px solid #7075a074;
+}
+
+.flight-ribbon > div {
+  border-color: #7075a078;
+}
+
+.flight-ribbon small,
+.flight-ribbon span {
+  color: #b8bddf;
+}
+
+.flight-ribbon strong,
+.flight-pfd-columns b,
+.flight-pfd-footer b {
+  color: #f4f0ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.flight-pfd {
+  background: #111531ec;
+  border-color: #7477ad8a;
+}
+
+.flight-pfd-caption,
+.flight-pfd-footer {
+  border-color: #777aa96c;
+}
+
+.flight-pfd-caption span,
+.flight-pfd small {
+  color: #babce0;
+}
+
+/* Mission Data Lab */
+.mission-data-dialog {
+  background:
+    radial-gradient(
+      ellipse at 85% 0%,
+      #30345b99,
+      transparent 45%
+    ),
+    linear-gradient(145deg,#111431,#08091c);
+  border: 1px solid #777db09c;
+  color: #eeeaff;
+  box-shadow: 0 26px 95px #050513c9;
+}
+
+.mission-data-dialog .close {
+  background: #242a4d;
+  color: #f0edff;
+  border-color: #767bb0;
+}
+
+.mission-data-kicker,
+.mission-data-dialog h2 em,
+.mission-data-intro code {
+  color: #b9aff3;
+}
+
+.mission-data-intro {
+  color: #b8bbda;
+}
+
+.mission-data-toolbar label {
+  color: #b8badd;
+}
+
+.mission-data-toolbar select,
+.convergence-controls select,
+.convergence-controls input,
+.robustness-controls select,
+.robustness-controls input {
+  background: #111530;
+  color: #edeaff;
+  border: 1px solid #757bb080;
+}
+
+.mission-data-toolbar button,
+.convergence-controls button,
+.robustness-controls button {
+  background: #363c6a;
+  color: #ece8ff;
+  border-color: #797eba;
+}
+
+.mission-data-toolbar button:hover:not(:disabled),
+.convergence-controls button:hover:not(:disabled),
+.robustness-controls button:hover:not(:disabled) {
+  background: #4a507f;
+}
+
+/* Recorder plots and sampled data */
+.mission-plot-wrap {
+  background: #0d1027;
+  border: 1px solid #7278a97a;
+  border-radius: 8px;
+}
+
+.mission-plot-empty {
+  color: #a7aed2;
+}
+
+.mission-sample-range {
+  accent-color: #aaa1e8;
+}
+
+.mission-sample-readout > div {
+  background: #1c2244;
+  border: 1px solid #656b9b78;
+  border-radius: 6px;
+}
+
+.mission-sample-readout small {
+  color: #b3b8db;
+}
+
+.mission-sample-readout b {
+  color: #f0edff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mission-data-footer {
+  color: #aeb3d3;
+}
+
+/* Monte Carlo and convergence */
+.robustness-panel,
+.convergence-panel {
+  background: linear-gradient(135deg,#222746,#131732);
+  border: 1px solid #6e72a582;
+  border-radius: 9px;
+}
+
+.robustness-heading h3,
+.convergence-heading h3 {
+  color: #f1eeff;
+}
+
+.robustness-heading small,
+.convergence-heading small {
+  color: #b9aff3;
+}
+
+.robustness-heading p,
+.convergence-heading p,
+.robustness-assumptions,
+.convergence-assumptions {
+  color: #b7b8d8;
+}
+
+.robustness-table-wrap,
+.convergence-table-wrap,
+.robustness-stats > div {
+  background: #111531;
+  border-color: #696f9c72;
+}
+
+.robustness-table,
+.convergence-table {
+  color: #dedcf4;
+  font-variant-numeric: tabular-nums;
+}
+
+.robustness-table th,
+.convergence-table th {
+  color: #c8c2f4;
+  background: #272c52;
+}
+
+.robustness-table td,
+.convergence-table td {
+  border-color: #62699555;
+}
+
+.convergence-status,
+.robustness-status {
+  background: #171c38;
+  color: #d9d8ef;
+}
+
+/* Failure Injection Lab:
+   preserve amber/red safety and FDIR states. */
+.fault-lab {
+  background: linear-gradient(135deg,#24213f,#141731);
+  border-color: #77729b88;
+}
+
+.fault-event-log li {
+  background: #1c1d39;
+  border-color: #7c78945e;
+}
+
+.fault-controls select {
+  background: #15172c;
+  border-color: #7e74936e;
+}
+
+/* Engineering Studio results */
+.engineering-metrics > div {
+  background: #1e244a;
+  border: 1px solid #7479a578;
+}
+
+.engineering-metrics small {
+  color: #b9bcdf;
+}
+
+.engineering-metrics strong {
+  color: #d2c8ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.engineering-chart {
+  background: #0d1027;
+  border: 1px solid #6d739e7d;
+}
+
+.engineering-verification {
+  background: #161c3a;
+  border-color: #7477a8;
+}
+
+.engineering-verification summary {
+  color: #c6bbf8;
+}
+
+.engineering-verification p,
+.engineering-verification pre {
+  color: #d4d2eb;
+}
+
+.engineering-verification button {
+  background: #3e4678;
+  border-color: #9094c4;
+  color: #f0edff;
+}
+
+/* COSMIC TELEMETRY V2 END */

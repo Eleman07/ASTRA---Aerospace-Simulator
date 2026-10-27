@@ -34,9 +34,9 @@ function plot(canvas,data,keys){
  const traces=keys.map(([key,label])=>({label,points:data.map((row,i)=>({x:i,y:Number(row[key])})).filter(p=>Number.isFinite(p.y))})).filter(t=>t.points.length>1);
  if(!traces.length)return;
  const values=traces.flatMap(t=>t.points.map(p=>p.y)),vmin=Math.min(...values),vmax=Math.max(...values),span=Math.max(1e-12,vmax-vmin),left=55,right=w-20,top=20,bottom=h-38;
- ctx.strokeStyle='rgba(160,211,236,.18)';ctx.lineWidth=1;ctx.fillStyle='#b5ced8';ctx.font='12px system-ui';
+ ctx.strokeStyle='rgba(145,152,203,.20)';ctx.lineWidth=1;ctx.fillStyle='#bfc1e3';ctx.font='12px system-ui';
  for(let i=0;i<=4;i++){const y=top+(bottom-top)*i/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillText(fmt(vmax-span*i/4),4,y+4)}
- const colors=['#65e1c7','#ffaa6b','#8ba8ff'];
+ const colors=['#b9aff3','#929fd8','#d3c8f6'];
  traces.forEach((trace,i)=>{ctx.strokeStyle=colors[i%colors.length];ctx.lineWidth=2;ctx.beginPath();trace.points.forEach((point,j)=>{const x=left+(right-left)*point.x/Math.max(1,data.length-1),y=bottom-(bottom-top)*(point.y-vmin)/span;j?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle=colors[i%colors.length];ctx.fillText(trace.label,left+i*(right-left)/Math.max(1,traces.length),h-12)});
 }
 
@@ -45,11 +45,11 @@ function plotRoute(canvas,result){
  const dpr=Math.min(devicePixelRatio||1,2),rect=canvas.getBoundingClientRect(),w=Math.max(300,Math.floor(rect.width)),h=260;
  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
  const [cols,rows]=result.grid_size_cells,pad=18,scale=Math.min((w-2*pad)/cols,(h-2*pad)/rows),ox=(w-cols*scale)/2,oy=(h-rows*scale)/2;
- ctx.fillStyle='#102638';ctx.fillRect(ox,oy,cols*scale,rows*scale);
- ctx.fillStyle='#5a707f';for(const [x,y] of result.obstacles)ctx.fillRect(ox+x*scale,oy+y*scale,scale*.93,scale*.93);
- if(result.waypoints_m.length){ctx.strokeStyle='#6cf4c9';ctx.lineWidth=Math.max(2,scale*.42);ctx.lineCap='round';ctx.beginPath();result.waypoints_m.forEach(([x,y],index)=>{const xx=ox+(x/result.cell_size_m+.5)*scale,yy=oy+(y/result.cell_size_m+.5)*scale;index?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke()}
- ctx.fillStyle='#69d9ff';ctx.beginPath();ctx.arc(ox+1.5*scale,oy+1.5*scale,Math.max(3,scale*.5),0,2*Math.PI);ctx.fill();
- ctx.fillStyle='#ffae72';ctx.beginPath();ctx.arc(ox+(cols-1.5)*scale,oy+(rows-1.5)*scale,Math.max(3,scale*.5),0,2*Math.PI);ctx.fill();
+ ctx.fillStyle='#111431';ctx.fillRect(ox,oy,cols*scale,rows*scale);
+ ctx.fillStyle='#60628f';for(const [x,y] of result.obstacles)ctx.fillRect(ox+x*scale,oy+y*scale,scale*.93,scale*.93);
+ if(result.waypoints_m.length){ctx.strokeStyle='#b9aff3';ctx.lineWidth=Math.max(2,scale*.42);ctx.lineCap='round';ctx.beginPath();result.waypoints_m.forEach(([x,y],index)=>{const xx=ox+(x/result.cell_size_m+.5)*scale,yy=oy+(y/result.cell_size_m+.5)*scale;index?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke()}
+ ctx.fillStyle='#849ad6';ctx.beginPath();ctx.arc(ox+1.5*scale,oy+1.5*scale,Math.max(3,scale*.5),0,2*Math.PI);ctx.fill();
+ ctx.fillStyle='#d2b7eb';ctx.beginPath();ctx.arc(ox+(cols-1.5)*scale,oy+(rows-1.5)*scale,Math.max(3,scale*.5),0,2*Math.PI);ctx.fill();
 }
 
 export function initEngineeringStudio(){
