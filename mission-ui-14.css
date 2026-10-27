@@ -1,7 +1,7 @@
 /* ASTRA 1.4 · Flight Systems UI / visible mission-control redesign.
    No geometry, actions or input nodes are removed. */
 :root{
-  --ink:#edf2f8;--mint:#a6dbc8;--cyan:#88bde7;--gold:#e9c99a;
+  --ink:#edf2f8;--mint:#a6c8db;--cyan:#88bde7;--gold:#e9c99a;
   --muted:#b3bdcb;--dim:#96a4b3;--line:#8599ad36;
   --glass:#0f1928ef;--sans:Inter,Manrope,system-ui,sans-serif;
   --mono:"DM Mono",ui-monospace,SFMono-Regular,monospace;
@@ -43,7 +43,7 @@ html,body{color:#edf2f8;background:#070d17;-webkit-font-smoothing:antialiased}
   background:linear-gradient(125deg,#b3d7e8,#89b4d9);color:#0b2233;
   font:800 10px var(--mono);letter-spacing:.03em;box-shadow:0 6px 22px #79afcf45}
 .play:hover{filter:brightness(1.1)}
-.play.running{background:#16433a;border:1px solid #79bf9a;color:#c3f3d9}
+.play.running{background:#163343;border:1px solid #79a6bf;color:#c3e2f3}
 .mode.active,.speed.selected{color:#d8ecff;background:#2a415d;border:1px solid #7499b959}
 .control-deck button:not(.play),.control-deck select{font-size:10px!important}
 .learning-card{background:#122033ee!important;border:1px solid #7e97ae55!important;
@@ -68,7 +68,7 @@ html,body{color:#edf2f8;background:#070d17;-webkit-font-smoothing:antialiased}
 .discipline-card .discipline-limit{color:#a9b9c9}
 .discipline-status{font:600 9px/1.3 var(--mono);letter-spacing:.02em;border-radius:5px;max-width:160px;padding:6px 9px}
 .discipline-card[data-status=approx] .discipline-status{border-color:#b9a1776d;background:#3d3120;color:#ebd2a5}
-.discipline-card[data-status=active] .discipline-status{border-color:#75bd9e70;background:#1b3a31;color:#b5e7d1}
+.discipline-card[data-status=active] .discipline-status{border-color:#75a4bd70;background:#1b2f3a;color:#b5d5e7}
 .discipline-filter{min-height:33px;font-size:10px;border-radius:6px}
 .discipline-filter.active{border:1px solid #96b9dd79;background:#244666;color:#d9ecff}
 .discipline-open-model{width:100%;margin-top:14px;min-height:36px;padding:8px 12px;
@@ -81,12 +81,12 @@ html,body{color:#edf2f8;background:#070d17;-webkit-font-smoothing:antialiased}
 .engineering-actions button{border-radius:7px;background:#294e69;color:#dceefa;
   border:1px solid #7aa8c8;padding:12px 18px;font:700 11px var(--sans)}
 .engineering-actions button:hover:not(:disabled){background:#38698a}
-.engineering-actions #engineeringRunLive{background:#1b453f;border:1px solid #77bfa6;color:#c3ebdc}
+.engineering-actions #engineeringRunLive{background:#1b3645;border:1px solid #77a6bf;color:#c3ddeb}
 .engineering-actions #engineeringApplyWind{background:#27436c;border:1px solid #729fe0;color:#d7e9ff}
 .engineering-metrics>div{background:#13263a;border:1px solid #6586a255;border-radius:8px}
 .engineering-metrics>div strong{font-size:19px}
-.engineering-live-context{margin:12px 0;padding:12px 16px;border-left:3px solid #89cdb5;
-  background:#122c2e;border-radius:5px;color:#c7eadd;font:11px/1.5 var(--mono)}
+.engineering-live-context{margin:12px 0;padding:12px 16px;border-left:3px solid #89b5cd;
+  background:#12242e;border-radius:5px;color:#c7deea;font:11px/1.5 var(--mono)}
 .engineering-live-context[data-coupled='false']{border-color:#d3b47e;background:#2a281f;color:#edd8b9}
 #engineeringStatus{font-size:11px;line-height:1.6}
 @media(max-width:950px){.right-hud{width:285px}.control-deck{right:319px}.top-center::after{content:''}}

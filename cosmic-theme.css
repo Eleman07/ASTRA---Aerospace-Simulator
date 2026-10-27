@@ -889,3 +889,54 @@ a {
 }
 
 /* COSMIC TELEMETRY V2 END */
+
+/* COSMIC AZURE ACCENTS V3 START */
+:root {
+  --mint: #78ceff;
+  --cyan: #a5e4ff;
+  --cosmic-accent: #8dd5ff;
+  --cosmic-accent-strong: #c2eeff;
+  --cosmic-data-accent: #8dd5ff;
+}
+
+.session-dot,
+.rail-live,
+.hud-footer i,
+.section-title .live {
+  background: #7dd0ff !important;
+  box-shadow: 0 0 10px #76cfff66 !important;
+}
+
+.right-hud .section-title span,
+.right-hud .panel-kicker,
+.right-hud .readout > div > b small,
+.mission-data-kicker {
+  color: #a4dfff;
+}
+
+.system-metric span:not([data-check="FAIL"]),
+.gnc-confidence b,
+.stack-row > i,
+.nav-solution-head b,
+.mission-data-dialog h2 em,
+.mission-data-intro code,
+.engineering-metrics strong {
+  color: #9cdaff;
+}
+
+input[type="range"],
+.mission-sample-range {
+  accent-color: #78cfff;
+}
+
+.workspace-tabs button[aria-selected="true"] {
+  border-bottom-color: #8dd5ff;
+}
+
+.discipline-card[data-status="active"]
+.discipline-status {
+  background: #1d3856;
+  border-color: #5899c7;
+  color: #c6eaff;
+}
+/* COSMIC AZURE ACCENTS V3 END */
