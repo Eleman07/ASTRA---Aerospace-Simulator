@@ -1,0 +1,485 @@
+
+/* ASTRA Cosmic Navy Design System
+   Palette: Purple Navy / Dark Blue Gray /
+   Space Cadet / Xiketic
+   UI-only overrides; flight physics untouched.
+*/
+
+:root {
+  --cosmic-purple-navy: #3d4168;
+  --cosmic-blue-gray: #60628f;
+  --cosmic-space-cadet: #111431;
+  --cosmic-space-raised: #1e244a;
+  --cosmic-xiketic: #08091c;
+
+  --cosmic-accent: #a6a0e4;
+  --cosmic-accent-strong: #c3bbfa;
+  --cosmic-text: #efeffb;
+  --cosmic-secondary: #b3b7d8;
+  --cosmic-border: #7478ac55;
+
+  --mint: #aaa2e5;
+  --cyan: #a1a6e1;
+  --ink: #efeffb;
+  --muted: #b3b7d8;
+  --dim: #939abb;
+  --line: #737aa747;
+  --glass: #111431f2;
+  --sans: Inter, Manrope, system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+/* Base and flight viewport */
+
+html, body {
+  background: var(--cosmic-xiketic);
+  color: var(--cosmic-text);
+}
+
+.shell {
+  background: var(--cosmic-xiketic);
+}
+
+.stage {
+  background: radial-gradient(
+    ellipse at 52% 42%,
+    #262b56 0%,
+    #141934 45%,
+    #08091c 100%
+  );
+}
+
+.scene-vignette {
+  background:
+    linear-gradient(
+      180deg,
+      #08091c55,
+      transparent 28%,
+      transparent 62%,
+      #08091ca8
+    );
+}
+
+/* Header, logo and navigation */
+
+.topbar {
+  background: #0c0e26f5;
+  border-bottom: 1px solid #666a9855;
+  box-shadow: 0 8px 30px #03041055;
+}
+
+.brand .wordmark,
+.wordmark {
+  color: #c5bafa !important;
+  letter-spacing: .14em;
+}
+
+.brand-sub {
+  color: #a6a7cf !important;
+}
+
+.brand .glyph i,
+.glyph i {
+  background: #b1a4f1 !important;
+  box-shadow: none !important;
+}
+
+.brand .glyph i:nth-child(2) {
+  background: #8488c5 !important;
+}
+
+.brand .glyph i:nth-child(3) {
+  background: #656b9f !important;
+}
+
+.brand-rule {
+  background: #7478a66b;
+}
+
+.top-center,
+.top-center b {
+  color: #b8b9df;
+}
+
+.session-dot,
+.rail-live {
+  background: #a7a1e8;
+  box-shadow: 0 0 10px #817bd071;
+}
+
+.nav-rail {
+  background: #0c0f29f7 !important;
+  border-right: 1px solid #60658d5c !important;
+  box-shadow: none;
+}
+
+.nav-rail button {
+  color: #a2a7cf;
+  border-radius: 9px;
+}
+
+.nav-rail button:hover {
+  background: #292e55 !important;
+  color: #e4dfff !important;
+}
+
+.nav-rail button.rail-active {
+  background: #353963 !important;
+  border: 1px solid #8284bf90 !important;
+  color: #ddd5ff !important;
+}
+
+.product-modes,
+.workspace-tabs {
+  background: #171a3a;
+  border-color: #62689664;
+}
+
+.product-mode.active,
+.mode.active,
+.speed.selected {
+  background: #404674;
+  color: #f0edff;
+  border-color: #8387bd79;
+}
+
+.round-btn,
+.learn-toggle,
+.tech-toggle,
+.locale-picker,
+#focusView {
+  background: #161a39;
+  color: #c4c6e3;
+  border: 1px solid #60689575;
+}
+
+.round-btn:hover,
+.learn-toggle:hover,
+.tech-toggle:hover,
+#focusView:hover {
+  background: #30355e;
+  color: white;
+}
+
+/* Scene overlays and flight instruments */
+
+.scene-heading h1 {
+  color: #f3f0ff;
+  text-shadow: 0 4px 20px #05061799;
+}
+
+.scene-heading .eyebrow,
+.scene-heading p,
+.scene-coords {
+  color: #b8bcdf !important;
+}
+
+.eyebrow span {
+  background: #a9a0e5;
+}
+
+.scene-hint,
+.scene-status,
+.asset-loading {
+  background: #141935e8;
+  color: #d5d4ee;
+  border-color: #7277a76b;
+}
+
+.flight-ribbon {
+  background: #111632e8;
+  border: 1px solid #656d9c70;
+  border-radius: 10px;
+  backdrop-filter: blur(14px);
+}
+
+.flight-ribbon strong,
+.flight-pfd b {
+  color: #edeaff;
+}
+
+.flight-ribbon small,
+.flight-ribbon span {
+  color: #adb3d9;
+}
+
+.flight-pfd {
+  background: #111631f0;
+  border: 1px solid #686d9c80;
+  box-shadow: 0 12px 34px #05061755;
+}
+
+.flight-pfd-caption,
+.flight-pfd-footer {
+  border-color: #676c9b65;
+}
+
+/* Mission controls */
+
+.right-hud,
+.control-deck {
+  background: #141935f2;
+  border: 1px solid #777dac67;
+  border-radius: 12px;
+  box-shadow: 0 18px 45px #04051570;
+  backdrop-filter: blur(16px);
+}
+
+.hud-top,
+.deck-top {
+  background: #1d2243cc;
+  border-bottom: 1px solid #7579a34e;
+}
+
+.hud-brand small,
+.deck-top small {
+  color: #aeb4d7 !important;
+}
+
+.hud-brand b,
+.deck-top b {
+  color: #edeaff;
+}
+
+.play,
+#engineeringRun {
+  background: #5b6099;
+  color: #faf8ff;
+  border: 1px solid #9297d2;
+  border-radius: 7px;
+  box-shadow: none;
+}
+
+.play:hover,
+#engineeringRun:hover:not(:disabled) {
+  background: #6d72ad;
+}
+
+.play.running {
+  background: #363c70;
+  border-color: #888ec1;
+  color: #eeeaff;
+}
+
+.learning-card,
+.career-card,
+.game-pilot-dock {
+  background: #161b3aeF !important;
+  border: 1px solid #7077a568 !important;
+  box-shadow: 0 16px 38px #05061740;
+}
+
+/* Engineering library */
+
+.discipline-dialog,
+.engineering-studio-dialog,
+.mission-data-dialog {
+  background:
+    radial-gradient(
+      ellipse at 92% 0%,
+      #272b53 0%,
+      transparent 42%
+    ),
+    linear-gradient(145deg,#141832,#0c1027);
+  color: #f0edfb;
+  border: 1px solid #777aa77d;
+  border-radius: 14px;
+  box-shadow: 0 28px 75px #040413ba;
+}
+
+.discipline-dialog::backdrop,
+.engineering-studio-dialog::backdrop,
+.mission-data-dialog::backdrop {
+  background: #050616d6;
+  backdrop-filter: blur(8px);
+}
+
+.discipline-dialog h2,
+.engineering-studio-dialog h2 {
+  color: #f2efff;
+}
+
+.discipline-dialog h2 em,
+.engineering-studio-dialog h2 em {
+  color: #aba5ed;
+}
+
+.discipline-kicker {
+  color: #a9ace0;
+}
+
+.discipline-intro,
+.engineering-studio-dialog p {
+  color: #b8bddb;
+}
+
+.discipline-filters,
+.discipline-summary {
+  background: #0d1027;
+  border-color: #61668f70;
+  border-radius: 8px;
+}
+
+.discipline-filter {
+  color: #aeb3d4;
+  border-radius: 6px;
+}
+
+.discipline-filter:hover {
+  background: #282d55;
+  color: #f0edff;
+}
+
+.discipline-filter.active {
+  background: #404573;
+  border: 1px solid #888bd1;
+  color: #f5f2ff;
+  box-shadow: none;
+}
+
+.discipline-card {
+  background: linear-gradient(
+    155deg,#1e2447,#151a36
+  );
+  border: 1px solid #696e9b87;
+  border-radius: 11px;
+  box-shadow: 0 8px 28px #080a1a38;
+}
+
+.discipline-card:hover {
+  background: linear-gradient(
+    155deg,#292f57,#191f40
+  );
+  border-color: #9494cf;
+  transform: translateY(-1px);
+}
+
+.discipline-card h3 {
+  color: #f1effc;
+}
+
+.discipline-card-domain,
+.discipline-card p {
+  color: #b9bedc;
+}
+
+.discipline-card p b,
+.discipline-card .discipline-limit b,
+.discipline-card .discipline-evidence b {
+  color: #a9a5de;
+}
+
+/* Fidelity statuses keep their real meaning. */
+
+.discipline-card[data-status="active"] .discipline-status {
+  background: #30385a;
+  border: 1px solid #8388ad;
+  color: #d0d8f6;
+}
+
+.discipline-card[data-status="approx"] .discipline-status {
+  background: #343457;
+  border: 1px solid #7773af;
+  color: #ded5f8;
+}
+
+.discipline-card[data-status="roadmap"] .discipline-status {
+  background: #222642;
+  border: 1px solid #636987;
+  color: #aeb4d1;
+}
+
+.discipline-open-model {
+  background: #3b416d;
+  border: 1px solid #8589bc;
+  color: #f0efff;
+  border-radius: 7px;
+  box-shadow: none;
+}
+
+.discipline-open-model:hover {
+  background: #4b5184;
+}
+
+/* Engineering Studio inputs and results */
+
+.engineering-studio-dialog input,
+.engineering-studio-dialog select,
+.engineering-studio-dialog textarea,
+.engineering-verification textarea {
+  background: #111630;
+  color: #f0eefb;
+  border: 1px solid #6a709d;
+}
+
+.engineering-studio-dialog input:focus,
+.engineering-studio-dialog select:focus,
+.engineering-studio-dialog textarea:focus {
+  border-color: #bbb3ed;
+  outline: 1px solid #bbb3ed;
+}
+
+.engineering-actions button,
+.engineering-actions #engineeringRunLive,
+.engineering-actions #engineeringApplyWind {
+  background: #434a7c;
+  border: 1px solid #858ac4;
+  color: #f4f1ff;
+}
+
+.engineering-actions button:hover:not(:disabled) {
+  background: #565e96;
+}
+
+.engineering-metrics > div,
+.engineering-verification,
+.engineering-live-context {
+  background: #1b2142;
+  border-color: #686e9e;
+  color: #e5e2fa;
+}
+
+.engineering-live-context[data-coupled="false"] {
+  background: #24243f;
+  border-color: #8980b9;
+  color: #d5cdeb;
+}
+
+/* Miscellaneous interface and focus states */
+
+input[type="range"] {
+  accent-color: #a9a2e9;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #b9b1f2;
+  outline-offset: 2px;
+}
+
+a {
+  text-decoration-color: #aaa3e0;
+}
+
+::selection {
+  background: #6265ab;
+  color: #ffffff;
+}
+
+@media (max-width: 620px) {
+  .discipline-dialog,
+  .engineering-studio-dialog {
+    padding: 18px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discipline-card {
+    transition: none;
+    transform: none !important;
+  }
+}
