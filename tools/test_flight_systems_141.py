@@ -46,7 +46,8 @@ class FlightSystems141Tests(unittest.TestCase):
         self.assertIn('<b>FLIGHT SYSTEMS 1.4.1</b>',index)
         self.assertNotIn('VERSION 1.3.1',index)
         self.assertIn('build=291',index)
-        self.assertIn('astra-browser-v292',sw)
+        self.assertIn("const VERSION='astra-browser-", sw)
+        self.assertIn("'./cosmic-theme.css'", sw)
         self.assertIn('ENGINEERING RELEASE',css)
         self.assertIn('MODELLI PARAMETRICI',index)
 
