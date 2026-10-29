@@ -2,15 +2,15 @@
 
 Simulatore aerospaziale **nativo per Windows 11 x64**, utilizzabile offline. Motore scientifico Python, grafica 3D Godot, tastiera, controller e API per controllare la stessa simulazione da script.
 
-**Versione desktop e SDK: 2.3.0 · anteprima.**
+**Desktop 2.3.2 · SDK Python 2.3.0 · anteprima.**
 
-[Scarica l’installer Windows](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.0-desktop/ASTRA-Desktop-2.3.0-Windows-x64-Setup.exe) · [Scarica il wheel Python](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.0-desktop/astra_simulator_client-2.3.0-py3-none-any.whl) · [Note della release](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/tag/v2.3.0-desktop)
+[Scarica l’installer Windows](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA-Desktop-2.3.2-Windows-x64-Setup.exe) · [Scarica il wheel Python](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/astra_simulator_client-2.3.0-py3-none-any.whl) · [Note della release](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/tag/v2.3.2-desktop)
 
 ![ASTRA Desktop: veicolo orbitale, Terra e nebulosa azzurra](docs/images/desktop-2.3-space.webp)
 
 ## Installare e avviare
 
-1. Scarica `ASTRA-Desktop-2.3.0-Windows-x64-Setup.exe` dagli asset della release.
+1. Scarica `ASTRA-Desktop-2.3.2-Windows-x64-Setup.exe` dagli asset della release.
 2. Chiudi eventuali istanze precedenti di ASTRA e avvia l’installer.
 3. Apri **ASTRA Desktop** dal menu Start. Il simulatore include motore, modelli, texture e audio: non richiede Internet, browser o Python installato.
 4. Usa il profilo principale su GPU Vulkan; se necessario scegli **Grafica leggera** per il backend OpenGL. Aggiorna il driver della GPU se il renderer non si avvia.
@@ -38,9 +38,13 @@ Premi **AVVIA MISSIONE** o **GIOCA / RIPRENDI**. Nel lancio libero il razzo atte
 
 Seleziona **CONTROLLO DA TASTIERA** per pilotare. Per Xbox/gamepad apri **CONTROLLER**, seleziona il dispositivo, rilascia gli stick ed esegui l’armamento esplicito. I profili di calibrazione sono separati per categoria di veicolo.
 
+**Gli stick controllano il volo; la croce direzionale controlla i menu.** Gli assi analogici non cambiano focus, missione o valori nei pannelli. Assegna Xbox soltanto a **Primario**: manetta e pedali separati richiedono dispositivi distinti. Il profilo **RISPOSTA PRONTA** offre sensibilità e velocità della manetta regolabili; con 125 %/s l'intera escursione richiede 0,8 s. Rilasciando i grilletti la spinta impostata resta costante.
+
 | Azione | Tastiera | Xbox/gamepad |
 |---|---|---|
-| Avvio / pausa | Spazio | A |
+| Avvio / pausa del volo | Spazio | Start |
+| Navigazione menu | Frecce | Croce direzionale |
+| Conferma / indietro nei menu | Invio / Esc | A / B |
 | Controllo manuale | M | Y per armare/disarmare |
 | Assetto roll / pitch | A/D e W/S | Stick sinistro |
 | Imbardata | Q/E | Stick destro |
