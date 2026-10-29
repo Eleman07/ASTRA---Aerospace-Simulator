@@ -8,6 +8,14 @@ Simulatore aerospaziale **nativo per Windows 11 x64**, utilizzabile offline. Mot
 
 ![ASTRA Desktop: veicolo orbitale, Terra e nebulosa azzurra](docs/images/desktop-2.3-space.webp)
 
+## Trailer cinematografico
+
+[Trailer 4K](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA_Cinematic_Trailer_4K.mp4) · [Trailer 1080p](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA_Cinematic_Trailer_1080p.mp4) · [Crediti completi del trailer](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA-Trailer-Credits.txt)
+
+55 secondi, **3840×2160, 16:9, 30 fps**. Scene reali nel motore ASTRA: Falcon 9 nello spazio, aereo, UAV, controllo tramite SDK Python e modalità GIOCA. Titoli inglesi, movimenti di camera, transizioni e color grading; solo musica. Finale con il portfolio [elemanprojects.com](https://elemanprojects.com).
+
+Musica: **“Horizons” di Scott Buckley**, pubblicata in [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), [scottbuckley.com.au](https://www.scottbuckley.com.au/library/horizons/). Estratto montato con dissolvenze e normalizzazione del volume. Autori e licenze dei modelli sono nei crediti allegati.
+
 ## Installare e avviare
 
 1. Scarica `ASTRA-Desktop-2.3.2-Windows-x64-Setup.exe` dagli asset della release.
@@ -127,3 +135,4 @@ I modelli grafici NASA, Innerscene e PX4 sono riferimenti visivi: le prestazioni
 Modelli, autori, licenze e modifiche sono elencati in [ASSET-CREDITS.md](ASSET-CREDITS.md) e nel pannello **ASSET 3D → CREDITI E LICENZE** dell’app. Le preview sono catture reali del simulatore. I suoni sintetici sono originali del progetto. [Licenza del progetto](LICENSE).
 
 Le release desktop distribuiscono **installer Windows e SDK Python**. Questa guida sostituisce le precedenti istruzioni della Browser Edition; i vecchi link PWA, diagnostica browser e wheel 1.3 non sono il percorso d’installazione del desktop.
+
