@@ -163,3 +163,77 @@ Nessun modello implica affiliazione o approvazione NASA, SpaceX o degli autori.
 
 ## Additional local reference
 - `assets/source/user-nebula-reference.jpg` — user-provided nebula image integrated as the ASTRA 1.2.2 space background source.
+
+## ASTRA Desktop 2.1 — utilizzo nativo degli asset
+
+Il pacchetto desktop distribuisce i GLB autonomi elencati nel catalogo e mantiene
+autori, pagine sorgente e licenze sopra riportati. Le sorgenti di lavorazione
+sono conservate nel progetto; non sono necessarie per eseguire il pacchetto.
+Il renderer Godot seleziona le copie dettagliate nei profili high/ultra dove
+disponibili e le varianti di stadio, orbita e recupero. Durante l'importazione
+applica orientamento e scala di presentazione; per le superfici sottili e i GLB
+derivati da STL conserva i materiali PBR e consente il rendering delle due
+facce. Non modifica i parametri scientifici dei profili ASTRA.
+
+La versione 2.1 rimuove i veicoli costruiti con primitive ASTRA: tutti i veicoli
+predefiniti provengono da asset pre-realizzati. La selezione automatica usa
+SLS/Orion, Falcon 9/Crew Dragon, bimotore e monomotore Innerscene, quadricottero
+Innerscene ed esacottero Typhoon H480. Il bersaglio orbitale usa la ISS NASA.
+La rampa resta una geometria di ambiente. Selezionare un modello NASA, SpaceX,
+Innerscene o PX4 non rende il profilo numerico una replica certificata del
+veicolo: il nome del riferimento visivo è mostrato separatamente dal profilo
+fisico ASTRA. Non sono stati sostituiti gli algoritmi scientifici.
+
+- Bimotore turboprop Innerscene: [modello originale](https://www.innerscene.com/tools/library/3d-parts/twin-turboprop-aircraft-f8c5fa80),
+  licenza [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+  ASTRA raggruppa le mesh opache per materiale e crea pivot sulle pale già
+  presenti per animarle; vetri e pale restano separati. Non ricostruisce la
+  fusoliera. La copia leggera usa decimazione della geometria.
+- Typhoon H480: geometrie e pose dal progetto
+  [PX4-SITL_gazebo-classic](https://github.com/PX4/PX4-SITL_gazebo-classic/tree/main/models/typhoon_h480),
+  autore indicato nel model.config: Lorenz Meier; pacchetto attribuito anche
+  a James Goppert e collaboratori PX4. Il package.xml upstream dichiara BSD;
+  copia di model.config, package.xml, SDF e delle mesh sorgente è inclusa in
+  assets/source/vehicles/px4-typhoon. ASTRA converte le mesh STL in GLB,
+  conserva le pose dell'assemblaggio e i sei rotori, assegna finiture PBR
+  ai colori del modello Gazebo e produce un livello di dettaglio leggero.
+- Lander robotico InSight: [modello NASA](https://science.nasa.gov/3d-resources/insight-cruise-lander/),
+  NASA/Brian E. Kumanchik, NASA Usage Guidelines. Le copie con pannelli
+  ripiegati e dispiegati sono convertite senza Draco e raggruppate per
+  materiale. InSight è un veicolo marziano: nella scena lunare viene usato
+  come riferimento grafico moderno per il generico lander ASTRA, non come
+  ricostruzione di una missione InSight sulla Luna o di un HLS commerciale.
+
+Le pale e i rotori dei modelli pre-realizzati sono separati dalla geometria
+originale e animati usando la telemetria. La fase dei rotori UAV proviene dal
+motore; l'RPM delle eliche è una visualizzazione del comando di potenza.
+Paracadute e plume sono effetti visuali generati separatamente dal veicolo.
+
+La nebulosa azzurra del renderer nativo è una visualizzazione sintetica
+procedurale. Non usa il mosaico infrarosso 2MASS come misura della densità o del
+colore del gas. Le attribuzioni precedenti restano pertinenti ai file distribuiti
+e alle altre versioni del renderer.
+In 2.1 emissione e trasmissione vengono precalcolate in texture HDR EXR da
+tools/bake_native_nebula.gd. Il renderer campiona queste mappe e conserva
+stelle, pianeti e atmosfera dinamici; non ripete il ray marching della
+nebulosa a ogni pixel e fotogramma. Non si tratta di dati astronomici misurati.
+
+## Desktop 2.2 — mappe planetarie e rampa
+
+- **Mobile Launcher**: NASA / Samuel H. Neblett, https://science.nasa.gov/3d-resources/mobile-launcher/ . GLB già convertito dal modello NASA, materiali e geometria originali conservati; posizionamento/scalatura nel renderer desktop. NASA Usage Guidelines; nessuna approvazione NASA implicita.
+- **Luna 4k/2k**: NASA Scientific Visualization Studio / Ernie Wright, LRO / LROC / LOLA, CGI Moon Kit (2019), https://svs.gsfc.nasa.gov/4720/ . `lroc_color_poles_4k.tif` convertito in WebP e ridimensionato a 2k per il profilo leggero. Mappa estetica, non prodotto scientifico.
+- **Mercurio, Venere (atmosfera), Marte, Giove, Saturno, Urano, Nettuno, Sole**: Solar System Scope / INOVE, https://www.solarsystemscope.com/textures/ , **CC BY 4.0**, https://creativecommons.org/licenses/by/4.0/ . JPEG 2k convertiti in WebP; nessun ritocco cromatico. Mappe basate su immagini NASA con colori adattati e riempimenti illustrativi nelle aree non mappate.
+- URL e checksum dei download: `assets/celestial/sources.json`. Tutte le texture sono incluse per l'uso offline.
+
+## Desktop 2.3 — modifiche ai riferimenti NASA e audio
+
+- SLS Block 1 / Orion: dal rendering dei GLB `sls-block1.glb` e `sls-block1-high.glb` viene escluso il basamento di stampa (8 vertici geometrici, 12 triangoli); tutti i componenti degli ugelli restano presenti. Geometria originale conservata sul disco. Nel GLB orbitale estratto viene escluso il materiale/accessorio `NASA SLS WH_Box` e l'orientamento viene corretto per allineare l'asse longitudinale e la propulsione.
+- Audio: quattro loop PCM originali generati proceduralmente dal progetto (`tools/generate_flight_audio.py`), nessuna registrazione o libreria audio di terzi. Suoni di bordo illustrativi, non dati acustici misurati di veicoli NASA.
+- Preview del README: catture reali del renderer ASTRA Desktop, non immagini generate. Le texture e i modelli visibili mantengono i crediti sopra riportati.
+
+### VFX HDR da Unity Labs Paris — CC0
+
+- **WispySmoke01** (8×8) e **Flame02** (16×4), autore Unity Labs Paris / Thomas ICHÉ. Realizzati con Houdini e pubblicati il 28 novembre 2016 sotto **CC0 1.0**.
+- Fonte e dichiarazione di licenza: https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks . Licenza: https://creativecommons.org/publicdomain/zero/1.0/ .
+- EXR HDR estratti dagli archivi ufficiali, inclusi in `assets/vfx/`. È corretto soltanto il conteggio dei byte `chlist` nell’header originale (55 → 73 per quattro canali); pixel HDR e trasparenza sono invariati. Checksum degli archivi e dei file in `assets/vfx/sources.json`. Nessun requisito di utilizzo del motore Unity.
+- Integrazione ASTRA: campionamento animato a 24 fps, adattamento dei colori e dell'opacità alla pressione ambiente e alla spinta; fumo su particelle billboard con atlas 8×8. Gli atlas artistici non sostituiscono un modello CFD del getto.

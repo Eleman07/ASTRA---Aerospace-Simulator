@@ -1,0 +1,114 @@
+{
+  "version": "1.5.0",
+  "python_tests": 80,
+  "python_skipped": 1,
+  "javascript_tests": 27,
+  "advanced_analytical_and_live_tests": 19,
+  "legacy_path_retained": true,
+  "advanced_path_ui_default": true,
+  "disciplines": 13,
+  "offline_browser": {
+    "packaged": true,
+    "launch": {
+      "pipeline": {
+        "hdr": true,
+        "shadows": true,
+        "bloom": true,
+        "ssao": true,
+        "fxaa": true
+      },
+      "glError": 0,
+      "width": 1376,
+      "height": 932
+    },
+    "lunarStart": {
+      "pipeline": {
+        "hdr": true,
+        "shadows": true,
+        "bloom": true,
+        "ssao": true,
+        "fxaa": true
+      },
+      "glError": 0,
+      "width": 1376,
+      "height": 932
+    },
+    "lunarContact": {
+      "pipeline": {
+        "hdr": true,
+        "shadows": true,
+        "bloom": true,
+        "ssao": true,
+        "fxaa": true
+      },
+      "glError": 0,
+      "width": 1376,
+      "height": 932
+    },
+    "orbital": {
+      "pipeline": {
+        "hdr": true,
+        "shadows": true,
+        "bloom": true,
+        "ssao": true,
+        "fxaa": true
+      },
+      "glError": 0,
+      "width": 1376,
+      "height": 932
+    },
+    "aircraft": {
+      "pipeline": {
+        "hdr": true,
+        "shadows": true,
+        "bloom": true,
+        "ssao": true,
+        "fxaa": true
+      },
+      "glError": 0,
+      "width": 1376,
+      "height": 932
+    },
+    "landing": {
+      "time_s": 47.670228114104354,
+      "speed_m_s": 0.7034398132290893,
+      "error_m": 0.549616020766876
+    },
+    "external": [],
+    "pageErrors": [],
+    "consoleErrors": []
+  },
+  "validation_limits": [
+    "Software-rendered Edge; no hardware FPS claim",
+    "Simulated input devices; no physical controller certification",
+    "Educational reference models, not identified or certified vehicle data",
+    "No claim of Star Citizen visual parity"
+  ],
+  "source_sha256": {
+    "astra/mission_science.py": "36da475409dae684fda4a5d78180636716c4fd83b92369019ffd9187351757d9",
+    "astra/science_models.py": "d9f5c8135e216c3b4f9eaac20574ed89bed9040c59115d974c05e2e12857967d",
+    "astra/planetary_mission.py": "2f67ab9ee9b4d99644ff7e89fb4eb8e85edf994f072b7a37c84bafee9eac3480",
+    "astra/engine.py": "a0e25564db3b5b97a707df7a2d51c6870249b40392f7a6171cca3c75a0de6d89",
+    "astra/attitude.py": "f4c5324db53a79b9f271a92b2567e5a38b06aefd13628f71f2ec10966d7e4473",
+    "astra/engineering.py": "ae46cf2894933955d73dfb92c9a3ba499e4f343863ac395a70687bde73107558",
+    "app.js": "e571f43ecd23ca18bbcdbe9f563a3595fd470f89d3ddd6e173b62f286ae26799",
+    "rendering.js": "a3be48e98b001012f5c38a46aaf01c4ca35c1abe86b0adbf092e29b42e38192d",
+    "cinematic-renderer.js": "ce4990d3e6f65ab4716614152400821f5fe596b44385bf01e730de33aed278a6",
+    "science-ui.js": "9cbd9ae110d923cbf473caea0fe443dcfd17c0e285bec64ec2124440f2c407b7",
+    "index.html": "a3d86a2e65383900082d0883bc521549a739d93cda37df9a06b45f3be796f82a",
+    "flight-workspace.css": "e95c3684ba87a66a3749750b2ba11265e9ef580b4ad2e820bfb2f80419311b27"
+  },
+  "readme_unchanged": true,
+  "installer_validation": {
+    "version": "1.5.0.0",
+    "installer": "ASTRA-Flight-Systems-1.5.0.0-Windows-x64-Setup.exe",
+    "bytes": 50973161,
+    "sha256": "2ad25d0f3d6b0563626405b6bdc5e57279f2788776d3a710b83096be2ee8916b",
+    "payload_manifest_sha256": "50de3c6c8ad393863fb5678ff6d9b667142746bd8ddbb92c33b2c040cde02a04",
+    "runtime_self_test": "PASS",
+    "installer_test": "PASS",
+    "installed_files_verified": 128,
+    "uninstaller_test": "PASS",
+    "user_files_preserved": true
+  }
+}

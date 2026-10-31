@@ -11,3 +11,9 @@ vendor/pyodide/*
 # Editor and OS local files
 .DS_Store
 .vscode/
+build/
+dist/
+test-results/
+.godot/
+desktop/export_presets.cfg
+/deliverables/

@@ -23,5 +23,8 @@
   "astra/fidelity_models.py",
   "astra/mission_context.py",
   "astra/live_systems.py",
-  "astra/mission_route.py"
+  "astra/mission_route.py",
+  "astra/science_models.py",
+  "astra/mission_science.py",
+  "astra/planetary_mission.py"
 ]

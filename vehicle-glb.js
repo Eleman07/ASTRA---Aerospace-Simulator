@@ -104,7 +104,9 @@ export function parseGlb(buffer, { maxTriangles = 180_000, maxPrimitives = 96, m
     if (image.uri?.startsWith("data:")) { const decoded = decodeDataUri(image.uri); return new Blob([decoded.bytes], { type: decoded.mimeType }); }
     throw new Error("Una texture dipende da un file esterno. Incorpora le texture nel GLB prima di importarlo.");
   });
+  const materialWarnings=[];
   const materialData = (doc.materials || []).map(material => {
+    const imageFor=info=>{if(!info)return null;const image=doc.textures?.[info.index]?.source;if(!Number.isInteger(image)||!imageBlobs[image])throw Error('Texture glTF non valida');if((info.texCoord??0)!==0||info.extensions?.KHR_texture_transform){materialWarnings.push('Mappa aggiuntiva omessa: supportato solo TEXCOORD_0 senza trasformazione');return null;}return image;};
     const pbr = material.pbrMetallicRoughness || {};
     const textureRef = pbr.baseColorTexture?.index;
     const imageIndex = textureRef === undefined ? null : doc.textures?.[textureRef]?.source;
@@ -113,6 +115,9 @@ export function parseGlb(buffer, { maxTriangles = 180_000, maxPrimitives = 96, m
     const mrImage=mrRef===undefined?null:doc.textures?.[mrRef]?.source;
     if(mrRef!==undefined && (!Number.isInteger(mrImage)||!imageBlobs[mrImage])) throw new Error("Texture metallic/roughness GLB non valida.");
     return { metallicFactor:pbr.metallicFactor??1, roughnessFactor:pbr.roughnessFactor??1,
+      normalTextureIndex:imageFor(material.normalTexture),normalScale:material.normalTexture?.scale??1,
+      occlusionTextureIndex:imageFor(material.occlusionTexture),occlusionStrength:material.occlusionTexture?.strength??1,
+      emissiveTextureIndex:imageFor(material.emissiveTexture),
       metalRoughTextureIndex:mrImage, emissiveFactor:material.emissiveFactor||[0,0,0], color: pbr.baseColorFactor || [1, 1, 1, 1], textureIndex: imageIndex, alphaMode: material.alphaMode || "OPAQUE", alphaCutoff: material.alphaCutoff ?? 0.5, doubleSided: !!material.doubleSided };
   });
   const rawPrimitives = [], bounds = [[Infinity, Infinity, Infinity], [-Infinity, -Infinity, -Infinity]];
@@ -198,5 +203,5 @@ export function parseGlb(buffer, { maxTriangles = 180_000, maxPrimitives = 96, m
              materialIndex: raw.materialIndex, nodeName: raw.nodeName,
              material: raw.materialIndex < 0 ? { color: [0.78, 0.82, 0.9, 1], textureIndex: null, alphaMode: "OPAQUE", alphaCutoff: 0.5, doubleSided: false } : materialData[raw.materialIndex] };
   });
-  return { primitives, images: imageBlobs, bounds: bounds.map(v => v.slice()), dimensions: bounds[0].map((x, c) => bounds[1][c] - x), normalization: { center, fitScale: fit }, triangles: totalTriangles, vertices: totalVertices };
+  return { primitives, images: imageBlobs, warnings:[...new Set(materialWarnings)], bounds: bounds.map(v => v.slice()), dimensions: bounds[0].map((x, c) => bounds[1][c] - x), normalization: { center, fitScale: fit }, triangles: totalTriangles, vertices: totalVertices };
 }

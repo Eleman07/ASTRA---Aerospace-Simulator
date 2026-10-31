@@ -140,6 +140,9 @@ class SpacecraftAttitude:
         self.gravity_gradient_torque_body_N_m = [0.0, 0.0, 0.0]
         self.wheel_saturated = [False, False, False]
         self.attitude_error_deg = 0.0
+        self.control_mode = "lvlh"
+        self.inertial_hold_quaternion = self.quaternion_body_to_eci[:]
+        self.manual_torque_fraction = [0.0, 0.0, 0.0]
 
     def _lvlh_target(self, position_eci_m: list[float], velocity_eci_m_s: list[float],
                      target_angles_deg: list[float]) -> tuple[list[float], list[float], list[float]]:
@@ -178,6 +181,81 @@ class SpacecraftAttitude:
                 target_angles_deg: list[float]) -> tuple[list[float], list[float], list[float]]:
         return self._lvlh_target(position_eci_m, velocity_eci_m_s, target_angles_deg)
 
+    def _direction_target(self, direction_eci: list[float],
+                          reference_eci: list[float], axis: str = "x") -> list[float]:
+        """Build a stable inertial attitude frame around the requested body axis."""
+        direction_norm = _norm(direction_eci)
+        if direction_norm < 1e-9:
+            raise ValueError("SAS direction must be nonzero")
+        direction = [value/direction_norm for value in direction_eci]
+        reference = [reference_eci[i]-_dot(reference_eci, direction)*direction[i]
+                     for i in range(3)]
+        reference_norm = _norm(reference)
+        if reference_norm < 1e-9:
+            fallback = [0.0, 0.0, 1.0] if abs(direction[2]) < .9 else [0.0, 1.0, 0.0]
+            reference = [fallback[i]-_dot(fallback, direction)*direction[i]
+                         for i in range(3)]
+            reference_norm = _norm(reference)
+        reference = [value/reference_norm for value in reference]
+        if axis == "x":
+            body_x = direction
+            body_z = reference
+            body_y = _cross(body_z, body_x)
+        elif axis == "y":
+            body_y = direction
+            body_z = reference
+            body_x = _cross(body_y, body_z)
+        else:
+            body_z = direction
+            body_x = reference
+            body_y = _cross(body_z, body_x)
+        body_x = [value/_norm(body_x) for value in body_x]
+        body_y = [value/_norm(body_y) for value in body_y]
+        body_z = [value/_norm(body_z) for value in body_z]
+        return _q_from_matrix([[body_x[row], body_y[row], body_z[row]]
+                               for row in range(3)])
+
+    def _sas_target(self, mode: str, position_eci_m: list[float],
+                    velocity_eci_m_s: list[float], target_position_eci_m: list[float] | None,
+                    maneuver_direction_eci: list[float] | None,
+                    angles: list[float]) -> tuple[list[float], list[float]]:
+        radius = _norm(position_eci_m)
+        radial = [value/radius for value in position_eci_m]
+        speed = _norm(velocity_eci_m_s)
+        prograde = ([value/speed for value in velocity_eci_m_s]
+                    if speed > 1e-9 else [1.0, 0.0, 0.0])
+        angular_momentum = _cross(position_eci_m, velocity_eci_m_s)
+        hmag = _norm(angular_momentum)
+        normal = ([value/hmag for value in angular_momentum]
+                  if hmag > 1e-9 else [0.0, 0.0, 1.0])
+        if mode == "stability_assist":
+            return self.inertial_hold_quaternion[:], [0.0, 0.0, 0.0]
+        if mode == "prograde":
+            return self._direction_target(prograde, [-value for value in radial], "x"), [0.0, 0.0, 0.0]
+        if mode == "retrograde":
+            return self._direction_target([-value for value in prograde], [-value for value in radial], "x"), [0.0, 0.0, 0.0]
+        if mode in {"radial_in", "radial_out"}:
+            direction = [-value for value in radial] if mode == "radial_in" else radial
+            return self._direction_target(direction, prograde, "z"), [0.0, 0.0, 0.0]
+        if mode in {"normal", "anti_normal"}:
+            direction = normal if mode == "normal" else [-value for value in normal]
+            return self._direction_target(direction, [-value for value in radial], "y"), [0.0, 0.0, 0.0]
+        if mode == "target":
+            if target_position_eci_m is None:
+                raise ValueError("Target SAS requires target orbit position")
+            direction = [target_position_eci_m[i]-position_eci_m[i] for i in range(3)]
+            return self._direction_target(direction, [-value for value in radial], "x"), [0.0, 0.0, 0.0]
+        if mode == "maneuver_node":
+            if maneuver_direction_eci is None:
+                raise ValueError("Maneuver-node SAS requires a defined maneuver direction")
+            return self._direction_target(maneuver_direction_eci, [-value for value in radial], "x"), [0.0, 0.0, 0.0]
+        if mode == "lvlh":
+            target_q, target_omega, _normal = self._lvlh_target(position_eci_m, velocity_eci_m_s, angles)
+            return target_q, target_omega
+        if mode in {"manual", "off"}:
+            return self.quaternion_body_to_eci[:], [0.0, 0.0, 0.0]
+        raise ValueError("Unknown spacecraft SAS mode")
+
     def _torque_and_disturbance(self, state: list[float], target_q: list[float],
                                 target_omega_eci: list[float], radial_eci: list[float],
                                 mu_m3_s2: float, radius_m: float
@@ -202,6 +280,7 @@ class SpacecraftAttitude:
               for moment in self.inertia_kg_m2]
         torque = [kp[i]*error_vector[i]-kd[i]*(omega[i]-target_omega_body[i])
                   -gravity_gradient[i] for i in range(3)]
+        torque = [v*getattr(self,'control_power_factor',1.) for v in torque]
         saturated = []
         for i in range(3):
             torque[i] = max(-self.wheel_torque_limit_N_m[i],
@@ -219,17 +298,46 @@ class SpacecraftAttitude:
 
     def step(self, dt_s: float, position_eci_m: list[float],
              velocity_eci_m_s: list[float], mu_m3_s2: float,
-             target_angles_deg: list[float] | None = None) -> None:
+             target_angles_deg: list[float] | None = None,
+             control_mode: str = "lvlh",
+             manual_torque_body_fraction: list[float] | None = None,
+             target_position_eci_m: list[float] | None = None,
+             maneuver_direction_eci: list[float] | None = None) -> None:
         if not math.isfinite(dt_s) or dt_s <= 0.0 or dt_s > 1.0:
             raise ValueError("attitude integration step must be in (0, 1] seconds")
         angles = list(target_angles_deg or [0.0, 0.0, 0.0])
-        target_q, target_omega_eci, _normal = self._target(
-            position_eci_m, velocity_eci_m_s, angles)
+        if control_mode not in {"manual", "off", "stability_assist", "prograde",
+                                "retrograde", "radial_in", "radial_out", "normal",
+                                "anti_normal", "target", "maneuver_node", "lvlh"}:
+            raise ValueError("Unknown spacecraft SAS mode")
+        if control_mode == "stability_assist" and self.control_mode != "stability_assist":
+            self.inertial_hold_quaternion = self.quaternion_body_to_eci[:]
+        if control_mode == "manual" and self.control_mode != "manual":
+            self.manual_torque_fraction = [0.0, 0.0, 0.0]
+        torque_fraction = list(manual_torque_body_fraction or [0.0, 0.0, 0.0])
+        if len(torque_fraction) != 3 or any(not math.isfinite(v) or abs(v) > 1.0 for v in torque_fraction):
+            raise ValueError("manual attitude torque must contain three finite fractions in [-1, 1]")
+        if control_mode == "stability_assist" and any(abs(value) > 1e-6 for value in torque_fraction):
+            # Stick input commands a bounded body rate; the SAS then holds the
+            # newly slewed inertial attitude after the pilot centres the stick.
+            rate = [value*math.radians(30.0) for value in torque_fraction]
+            rate_norm = _norm(rate)
+            angle = rate_norm*dt_s
+            delta = ([1.0, 0.0, 0.0, 0.0] if rate_norm < 1e-12 else
+                     [math.cos(angle/2.0),
+                      *(value/rate_norm*math.sin(angle/2.0) for value in rate)])
+            self.inertial_hold_quaternion = _q_normalize(
+                _q_multiply(self.inertial_hold_quaternion, delta))
+        target_q, target_omega_eci = self._sas_target(
+            control_mode, position_eci_m, velocity_eci_m_s,
+            target_position_eci_m, maneuver_direction_eci, angles)
+        self.control_mode = control_mode
         self.target_angles_deg = angles
         self.target_quaternion_body_to_eci = target_q
         self.target_angular_velocity_eci_rad_s = target_omega_eci
         radius = _norm(position_eci_m)
         radial_eci = [value/radius for value in position_eci_m]
+        self.manual_torque_fraction = torque_fraction[:]
         state = [*self.quaternion_body_to_eci, *self.body_rates_rad_s,
                  *self.wheel_momentum_body_N_m_s]
 
@@ -237,8 +345,26 @@ class SpacecraftAttitude:
             q = _q_normalize(value[:4])
             omega = value[4:7]
             h = value[7:10]
-            torque, disturbance, _flags = self._torque_and_disturbance(
-                value, target_q, target_omega_eci, radial_eci, mu_m3_s2, radius)
+            if control_mode in {"manual", "off"}:
+                q_now = _q_normalize(value[:4])
+                omega_now = value[4:7]
+                radial_body_now = _q_rotate(_q_conjugate(q_now), radial_eci)
+                inertia_r_now = [self.inertia_kg_m2[i]*radial_body_now[i] for i in range(3)]
+                disturbance = [3.0*mu_m3_s2/radius**3*item
+                               for item in _cross(radial_body_now, inertia_r_now)]
+                torque = [torque_fraction[i]*self.wheel_torque_limit_N_m[i]
+                          for i in range(3)]
+                saturated_now = []
+                for i in range(3):
+                    momentum_rate = -torque[i]
+                    blocked = ((value[7+i] >= self.wheel_momentum_limit_N_m_s[i]-1e-9 and momentum_rate > 0.0) or
+                               (value[7+i] <= -self.wheel_momentum_limit_N_m_s[i]+1e-9 and momentum_rate < 0.0))
+                    if blocked:
+                        torque[i] = 0.0
+                    saturated_now.append(blocked or abs(torque[i]) >= self.wheel_torque_limit_N_m[i]-1e-9)
+            else:
+                torque, disturbance, saturated_now = self._torque_and_disturbance(
+                    value, target_q, target_omega_eci, radial_eci, mu_m3_s2, radius)
             qdot = [0.5*x for x in _q_multiply(q, [0.0, *omega])]
             angular_momentum = [self.inertia_kg_m2[i]*omega[i]+h[i]
                                 for i in range(3)]
@@ -253,11 +379,27 @@ class SpacecraftAttitude:
         self.wheel_momentum_body_N_m_s = [
             max(-limit, min(limit, value))
             for value, limit in zip(propagated[7:10], self.wheel_momentum_limit_N_m_s)]
-        self.control_torque_body_Nm, self.gravity_gradient_torque_body_N_m, self.wheel_saturated = (
-            self._torque_and_disturbance(
-                [*self.quaternion_body_to_eci, *self.body_rates_rad_s,
-                 *self.wheel_momentum_body_N_m_s], target_q, target_omega_eci,
-                radial_eci, mu_m3_s2, radius))
+        final_state = [*self.quaternion_body_to_eci, *self.body_rates_rad_s,
+                       *self.wheel_momentum_body_N_m_s]
+        if control_mode in {"manual", "off"}:
+            radial_body = _q_rotate(_q_conjugate(self.quaternion_body_to_eci), radial_eci)
+            inertia_r = [self.inertia_kg_m2[i]*radial_body[i] for i in range(3)]
+            self.gravity_gradient_torque_body_N_m = [3.0*mu_m3_s2/radius**3*value
+                for value in _cross(radial_body, inertia_r)]
+            torque = [torque_fraction[i]*self.wheel_torque_limit_N_m[i]
+                      for i in range(3)]
+            self.wheel_saturated = []
+            for i in range(3):
+                rate = -torque[i]
+                blocked = ((self.wheel_momentum_body_N_m_s[i] >= self.wheel_momentum_limit_N_m_s[i]-1e-9 and rate > 0.0) or
+                           (self.wheel_momentum_body_N_m_s[i] <= -self.wheel_momentum_limit_N_m_s[i]+1e-9 and rate < 0.0))
+                if blocked:torque[i]=0.0
+                self.wheel_saturated.append(blocked or abs(torque[i]) >= self.wheel_torque_limit_N_m[i]-1e-9)
+            self.control_torque_body_Nm = torque
+        else:
+            self.control_torque_body_Nm, self.gravity_gradient_torque_body_N_m, self.wheel_saturated = (
+                self._torque_and_disturbance(final_state, target_q, target_omega_eci,
+                                             radial_eci, mu_m3_s2, radius))
         error = _q_normalize(_q_multiply(
             _q_conjugate(self.quaternion_body_to_eci), target_q))
         self.attitude_error_deg = math.degrees(2.0*math.atan2(
@@ -281,6 +423,7 @@ class SpacecraftAttitude:
                 "wheel_torque_limit_N_m": self.wheel_torque_limit_N_m[:],
                 "wheel_momentum_limit_N_m_s": self.wheel_momentum_limit_N_m_s[:],
                 "wheel_saturated": self.wheel_saturated[:],
+                "manual_torque_fraction": self.manual_torque_fraction[:],
                 "inertia_kg_m2": self.inertia_kg_m2[:],
             },
         }
@@ -456,6 +599,8 @@ class LaunchVehicleAttitude:
         axial = 0.5 * mass_kg * self.body_radius_m**2
         transverse = mass_kg * (3.0*self.body_radius_m**2 + self.body_length_m**2) / 12.0
         self.inertia_kg_m2 = [transverse, transverse, axial]
+        if getattr(self, 'inertia_override_kg_m2', None) is not None:
+            self.inertia_kg_m2 = list(self.inertia_override_kg_m2)
         attitude_error = self._attitude_error(self.quaternion_body_to_eci, target_q)
         target_omega_body = _q_rotate(_q_conjugate(self.quaternion_body_to_eci),
                                       target_omega_eci)
@@ -468,6 +613,7 @@ class LaunchVehicleAttitude:
         torque_command = [kp[i]*attitude_error[i]
                           - kd[i]*(self.body_rates_rad_s[i]-target_omega_body[i])
                           - gravity_gradient[i] for i in range(3)]
+        torque_command = [v*getattr(self,"control_power_factor",1.) for v in torque_command]
         self.rcs_propellant_used_kg = 0.0
         self.rcs_mass_flow_kg_s = 0.0
         self.rcs_torque_N_m = [0.0, 0.0, 0.0]
@@ -579,7 +725,9 @@ class LaunchVehicleAttitude:
                 "actuator_torque_body_N_m": self.actuator_torque_body_N_m[:],
                 "gravity_gradient_torque_body_N_m": self.gravity_gradient_torque_body_N_m[:],
                 "inertia_kg_m2": self.inertia_kg_m2[:],
-                "inertia_model": "uniform-cylinder using current mass and ASTRA reference geometry",
+                "inertia_model": ("dry shell + shrinking propellant cylinder, parallel axis"
+                                  if getattr(self,'inertia_override_kg_m2',None) else
+                                  "uniform-cylinder using current mass and ASTRA reference geometry"),
                 "body_length_m": self.body_length_m,
                 "body_radius_m": self.body_radius_m,
                 "aerodynamic_moments": "NOT_MODELLED",

@@ -1,4 +1,4 @@
-"""ASTRA 1.4.1 physics, version consistency and browser wiring tests.
+"""ASTRA 1.5.0 physics, version consistency and browser wiring tests.
 Run python -m unittest tools.test_flight_systems_141 -v from repo root.
 """
 import json
@@ -40,10 +40,10 @@ class FlightSystems141Tests(unittest.TestCase):
         index=(ROOT/'index.html').read_text()
         sw=(ROOT/'service-worker.js').read_text()
         css=(ROOT/'mission-ui-14.css').read_text()
-        self.assertEqual(__version__,'1.4.1')
+        self.assertEqual(__version__,'1.5.0')
         self.assertEqual(api('/status')['version'],__version__)
         self.assertEqual(self.sim.state()['version'],__version__)
-        self.assertIn('<b>FLIGHT SYSTEMS 1.4.1</b>',index)
+        self.assertIn('<b>FLIGHT SYSTEMS 1.5.0</b>',index)
         self.assertNotIn('VERSION 1.3.1',index)
         self.assertIn('build=291',index)
         self.assertIn("const VERSION='astra-browser-", sw)

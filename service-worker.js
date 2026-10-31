@@ -1,9 +1,10 @@
 /* ASTRA Browser PWA 1.4.1. Static only; all physics stays on this device. */
-const VERSION='astra-browser-cosmic-blue-v3';
+const VERSION='astra-browser-advanced-cinematic-v7-azure';
 const SHELL=['./cosmic-theme.css','./','./index.html','./styles.css','./mission-ui-14.css','./app.js','./rendering.js','./flight-workspace.js','./flight-workspace.css','./browser-api.js',
   './browser-engine-worker.js','./browser-python-files.json','./browser_bridge.py',
   './i18n.js','./vehicle-glb.js','./disciplines.js','./mission-recorder.js',
   './engineering-studio.js','./flight-frames.js','./pilot-controls.js',
+  './controller-profiles.js','./input-device-manager.js','./controller-manager-ui.js','./controller-manager.css','./render-settings.js','./science-ui.js','./cinematic-renderer.js','./nebula-rendering.js',
   './manifest.json','./icon.svg','./assets/vehicle-models.json'];
 const PYODIDE=['pyodide.mjs','pyodide.js','pyodide.asm.mjs','pyodide.asm.wasm','python_stdlib.zip','pyodide-lock.json'];
 const CORE_VISUALS=['./assets/space-nebula-2k.webp','./assets/space-nebula-4k.webp',
@@ -55,7 +56,7 @@ self.addEventListener('fetch',event=>{
   if(r.method!=='GET'||url.origin!==self.location.origin)return;
   event.respondWith((async()=>{
     const cache=await caches.open(VERSION);
-    const old=await cache.match(r);
+    const old=await cache.match(r,{ignoreSearch:/\.(?:js|css)$/.test(url.pathname)});
     if(old)return old;
     try{
       const response=await fetch(r);

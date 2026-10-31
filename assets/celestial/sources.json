@@ -1,0 +1,83 @@
+[
+  {
+    "id": "moon",
+    "url": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_poles_4k.tif",
+    "sha256_source": "918649a7f8ed2f1329b2cd95bb0d25483befdcb60ae1a66db681a637cc21344f",
+    "size": [
+      4096,
+      2048
+    ]
+  },
+  {
+    "id": "mercury",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_mercury.jpg",
+    "sha256_source": "5a5c80607f643496bac9a631e71957def35ed788895f18b678ac849c2b38e48a",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "venus_atmosphere",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_venus_atmosphere.jpg",
+    "sha256_source": "225012ad4911730605c4e189ca2a3bf674fce50cc48aab4102b936b47d6991ac",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "mars",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_mars.jpg",
+    "sha256_source": "2d187f3e77a98eaa8cea5f4cc722f633c122ef170b9e94ace6b5fb6cbc3f8e01",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "jupiter",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg",
+    "sha256_source": "b0f04d005350252636b0e3396fc592548cbd9e9126b269d32d5c6abd4b0e4f2b",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "saturn",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_saturn.jpg",
+    "sha256_source": "54a900ca9bf7ab62e70f862852759abdf342e6d6436a95a2fe9ebdb6bcd3bbac",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "uranus",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_uranus.jpg",
+    "sha256_source": "d15239d46f82d3ea13d2b260b5b29b2a382f42f2916dae0694d0387b1204a09d",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "neptune",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_neptune.jpg",
+    "sha256_source": "cb42ea82709741d28b0af44d8b283cbc6dbd0c521a7f0e1e1e010ade00977df6",
+    "size": [
+      2048,
+      1024
+    ]
+  },
+  {
+    "id": "sun",
+    "url": "https://www.solarsystemscope.com/textures/download/2k_sun.jpg",
+    "sha256_source": "ff0f076ba65e03b5ab518451bc96699325be38e3ccbdd5869ee1c00f3a0c8816",
+    "size": [
+      2048,
+      1024
+    ]
+  }
+]

@@ -72,7 +72,9 @@ def route_raw(raw):
                                   payload.get('model_id'),payload.get('custom_design'),
                                   payload.get('wind_ned_m_s'),payload.get('turbulence'),
                                   payload.get('wind_profile_ned_m_s'),
-                                  payload.get('surface_layer_wind'))
+                                  payload.get('surface_layer_wind'),
+                                  payload.get('advanced_models',False),
+                                  payload.get('science_configuration'))
         elif endpoint == '/mission/route':
             if engine.vehicle != 'drone' or engine.mission_started:
                 raise ValueError('Select a ready UAV mission before applying a route')

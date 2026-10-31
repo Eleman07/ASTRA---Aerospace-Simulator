@@ -216,6 +216,7 @@ def _add(a: list[float], b: list[float], scale: float) -> list[float]:
 
 from .live_systems import LiveSystems
 from .mission_route import MissionRoute
+from .mission_science import MissionScience
 
 
 class SimulationEngine:
@@ -230,8 +231,14 @@ class SimulationEngine:
               wind_ned_m_s: list[float] | tuple[float, float, float] | None = None,
               turbulence: dict[str, Any] | None = None,
               wind_profile_ned_m_s: list[dict[str, Any]] | None = None,
-              surface_layer_wind: dict[str, Any] | None = None
+              surface_layer_wind: dict[str, Any] | None = None,
+              advanced_models: bool = False,
+              science_configuration: dict[str, Any] | None = None
               ) -> dict[str, Any]:
+        if not isinstance(advanced_models, bool):
+            raise ValueError('advanced_models must be boolean')
+        self.science = None
+        self.planetary = None
         if vehicle not in VEHICLES:
             raise ValueError(f"vehicle must be one of {sorted(VEHICLES)}")
         wind = self._validate_wind(wind_ned_m_s)
@@ -247,8 +254,8 @@ class SimulationEngine:
         if vehicle == "drone" and _norm3(wind) > 16.0:
             raise ValueError("drone wind magnitude must not exceed the 16 m/s model envelope")
         turbulence_settings = validate_turbulence_settings(turbulence, vehicle)
-        if scenario not in {"mission", "leo-return", "orbital"}:
-            raise ValueError("scenario must be mission, leo-return or orbital")
+        if scenario not in {"mission", "leo-return", "orbital", "planetary"}:
+            raise ValueError("scenario must be mission, leo-return, orbital or planetary")
         if vehicle != "space" and scenario != "mission":
             raise ValueError("leo-return and orbital scenarios are available only for spacecraft")
         if custom_design is not None:
@@ -348,6 +355,9 @@ class SimulationEngine:
         self.command = {"throttle_pct": 0.0, "roll_deg": 0.0,
                         "pitch_deg": 0.0, "yaw_deg": 0.0,
                         "attitude_target_deg": [0.0, 0.0, 0.0],
+                        "attitude_torque_body_fraction": [0.0, 0.0, 0.0],
+                        "attitude_sas_mode": "stability_assist",
+                        "maneuver_direction_eci": None,
                         "brakes_pct": 0.0,
                         "mode": "auto"}
         self.external_control = {
@@ -378,6 +388,20 @@ class SimulationEngine:
             # equivalent support force without adding ground contact dynamics.
             gravity_eci = self._gravity_eci_acceleration(self.orbit[:3])
             self._set_specific_force_eci([-value for value in gravity_eci])
+        if scenario == 'planetary':
+            from .planetary_mission import PlanetaryMission
+            from .mission_science import validate_configuration
+            config = validate_configuration(science_configuration or {})
+            self.planetary = PlanetaryMission(config['seed'])
+            self.mass_dry_kg = self.planetary.dry
+            self.mass_kg = self.planetary.y[13]
+            self.propellant_kg = self.mass_kg-self.mass_dry_kg
+            self.propellant_capacity_kg = self.propellant_kg
+            self.launch_vehicle_attitude = None
+            self.space_navigation = None
+            self.phase = 'READY'
+        if advanced_models or scenario == 'planetary':
+            self.science = MissionScience(self, science_configuration)
         return self.state()
 
     def _guidance_update_due(self, time_s: float) -> bool:
@@ -486,6 +510,12 @@ class SimulationEngine:
                            "quaternion attitude · TVC/RCS · Sutton–Graves heating")
 
     def _activate_stage(self) -> None:
+        if self.science:
+            self.science.spool = 0.
+            self.science.nozzle = dict(ideal_thrust_N=0.,exhaust_mass_flow_kg_s=0.,
+                                      flow_regime='STAGE_IGNITION_PENDING',
+                                      chamber_pressure_Pa=0.,mass_continuity_relative_residual=0.)
+            self.science.mass_flow_kg_s = 0.
         if self.active_stage_index >= len(self.stage_specs):
             self.max_thrust_N = 0.0
             self.nozzle_exit_area_m2 = 0.0
@@ -555,6 +585,12 @@ class SimulationEngine:
         self.space_navigation = None
         self.spacecraft_attitude.initialize(
             self.orbit[:3], self.orbit[3:], self.command["attitude_target_deg"])
+        # A freshly inserted spacecraft is inertially at rest in attitude.
+        # Tracking the local vertical is an explicit SAS choice, never the
+        # unannounced default body rate of manual flight.
+        self.spacecraft_attitude.body_rates_rad_s = [0.0, 0.0, 0.0]
+        self.spacecraft_attitude.inertial_hold_quaternion = (
+            self.spacecraft_attitude.quaternion_body_to_eci[:])
         self.stage_specs = []
         self.stage_propellant_kg = []
         self.active_stage_index = 0
@@ -669,6 +705,11 @@ class SimulationEngine:
     def launch(self) -> dict[str, Any]:
         """Begin the selected launch/takeoff mission from its ground state."""
         if self.scenario == "orbital":
+            return self.state()
+        if self.scenario == 'planetary':
+            self.mission_started = True
+            self.phase = 'POWERED_DESCENT'
+            self.launch_t = self.t
             return self.state()
         if not self.mission_started and self.phase == "READY":
             self.mission_started = True
@@ -1034,7 +1075,27 @@ class SimulationEngine:
         self._update_launch_vehicle_geometry()
         return self.state()
 
-    def set_command(self, payload: dict[str, Any]) -> dict[str, Any]:
+    def set_command(self, payload: dict[str, Any], _radio_delivery: bool = False,
+                    _command_time_s: float | None = None) -> dict[str, Any]:
+        if (self.science and self.science.config['radio_commands'] and
+                str(payload.get('mode',self.command['mode'])).lower() == 'python'
+                and not _radio_delivery):
+            # Validate command shape/ranges on a copy before queueing any effect.
+            for key in ('throttle_pct','roll_deg','pitch_deg','yaw_deg','brakes_pct'):
+                if key in payload and not math.isfinite(float(payload[key])):
+                    raise ValueError(f'{key} must be finite')
+            if 'attitude_target_deg' in payload:
+                target=payload['attitude_target_deg']
+                if (not isinstance(target,(list,tuple)) or len(target)!=3 or
+                    any(isinstance(v,bool) or not isinstance(v,(int,float)) or
+                        not math.isfinite(v) for v in target)):
+                    raise ValueError('attitude_target_deg must contain three finite angles')
+            queued = self.science.radio.send(payload, self.t)
+            result = self.state()
+            result['radio_command_receipt'] = dict(sequence=self.science.radio.sequence,
+                queued=queued,queued_packets=len(self.science.radio.queue),
+                dropped_packets=self.science.radio.dropped)
+            return result
         for name, low, high in (("throttle_pct", 0.0, 100.0),
                                 ("roll_deg", -60.0, 60.0),
                                 ("pitch_deg", -45.0, 45.0),
@@ -1053,16 +1114,56 @@ class SimulationEngine:
                 raise ValueError("attitude_target_deg must contain three finite Euler angles in degrees")
             self.command["attitude_target_deg"] = [
                 _clamp(float(value), -180.0, 180.0) for value in target]
+        if "attitude_torque_body_fraction" in payload:
+            torque = payload["attitude_torque_body_fraction"]
+            if (not isinstance(torque, (list, tuple)) or len(torque) != 3 or
+                    any(isinstance(value, bool) or not isinstance(value, (int, float)) or
+                        not math.isfinite(value) or abs(value) > 1.0 for value in torque)):
+                raise ValueError("attitude_torque_body_fraction must contain three finite values in [-1, 1]")
+            self.command["attitude_torque_body_fraction"] = [float(value) for value in torque]
+        if "maneuver_direction_eci" in payload:
+            direction = payload["maneuver_direction_eci"]
+            if direction is None:
+                self.command["maneuver_direction_eci"] = None
+            elif (not isinstance(direction, (list, tuple)) or len(direction) != 3 or
+                    any(isinstance(value, bool) or not isinstance(value, (int, float)) or
+                        not math.isfinite(value) for value in direction) or
+                    _norm3([float(value) for value in direction]) < 1e-9):
+                raise ValueError("maneuver_direction_eci must be a nonzero finite 3-vector")
+            else:
+                self.command["maneuver_direction_eci"] = [float(value) for value in direction]
+        if "attitude_sas_mode" in payload:
+            sas_mode = str(payload["attitude_sas_mode"]).lower()
+            if sas_mode not in {"manual", "stability_assist", "prograde", "retrograde",
+                                "radial_in", "radial_out", "normal", "anti_normal",
+                                "target", "maneuver_node", "lvlh"}:
+                raise ValueError("Unknown attitude_sas_mode")
+            if sas_mode == "maneuver_node" and self.command.get("maneuver_direction_eci") is None:
+                raise ValueError("Define maneuver_direction_eci before selecting maneuver-node SAS")
+            self.command["attitude_sas_mode"] = sas_mode
         if "mode" in payload:
             mode = str(payload["mode"]).lower()
             if mode not in {"auto", "manual", "python"}:
                 raise ValueError("mode must be auto, manual or python")
+            previous_mode = self.command["mode"]
             self.command["mode"] = mode
+            if self.vehicle == "space" and self.scenario == "orbital" and "attitude_sas_mode" not in payload:
+                if mode == "auto":
+                    self.command["attitude_sas_mode"] = "lvlh"
+                elif mode == "manual" and previous_mode != "manual":
+                    self.command["attitude_sas_mode"] = "manual"
+                elif mode == "python" and "attitude_target_deg" in payload:
+                    # Preserve the legacy Python target-angle API as an explicit
+                    # LVLH target; new clients should prefer SAS or torque input.
+                    self.command["attitude_sas_mode"] = "lvlh"
+            if (mode != previous_mode and "attitude_torque_body_fraction" not in payload and
+                    self.scenario == "orbital"):
+                self.command["attitude_torque_body_fraction"] = [0.0, 0.0, 0.0]
         if self.command["mode"] == "python":
             # Any successful Python API command, including an empty command
             # used as a heartbeat, refreshes the simulation-time watchdog.
             self.external_control["state"] = "CONNECTED"
-            self.external_control["last_command_time_s"] = self.t
+            self.external_control["last_command_time_s"] = self.t if _command_time_s is None else _command_time_s
         else:
             self.external_control["last_command_time_s"] = None
             if self.external_control["state"] == "CONNECTED":
@@ -1091,6 +1192,8 @@ class SimulationEngine:
 
         phase_before = self.phase
         self.command["mode"] = "auto"
+        if self.vehicle == "space" and self.scenario == "orbital":
+            self.command["attitude_sas_mode"] = "lvlh"
         if self.vehicle == "space":
             link["state"] = "AUTO_TAKEOVER"
             action = "RESUME_AUTONOMOUS_MISSION_GUIDANCE"
@@ -1172,11 +1275,15 @@ class SimulationEngine:
             return self.state()
         if not self.mission_started or self.phase in {"LANDED", "CRASHED", "ABORTED"}:
             return self.state()
+        if self.scenario == 'planetary':
+            return self._step_planetary(dt_s)
         max_step = (0.02 if self.vehicle == "drone" else
                     0.05 if self.vehicle == "aircraft" else
                     0.05 if self.command["throttle_pct"] > 0.0 else MAX_STEP_S)
         if self.integration_step_cap_s is not None:
             max_step = min(max_step, self.integration_step_cap_s)
+        if self.science:
+            max_step = min(max_step, .05)
         n = max(1, math.ceil(dt_s / max_step))
         h = dt_s / n
         advanced_s = 0.0
@@ -1193,6 +1300,8 @@ class SimulationEngine:
                   and self.command["mode"] == "auto" and
                   self._guidance_update_due(self.t + advanced_s)):
                 self._guide_orbital_rendezvous()
+            if self.science:
+                self.science.before_step(self, h, self.t+advanced_s)
             navigation_start_state = (
                 self._relative_rtn_state()[:2]
                 if self.vehicle == "space" and self.scenario == "orbital"
@@ -1247,6 +1356,8 @@ class SimulationEngine:
                             # acceleration.
                             mass_flow = (throttle*self.max_thrust_N*engine_availability/
                                          (self.isp_s*G0))
+                            if self.science and self.science.mass_flow_kg_s is not None:
+                                mass_flow = self.science.mass_flow_kg_s*engine_availability
                             if self.active_stage_index < len(self.stage_specs):
                                 stage_fuel = self.stage_propellant_kg[self.active_stage_index]
                                 burn_time_s = stage_fuel/mass_flow
@@ -1353,7 +1464,14 @@ class SimulationEngine:
                     if self.scenario == "orbital" and self.spacecraft_attitude is not None:
                         self.spacecraft_attitude.step(
                             segment_h, self.orbit[:3], self.orbit[3:], MU_EARTH,
-                            self.command["attitude_target_deg"])
+                            self.command["attitude_target_deg"],
+                            control_mode=("lvlh" if self.command["mode"] == "auto"
+                                          else self.command["attitude_sas_mode"]),
+                            manual_torque_body_fraction=self.command[
+                                "attitude_torque_body_fraction"],
+                            target_position_eci_m=self.target_orbit[:3],
+                            maneuver_direction_eci=self.command.get(
+                                "maneuver_direction_eci"))
                     gravity_eci = self._gravity_eci_acceleration(self.orbit[:3])
                     self._set_specific_force_eci([
                         total_acceleration_eci[i]-gravity_eci[i]
@@ -1470,6 +1588,8 @@ class SimulationEngine:
             else:
                 self.phase_time_s += h
             self.live_systems.advance(self, h, self.t + advanced_s + h)
+            if self.science:
+                self.science.after_step(self, h, self.t+advanced_s+h)
             advanced_s += h
             self._update_fdir(self.t + advanced_s)
             if self.phase in {"LANDED", "CRASHED", "ABORTED"}:
@@ -1980,6 +2100,9 @@ class SimulationEngine:
 
     def _turbulence_gust_ned(self, y: list[float]) -> list[float]:
         """Map seeded Dryden u/v/w gusts into local NED wind axes."""
+        if (self.science and self.vehicle != 'space' and
+                self.science.config['turbulence_sigma_m_s'] > 0):
+            return self.science.wind.evaluate(y[-3])
         if self.turbulence_model is None:
             return [0.0, 0.0, 0.0]
         gust_forward, gust_right, gust_down = self.turbulence_model.evaluate(y[-3])
@@ -2486,6 +2609,11 @@ class SimulationEngine:
         x, yy, z, vx, vy, vz = y
         r = max(_norm3([x, yy, z]), 1.0)
         ax, ay, az = self._gravity_eci_acceleration([x, yy, z])
+        if self.science:
+            perturbation = self.science.gravity([x, yy, z])
+            ax += perturbation[0]
+            ay += perturbation[1]
+            az += perturbation[2]
         altitude = r - EARTH_RADIUS
         if self.scenario in {"mission", "leo-return"}:
             # Static COESA76 reference atmosphere, including thermosphere data.
@@ -2698,6 +2826,9 @@ class SimulationEngine:
             -kp*error[1] - kd*velocity[1] + 2.0*mean_motion*velocity[0],
             -kp*error[2] - kd*velocity[2] + mean_motion**2*position[2],
         ]
+        if self.science:
+            acceleration_rtn = self.science.rendezvous_acceleration(
+                self, position, velocity, axes, target)
         requested = _norm3(acceleration_rtn)
         acceleration_limit = min(
             self.rendezvous_guidance_state["maximum_acceleration_m_s2"],
@@ -2782,7 +2913,9 @@ class SimulationEngine:
         if self.spacecraft_attitude is None:
             return {"attitude_deg": None,
                     "attitude_state_status": "NOT_MODELLED"}
-        telemetry = self.spacecraft_attitude.telemetry(self.command["mode"])
+        control_mode = ("lvlh" if self.command["mode"] == "auto"
+                        else self.command["attitude_sas_mode"])
+        telemetry = self.spacecraft_attitude.telemetry(control_mode)
         telemetry["attitude_target_deg"] = list(self.command["attitude_target_deg"])
         return {
             **telemetry,
@@ -2819,6 +2952,10 @@ class SimulationEngine:
 
     def _thrust_at_altitude(self, altitude_m: float) -> float:
         """Apply the nozzle pressure-thrust correction in the atmosphere."""
+        if self.science:
+            reference = self.science.thrust_reference(self, altitude_m)
+            if reference is not None:
+                return reference
         ambient_pressure = (atmosphere_isa(altitude_m)["pressure_Pa"]
                             if self.scenario in {"mission", "leo-return"} else 0.0)
         return max(0.0, self.max_thrust_N - ambient_pressure * self.nozzle_exit_area_m2)
@@ -2953,6 +3090,8 @@ class SimulationEngine:
                    a[f"{name}_rate_limit_rad_s"])
             for i, name in enumerate(names)
         ]
+        if self.science:
+            rates = [v*self.science.control_power_factor for v in rates]
         return targets, rates
 
     def _flight_derivative(self, y: list[float]) -> list[float]:
@@ -2975,6 +3114,10 @@ class SimulationEngine:
                 a, alpha, beta, mach=speed/max(1.0, atm["speed_of_sound_m_s"]))
             _surface_targets, surface_rates = self._aircraft_surface_actuators(y)
             cl, cd = coefficients["CL"], coefficients["CD"]
+            if self.science:
+                cl += self.science.aero_delta_cl
+                mach = speed/max(1., atm['speed_of_sound_m_s'])
+                cd += min(.15, .8*max(0., mach-.72)**2)
             drag = qbar * a["S_m2"] * cd
             lift = qbar * a["S_m2"] * cl
             side = qbar * a["S_m2"] * coefficients["CY"]
@@ -3144,13 +3287,59 @@ class SimulationEngine:
         return self.state()
 
     def state(self) -> dict[str, Any]:
+        if self.planetary is not None:
+            result = self.planetary.state()
+            result.update(version=__version__,vehicle='space',scenario='planetary',phase=self.phase,
+                time_s=self.t,mission_started=self.mission_started,command=dict(self.command),
+                model_id='astra-lunar-lander',vehicle_name='ASTRA Lunar Lander',
+                frame='LOCAL_ENU',propellant_pct=100*self.propellant_kg/self.propellant_capacity_kg,
+                load_factor_g=self.load_factor_g,mission_metrics=dict(self.mission_metrics),
+                fault=self.fault,model='LIVE_LUNAR_6DOF_VARIABLE_INERTIA_RK4',
+                science=self.science.snapshot() if self.science else {'enabled':False})
+            return result
         result = self._flight_state()
         if not self.live_systems.snapshot():
             self.live_systems.advance(self, 0.0, self.t)
         result["live_systems"] = self.live_systems.snapshot()
         if self.mission_route is not None:
             result["mission_route"] = self.mission_route.snapshot()
+        result['science'] = self.science.snapshot() if self.science else {'enabled':False}
+        if self.science and self.vehicle == 'aircraft':
+            aero = result['aerodynamics']
+            aero['model'] = 'CONVECTIVE_LIFT_LAG_NONLINEAR_POLAR_EMPIRICAL_WAVE_DRAG'
+            aero['lift_coefficient'] += self.science.aero_delta_cl
+            mach = result['air_relative_speed_m_s']/max(1.,result['environment']['speed_of_sound_m_s'])
+            aero['drag_coefficient'] += min(.15,.8*max(0.,mach-.72)**2)
+            aero['compressibility_model_valid'] = mach < .9
+        if (self.science and self.vehicle != 'space' and
+                self.science.config['turbulence_sigma_m_s'] > 0):
+            result['environment']['turbulence'] = dict(
+                model='VON_KARMAN_SHAPED_FINITE_BAND_FROZEN_FIELD',
+                sigma_uvw_m_s=[self.science.config['turbulence_sigma_m_s']]*3,
+                length_uvw_m=[self.science.config['turbulence_length_m']]*3,
+                seed=self.science.config['seed'],
+                assumption='FINITE_BAND_1D_SPATIAL_SPECTRUM_NOT_3D_WEATHER')
         return result
+
+    def _step_planetary(self, dt_s):
+        cap = min(.02,self.integration_step_cap_s or .02)
+        count = max(1,math.ceil(dt_s/cap))
+        for _ in range(count):
+            h = dt_s/count
+            self._update_python_control_watchdog(self.t)
+            self.science.before_step(self,h,self.t)
+            elapsed = self.planetary.advance(h,self.command,self.science.control_power_factor)
+            self.t += elapsed
+            self.mass_kg = self.planetary.y[13]
+            self.propellant_kg = max(0.,self.mass_kg-self.mass_dry_kg)
+            self.load_factor_g = self.planetary.thrust_N/max(self.mass_kg,1)/G0
+            if self.planetary.contact:
+                self.phase = 'LANDED' if self.planetary.soft_landing else 'CRASHED'
+                self.mission_metrics['touchdown_speed_m_s'] = self.planetary.touchdown_speed
+            self.science.after_step(self,elapsed,self.t)
+            if self.planetary.contact:
+                break
+        return self.state()
 
     def _flight_state(self) -> dict[str, Any]:
         if self.vehicle == "space":
@@ -3216,6 +3405,8 @@ class SimulationEngine:
                     "propulsion": {"model": "VACUUM_THRUST_MINUS_AMBIENT_PRESSURE_AREA",
                                    "vacuum_thrust_N": self.max_thrust_N,
                                    "net_thrust_N": self._thrust_at_altitude(altitude),
+                                   "applied_thrust_N": (self._thrust_at_altitude(altitude)*self._engine_availability()*self.command["throttle_pct"]/100.0
+                                                        if self.mission_started and self.propellant_kg > 0.0 else 0.0),
                                    "pressure_correction_N": self.max_thrust_N - self._thrust_at_altitude(altitude),
                                    "nozzle_exit_area_m2": self.nozzle_exit_area_m2,
                                    "reference_mass_flow_kg_s": (self.max_thrust_N/(self.isp_s*G0)

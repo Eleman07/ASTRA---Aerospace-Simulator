@@ -1,141 +1,147 @@
-<div align="center">
+# ASTRA Desktop
 
-![ASTRA — Aerospace Simulation Suite](docs/images/astra-banner.png)
+Simulatore aerospaziale **nativo per Windows 11 x64**, utilizzabile offline. Motore scientifico Python, grafica 3D Godot, tastiera, controller e API per controllare la stessa simulazione da script.
 
-# ASTRA · Aerospace Simulation Suite
+**Desktop 2.4.0 · SDK Python 2.4.0 · release Windows x64.**
 
-**Spaceflight, atmospheric flight, and autonomous navigation in one interactive simulation environment.**
+[Scarica l’installer Windows](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.4.0-desktop/ASTRA-Desktop-2.4.0-Windows-x64-Setup.exe) · [Scarica il wheel Python](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.4.0-desktop/astra_simulator_client-2.4.0-py3-none-any.whl) · [Note della release](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/tag/v2.4.0-desktop)
 
-Run aerospace mission dynamics in the browser with **Python + Pyodide/WebAssembly** and explore the results through a WebGL 3D interface. No payment card, cloud VM, or server-side Python installation is required for the Browser Edition.
+![ASTRA Desktop: veicolo orbitale, Terra e nebulosa azzurra](docs/images/desktop-2.4-space.webp)
 
-[**Launch Simulator**](https://eleman07.github.io/ASTRA---Aerospace-Simulator/) · [**Test the Browser API**](https://eleman07.github.io/ASTRA---Aerospace-Simulator/api-test.html) · [**Engine Diagnostics**](https://eleman07.github.io/ASTRA---Aerospace-Simulator/diagnostics.html) · [**Aerospace Portfolio**](https://elemanprojects.com)
+## Trailer cinematografico
 
-</div>
+[Trailer 4K](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA_Cinematic_Trailer_4K.mp4) · [Trailer 1080p](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA_Cinematic_Trailer_1080p.mp4) · [Crediti completi del trailer](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.3.2-desktop/ASTRA-Trailer-Credits.txt)
 
-> **Current published target:** ASTRA Browser 1.3.3, intended for GitHub Pages and installable as a Progressive Web App (PWA). Simulation is computed locally on each device, subject to device CPU/GPU/RAM limits. The browser API is **not** a publicly accessible Python HTTP server.
+55 secondi, **3840×2160, 16:9, 30 fps**. Scene reali nel motore ASTRA: Falcon 9 nello spazio, aereo, UAV, controllo tramite SDK Python e modalità GIOCA. Titoli inglesi, movimenti di camera, transizioni e color grading; solo musica. Finale con il portfolio [elemanprojects.com](https://elemanprojects.com).
 
----
+Musica: **“Horizons” di Scott Buckley**, pubblicata in [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), [scottbuckley.com.au](https://www.scottbuckley.com.au/library/horizons/). Estratto montato con dissolvenze e normalizzazione del volume. Autori e licenze dei modelli sono nei crediti allegati.
 
-## What can you do?
+## Installare e avviare
 
-| Environment | Experience | Examples |
+1. Scarica `ASTRA-Desktop-2.4.0-Windows-x64-Setup.exe` dagli asset della release.
+2. Chiudi eventuali istanze precedenti di ASTRA e avvia l’installer.
+3. Apri **ASTRA Desktop** dal menu Start. Il simulatore include motore, modelli, texture e audio: non richiede Internet, browser o Python installato.
+4. Usa il profilo principale su GPU Vulkan; se necessario scegli **Grafica leggera** per il backend OpenGL. Aggiorna il driver della GPU se il renderer non si avvia.
+
+L’installer è per Windows x64 e non è firmato digitalmente. Il wheel serve solo a chi vuole scrivere script Python.
+
+## Primo volo
+
+Nel menu **OPERAZIONI DI VOLO** seleziona **SIMULATORE** per le procedure tecniche o **GIOCA** per entrare nella carriera. Le missioni tecniche del Simulatore restano disponibili come prima; Gioca mostra tre sole discipline:
+
+| Esperienza | Partenza e comportamento |
+|---|---|
+| Spazio · lancio e recupero | Razzo sulla rampa, lancio e recupero secondo il profilo ASTRA. |
+| Spazio · rendezvous LEO | Veicolo in orbita con guida di rendezvous e bersaglio ISS. |
+| Luna · discesa | Lander con dinamica locale a sei gradi di libertà. |
+| Aereo · decollo e circuito | Partenza dalla pista e circuito automatico. |
+| UAV · ispezione e rientro | Decollo, ispezione e rientro del multirotore. |
+| Gioca · Spazio | Campagna Frontier Blu: lancio, rendezvous, aggancio orbitale e tre operazioni lunari. |
+| Gioca · Aereo | Circuito completo, rotta in quota e rientro stretto. |
+| Gioca · Drone | Ispezione della rete, diagnosi strutturale e campionamento atmosferico. |
+
+Scegli una delle sole tre discipline per aprire la bacheca, leggi il briefing di controllo missione, gli obiettivi e le ricompense. Le 12 operazioni sono divise in tre campagne tecniche per categoria: ingegneria, esplorazione, pilotaggio e scienza; ogni campagna verifica i dati reali del volo. La progressione sblocca le missioni in sequenza; crediti, reputazione, scienza, tecnologie e strutture vengono salvati localmente. Quota, distanza, mantenimento della quota, rendezvous e touchdown sono misurati dal motore, non da timer fittizi. In Gioca la tastiera è attiva all'avvio; i controller si armano dal pannello **CONTROLLER**. Carburante, batteria, stallo e urti restano attivi.
+
+![Aereo realistico nella scena di volo ASTRA Desktop](docs/images/desktop-2.4-aircraft.webp)
+
+## Tastiera, controller e camera
+
+Seleziona **CONTROLLO DA TASTIERA** per pilotare. Per Xbox/gamepad apri **CONTROLLER**, seleziona il dispositivo, rilascia gli stick ed esegui l’armamento esplicito. I profili di calibrazione sono separati per categoria di veicolo.
+
+**Gli stick controllano il volo; la croce direzionale controlla i menu.** Gli assi analogici non cambiano focus, missione o valori nei pannelli. Assegna Xbox soltanto a **Primario**: manetta e pedali separati richiedono dispositivi distinti. Il profilo **RISPOSTA PRONTA** offre sensibilità e velocità della manetta regolabili; con 125 %/s l'intera escursione richiede 0,8 s. Rilasciando i grilletti la spinta impostata resta costante.
+
+| Azione | Tastiera | Xbox/gamepad |
 |---|---|---|
-| **Space** | Simulate launches, orbital motion, recovery and spacecraft operations | ECI dynamics, gravity/J₂, quaternion attitude, mission guidance and staging |
-| **Aircraft** | Explore takeoff, flight performance, stability and landing | Lift/drag models, flight controls, runway operations and atmosphere |
-| **Drone** | Study multirotor guidance and flight | Rotors, stabilization, trajectory tracking, wind disturbances |
-| **Engineering Studio** | Run standalone engineering analyses | Orbit, propulsion, aerodynamics, thermal, structures, power and link budget |
-| **Mission Data Lab** | Inspect and export telemetry | Flight state, mission phases, recorded results |
+| Avvio / pausa del volo | Spazio | Start |
+| Navigazione menu | Frecce | Croce direzionale |
+| Conferma / indietro nei menu | Invio / Esc | A / B |
+| Controllo manuale | M | Y per armare/disarmare |
+| Assetto roll / pitch | A/D e W/S | Stick sinistro |
+| Imbardata | Q/E | Stick destro |
+| Aumenta / riduci spinta | Shift / Ctrl | RT / LT |
+| Freni | B | LB |
+| Riprendi il GNC nella missione | G | X |
+| Ruota la camera | Trascina con tasto destro | Mouse |
+| Zoom | Rotella | Mouse |
+| Mostra/nascondi interfaccia | F2 | Tastiera |
+| Schermo intero | F11 | Tastiera |
 
-The simulator is an **engineering education and experimentation platform**, not a certified flight-dynamics tool. Some models are reduced-order and not all standalone Engineering Studio solvers are coupled into live 3D missions. See [Model Readiness](ASTRA-1.3-MODEL-READINESS.md) for the implementation boundaries.
+Nel volo libero **G / X / PAUSA SICURA** e la perdita del dispositivo mettono in pausa; nelle missioni restituiscono il controllo al GNC. Le finestre di testo assorbono i tasti mentre stai scrivendo.
 
-## Quick start — first mission in 5 steps
+## Strumenti e grafica
 
-1. Open **[ASTRA online](https://eleman07.github.io/ASTRA---Aerospace-Simulator/)** using an updated Chrome, Edge, Firefox or Safari browser.
-2. Wait until the browser engine finishes loading. The first run downloads the local Python/WebAssembly runtime; **`BROWSER ENGINE · PYTHON …`** confirms the interpreter is ready. If it fails, use [Diagnostics](https://eleman07.github.io/ASTRA---Aerospace-Simulator/diagnostics.html).
-3. Select **Space**, **Aircraft**, or **Drone** using the left navigation. In **ASTRA / FLIGHT OPS**, choose the mission and a vehicle model.
-4. For your first run, keep **GNC AUTO**. Click **START MISSION / AVVIA MISSIONE** in the bottom transport bar.
-5. Watch the 3D scene and telemetry. Use **Pause**, **Step**, or **Reset** to inspect the mission. Open **Mission Data Lab** for traces and export options.
+In **VOLO → DATI ESSENZIALI · DETTAGLI** espandi assetto e rotazione, posizione e velocità, orbita e rendezvous, meccanica del volo, propulsione ed energia, navigazione e comandi. Unità e riferimenti ECI/NED/ENU sono indicati; le stime dei sensori sono separate dallo stato fisico.
 
-![Annotated ASTRA interface showing major controls](docs/images/quickstart-annotated.png)
+Il terreno segue il volo mediante chunk con memoria limitata e caricamento progressivo. L’ortofoto locale è raccordata al terreno procedurale: non è una cartografia mondiale scaricata in streaming. La Terra e la Luna restano sferiche durante lo zoom; la scena combina superfici planetarie, stelle e nebulosa azzurra. La modalità orbitale offre SAS inerziale, prograde/retrograde, radiale, normale, target e nodo di manovra; in manuale il GNC LVLH si rilascia e gli stick comandano le coppie d'assetto.
 
-*Annotated screen capture from an earlier ASTRA build. The placement of the main controls remains similar, but exact labels and layout may vary with the current version and screen size.*
+Da **GRAFICA** seleziona Basso/Medio/Alto/Ultra e regola esposizione, audio ed effetti cinematografici. Il preset Medio usa FSR2 temporale a scala 0,67 nel renderer Forward+; il profilo Basso passa a OpenGL con costo ridotto. Scattering, ombre, glow, SSAO, SSR e SDFGI seguono il preset senza mettere un tetto agli FPS. Getti, bagliori, rotori e incandescenza di rientro rispondono ai dati del motore. I flipbook HDR di fumo e fiamma provengono da **Unity Labs Paris / Thomas ICHÉ**, pubblicati in [CC0](https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks) e inclusi offline con i crediti. Gli FPS sono illimitati con VSync disattivato; prestazioni e qualità dipendono dall'hardware e dalla scena. SSR è screen-space e non equivale a ray tracing hardware.
 
-### Your first rocket mission
+## SDK Python: installazione corretta
 
-Choose **Space → GNC AUTO → Start Mission**. You should see the mission phase and `time_s` progress; altitude/velocity telemetry will evolve as the rocket follows its profile. If the vehicle does not move, test the Python engine first rather than retrying the same button repeatedly.
+È richiesto **Python 3.10 o successivo** solo per usare gli script. Scarica il wheel della stessa release e installalo con l’interprete usato dal tuo editor:
 
-### Your first aircraft or drone mission
-
-Choose **Aircraft** or **Drone**, select the vehicle in Flight Ops, keep **GNC AUTO**, and start the mission. Camera and manual controls are available in the flight interface. The first load of a GLB model may take longer on mobile devices.
-
-<details>
-<summary><strong>Show aircraft interface example</strong></summary>
-
-![ASTRA aircraft mission screen, archived preview](astra2.png)
-
-*Archived interface example, not a current version 1.3.3 benchmark.*
-
-</details>
-
-## Verify that the engine actually works
-
-**Option A — no code:** use [**ASTRA Browser API Test Console**](https://eleman07.github.io/ASTRA---Aerospace-Simulator/api-test.html) after deploying this documentation kit. The page starts an isolated engine Worker and exposes two real tests:
-
-1. **Test status / models / state** — checks interpreter, catalog and live state.
-2. **Run rocket launch API test** — resets a spacecraft, starts the mission and executes 30 simulation steps.
-
-Expected results: **`PASS · READ API`** and **`PASS · ROCKET SIMULATION`**, followed by a JSON report you can download. These checks validate execution and state progression, not the absolute physical accuracy of every model.
-
-**Option B — diagnostics:** use the [Pyodide diagnostics page](https://eleman07.github.io/ASTRA---Aerospace-Simulator/diagnostics.html) and run **Verify files and engine startup**. Look for `PYODIDE READY`.
-
-![ASTRA browser engine and API topology](docs/images/browser-api-architecture.png)
-
-Read the [**Complete API Testing Guide**](docs/API_TESTING.md) for browser JavaScript examples, original Python HTTP API commands, SDK installation and troubleshooting.
-
-
-## Demonstration video and telemetry
-
-
-**[Watch the technical ascent demo]([docs/media/astra-ascent-demo.mp4](https://youtu.be/t_WcxvVzkis?si=QcuKQbcnrhjlGALV))** — a 3D visualization generated from an executed ASTRA simulation.
-
-## Aerospace algorithms and GNC
-
-ASTRA includes numerical integration and control/navigation elements such as fourth-order Runge–Kutta propagation, gravity/J₂, quaternion attitude kinematics, feedback guidance and relative-motion models. The specific algorithms depend on the selected vehicle and mission; some have separate design-analysis implementations rather than live coupling.
-
-![ASTRA GNC algorithm architecture — conceptual technical diagram](docs/images/gnc-architecture.png)
-
-![Example telemetry-derived ascent/flight-performance plots](docs/images/flight-performance.png)
-
-*The architecture graphic is conceptual; the performance plots come from a sample simulation dataset, not independently certified flight-test data.*
-
-See [Engineering Studio](ENGINEERING-STUDIO.md) and [Model Readiness](ASTRA-1.3-MODEL-READINESS.md) for detailed scope and limitations.
-
-## Python SDK: how to install and test it
-
-The **original ASTRA Python server** has an HTTP/JSON API, accessible from `astra.client`. The SDK **cannot** connect directly to this GitHub Pages site because physics is running inside each visitor's browser Worker, not at a network listening port.
-
-To use the SDK, start the **original complete ASTRA server package** (with `astra/server.py` and `astra/__main__.py`) on your PC:
-
-```bash
-python3 -m astra --host 127.0.0.1 --port 8765
+```powershell
+python -m pip install --no-index --upgrade --force-reinstall --no-deps .\astra_simulator_client-2.4.0-py3-none-any.whl
 ```
 
-Install the wheel in your development environment:
+Con ASTRA Desktop aperto:
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install ./downloads/astra_simulator_client-1.3.0-py3-none-any.whl
-python -c 'from astra.client import AstraClient; print("SDK installed")'
+```python
+from astra_sdk import AstraClient, CLIENT_VERSION
+
+client = AstraClient()  # trova l’istanza desktop locale attiva
+print(CLIENT_VERSION)
+print(client.client_info())
+print(client.status())
+
+client.pause()
+client.reset("space", "orbital", advanced_models=True)
+client.launch()
+
+for _ in range(100):
+    client.command(mode="python", throttle_pct=0,
+                   attitude_target_deg=[5, 0, 0])
+    state = client.step(0.1)
+    print(state["time_s"], state["altitude_m"])
 ```
 
-Test the **original HTTP server** in a second terminal:
+L'API espone il controllo SAS e il catalogo della carriera; il motore resta il medesimo usato dalla finestra 3D:
 
-```bash
-python tools/test_astra_http.py --url http://127.0.0.1:8765
-python tools/test_astra_http.py --url http://127.0.0.1:8765 --simulate --steps 30
+```python
+client.free_flight("space", "orbital", advanced_models=True)
+client.orbital_attitude("stability_assist")
+print(client.game_catalog("space"))
 ```
 
-Expected final line: **`ALL TESTS PASSED`**. The second command resets and advances the simulator's shared state; do not run it on a public server with other users.
+`step()` acquisisce il clock esterno: la GUI continua a renderizzare lo stesso stato senza integrare la fisica una seconda volta. `pause()` ferma il tempo; `play()` lo restituisce al desktop. Altre operazioni utili:
 
-See [docs/API_TESTING.md](docs/SDK_README.md) for Windows instructions, a browser-console example, endpoint tables and error explanations.
+```python
+client.free_flight("aircraft", advanced_models=True)  # in pausa
+print(client.flight_details())
+print(client.visual_models())
+client.set_camera(azimuth_deg=55, elevation_deg=20, distance_m=25)
+client.set_view(audio_volume=0.5, cinematic_effects=True)
+client.capture("C:/percorso/esistente/volo.png", overwrite=True)
+```
 
-## Links and project documentation
+![Controllo GNC Python realmente eseguito tramite il wheel, con script e telemetria del veicolo](docs/images/desktop-2.4-python.webp)
 
-- [**Live ASTRA Browser**](https://eleman07.github.io/ASTRA---Aerospace-Simulator/)
-- [**API Test Console**](https://eleman07.github.io/ASTRA---Aerospace-Simulator/api-test.html)
-- [**API Testing Guide**](docs/API_TESTING.md)
-- [**Engineering Studio reference**](ENGINEERING-STUDIO.md)
-- [**Model readiness and validation boundaries**](ASTRA-1.3-MODEL-READINESS.md)
-- [**Italian GitHub Pages/PWA setup guide**](GITHUB-PAGES-TUTORIAL-IT.md)
-- [**Personal aerospace portfolio**](https://elemanprojects.com)
+Nella cattura: controllo di quota del drone tramite SDK installato, con navigazione stimata, 400 comandi e 8 secondi simulati. La vista 3D e i valori mostrati provengono dalla stessa istanza del motore.
 
----
+### Errore «AstraClient non ha pause»
 
-<div align="center">
+Usa **`from astra_sdk import AstraClient`**. Questo import è indipendente dalle vecchie cartelle locali `astra` che possono nascondere il pacchetto aggiornato. Esegui `client.client_info()` per vedere versione, modulo caricato e interprete. Se il tuo editor usa un altro Python, installa il wheel con quell’eseguibile e riavvia l’interprete. Gli import compatibili `astra.client` e `astra_desktop_client` restano disponibili.
 
-**ASTRA — Per aspera ad astra.**
+Il campo **`version: 1.5.0`** nello stato è la versione del motore scientifico conservato; **`desktop_version`** e **`client_version`** identificano applicazione e SDK. Non indicano tutti la stessa cosa.
 
-*An open, evolving environment for aerospace learning, simulation and GNC experimentation.*
+## Modelli scientifici e limiti
 
-</div>
+Il motore conserva 13 discipline: strutture, atmosfera, energia, comunicazioni, meccanica celeste, propulsione, aerodinamica, robotica, sistemi di lancio, atterraggio planetario, progettazione di missione, rendezvous e ingegneria di sistema. Sono disponibili anche 18 laboratori numerici, guasti, verifiche dei requisiti, convergenza e robustezza. Le grandezze fisiche usano unità SI.
+
+I modelli grafici NASA, Innerscene e PX4 sono riferimenti visivi: le prestazioni simulate derivano dai profili ASTRA e non costituiscono dati certificati dei veicoli reali. La build è un’anteprima del simulatore desktop; non viene dichiarata una parità o superiorità visiva rispetto a Star Citizen.
+
+## Crediti e distribuzione
+
+Modelli, autori, licenze e modifiche sono elencati in [ASSET-CREDITS.md](ASSET-CREDITS.md) e nel pannello **ASSET 3D → CREDITI E LICENZE** dell’app. Le preview sono catture reali del simulatore. I suoni sintetici sono originali del progetto. [Licenza del progetto](LICENSE).
+
+Le release desktop distribuiscono **installer Windows e SDK Python**. Questa guida sostituisce le precedenti istruzioni della Browser Edition; i vecchi link PWA, diagnostica browser e wheel 1.3 non sono il percorso d’installazione del desktop.

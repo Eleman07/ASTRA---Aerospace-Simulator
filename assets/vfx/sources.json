@@ -1,0 +1,26 @@
+[
+  {
+    "asset": "WispySmoke01",
+    "author": "Unity Labs Paris / Thomas ICHE",
+    "license": "CC0 1.0",
+    "source": "https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks",
+    "download": "https://unity3d.com/files/labs/downloads/vfx/assets01/WispySmoke01/WispySmoke01-flipbooks.zip",
+    "zip_sha256": "f9bdc88948ff18a7d3e6332b68f2f2ff17e9a64c6feb821e05388f4f23dbcff0",
+    "source_sha256": "c49d13f3e37448026adbfa858ec8b8085c2d472fa78367d9f95fe0eccf0a5704",
+    "file": "smoke-8x8.exr",
+    "runtime_sha256": "aee208f7646ae3479a78e40fd7be8c34f0d601b2b4f61344092cbabcabec85a4",
+    "processing": "Corrected EXR chlist byte count 55 to 73; pixel data and channel order unchanged"
+  },
+  {
+    "asset": "Flame02",
+    "author": "Unity Labs Paris / Thomas ICHE",
+    "license": "CC0 1.0",
+    "source": "https://unity.com/blog/engine-platform/free-vfx-image-sequences-flipbooks",
+    "download": "https://unity3d.com/files/labs/downloads/vfx/assets01/Flame02/Flame02-flipbooks.zip",
+    "zip_sha256": "f37b12cdae090591d537ed3bb50396f03833a49864362bf665d6817b7282c954",
+    "source_sha256": "a2790f154e6f246ef4af742a04f05eaa8638b6e744b160baee91fe449b0f9c46",
+    "file": "flame-16x4.exr",
+    "runtime_sha256": "1a57cb5c06faf786a7c50c1059cbec82b9655468f1daee63112897e4d483e0b3",
+    "processing": "Corrected EXR chlist byte count 55 to 73; pixel data and channel order unchanged"
+  }
+]

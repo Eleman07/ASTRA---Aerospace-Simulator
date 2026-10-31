@@ -1,0 +1,190 @@
+{
+  "version": "2.0.0",
+  "release_kind": "NATIVE_DESKTOP_PREVIEW",
+  "native": true,
+  "offline_assets_bundled": true,
+  "browser_required": false,
+  "science_sources_preserved": {
+    "astra/mission_science.py": true,
+    "astra/science_models.py": true,
+    "astra/planetary_mission.py": true,
+    "astra/engine.py": true,
+    "astra/attitude.py": true,
+    "astra/engineering.py": true
+  },
+  "python_tests": 91,
+  "python_passed": 89,
+  "python_installer_tests_skipped": 2,
+  "native_installer_test": {
+    "version": "2.0.0",
+    "installer": "ASTRA-Desktop-2.0.0-Windows-x64-Setup.exe",
+    "bytes": 102492402,
+    "sha256": "a5fa68f5d12496e233985d37e0dea0998fd22e8ce8241cdb78e4c3ed0846fe7c",
+    "payload_manifest_sha256": "43fad68b5397589f83c36911705fdfaa3e74c9719ad90c1e14d923c3f0325112",
+    "runtime_self_test": "PASS",
+    "installer_test": "PASS",
+    "sdk": "astra_simulator_client-2.0.0-py3-none-any.whl",
+    "sdk_sha256": "80e8927dcee7a60ab213af28fd00f167ed7ed53c0caf96efec07cdc852c266af",
+    "installed_files_verified": 104,
+    "uninstaller_test": "PASS",
+    "user_files_preserved": true
+  },
+  "exact_state_parity_scenarios": 5,
+  "scientific_disciplines": 13,
+  "engineering_solvers": 18,
+  "native_graphics": {
+    "high": {
+      "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+      "asset_imports": [
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\assets/vehicles/sls-block1-high.glb",
+          "screenshot": true,
+          "vehicle": "space"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\assets/vehicles/x57-maxwell.glb",
+          "screenshot": true,
+          "vehicle": "aircraft"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\assets/vehicles/quadrotor-innerscene.glb",
+          "screenshot": true,
+          "vehicle": "drone"
+        }
+      ],
+      "browser_required": false,
+      "cases": [
+        {
+          "disciplines": 13,
+          "name": "space-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "space-orbital",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "space-planetary",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "aircraft-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "drone-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        }
+      ],
+      "native": true,
+      "renderer": "forward_plus",
+      "solvers": 18,
+      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\ASTRA-Renderer.exe",
+      "renderer_sha256": "fde7bd1ea1d3d28de4fa6a59babbb976a6b1ae7653e75ab60018fdd3964a6491"
+    },
+    "low": {
+      "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+      "asset_imports": [
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\assets/vehicles/sls-block1.glb",
+          "screenshot": true,
+          "vehicle": "space"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\assets/vehicles/x57-maxwell.glb",
+          "screenshot": true,
+          "vehicle": "aircraft"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\assets/vehicles/quadrotor-innerscene.glb",
+          "screenshot": true,
+          "vehicle": "drone"
+        }
+      ],
+      "browser_required": false,
+      "cases": [
+        {
+          "disciplines": 13,
+          "name": "space-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "space-orbital",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "space-planetary",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "aircraft-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "disciplines": 13,
+          "name": "drone-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        }
+      ],
+      "native": true,
+      "renderer": "gl_compatibility",
+      "solvers": 18,
+      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.0.0\\ASTRA-Renderer.exe",
+      "renderer_sha256": "fde7bd1ea1d3d28de4fa6a59babbb976a6b1ae7653e75ab60018fdd3964a6491"
+    }
+  },
+  "packaged_sdk": {
+    "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "api_url": "http://127.0.0.1:49744",
+    "browser_required": false,
+    "fps": 30.0,
+    "frame_p95_ms": 33.3333333333333,
+    "frames": 383,
+    "native": true,
+    "physics_clock_owner": "external",
+    "renderer": "forward_plus",
+    "scenario": "mission",
+    "science_disciplines": 13,
+    "screenshot_saved": true,
+    "solvers": 18,
+    "time_s": 0.4,
+    "vehicle": "drone",
+    "frozen_host": "PASS",
+    "offline_wheel": "PASS",
+    "wheel_import_path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\desktop-sdk-installed\\astra\\client.py",
+    "exact_external_clock": "PASS",
+    "python_mode": "PASS"
+  },
+  "readme_unchanged": true,
+  "limits": [
+    "No Star Citizen visual parity claimed",
+    "No universal FPS guarantee",
+    "Offscreen GPU tests on NVIDIA RTX 5080 Laptop; not a universal benchmark",
+    "No physical Xbox/HOTAS device validation claimed",
+    "SSR is not hardware ray tracing",
+    "Visual reference models do not supply certified vehicle physics"
+  ]
+}

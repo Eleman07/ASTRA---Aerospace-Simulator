@@ -77,6 +77,37 @@ def _solve(a: list[list[float]], b: list[float]) -> list[float]:
     return x
 
 
+def _first_bending_mode(k, mass):
+    """K phi=lambda M phi by inverse iteration and banded Cholesky; no NumPy."""
+    n=len(k);lower=[[0.0]*n for _ in range(n)]
+    for i in range(n):
+        for j in range(max(0,i-3),i+1):
+            value=k[i][j]-sum(lower[i][c]*lower[j][c] for c in range(max(0,i-3,j-3),j))
+            if i==j:
+                if value<=0 or not math.isfinite(value):raise ValueError('beam stiffness is not positive definite')
+                lower[i][j]=math.sqrt(value)
+            else:lower[i][j]=value/lower[j][j]
+    def multiply(a,x):return [sum(a[i][j]*x[j] for j in range(max(0,i-3),min(n,i+4))) for i in range(n)]
+    x=[1.0 if i%2==0 else 0.0 for i in range(n)]
+    eigenvalue=0.;iterations=0
+    for iterations in range(1,81):
+        rhs=multiply(mass,x);y=[0.]*n
+        for i in range(n):y[i]=(rhs[i]-sum(lower[i][j]*y[j] for j in range(max(0,i-3),i)))/lower[i][i]
+        for i in range(n-1,-1,-1):y[i]=(y[i]-sum(lower[j][i]*y[j] for j in range(i+1,min(n,i+4))))/lower[i][i]
+        scale=max(abs(v) for v in y);x=[v/scale for v in y]
+        kx=multiply(k,x);mx=multiply(mass,x)
+        new=sum(a*b for a,b in zip(x,kx))/sum(a*b for a,b in zip(x,mx))
+        if abs(new-eigenvalue)<=1e-12*new: eigenvalue=new;break
+        eigenvalue=new
+    residual=math.sqrt(sum((kx[i]-eigenvalue*mx[i])**2 for i in range(n)))
+    denominator=math.sqrt(sum(v*v for v in kx))+eigenvalue*math.sqrt(sum(v*v for v in mx))
+    tip=x[-2];shape=[v/tip for v in x]
+    return {'first_frequency_Hz':math.sqrt(eigenvalue)/(2*math.pi),
+            'first_eigenvalue_rad2_s2':eigenvalue,'first_mode_tip_normalized':[0.,0.,*shape],
+            'relative_eigen_residual':residual/max(denominator,1e-30),'iterations':iterations,
+            'method':'consistent Hermite mass matrix, inverse iteration, banded Cholesky'}
+
+
 def beam_fem(p: dict) -> dict:
     """Euler-Bernoulli Hermite FEM cantilever with distributed and tip loads.
 
@@ -91,21 +122,26 @@ def beam_fem(p: dict) -> dict:
     uniform = number(p, 'distributed_force_N_m', -200, -1e7, 1e7, inclusive_low=True)
     yield_strength = number(p, 'yield_strength_Pa', 250e6, 1e3, 1e12)
     elements = integer(p, 'elements', 16, 2, 64)
+    density = number(p, 'density_kg_m3', 2700, .01, 100000)
     dx = length / elements
     inertia = width*height**3/12
     ndof = 2*(elements + 1)
     k = [[0.0]*ndof for _ in range(ndof)]
+    mass = [[0.0]*ndof for _ in range(ndof)]
     f = [0.0]*ndof
     shape = ((12, 6*dx, -12, 6*dx),
              (6*dx, 4*dx*dx, -6*dx, 2*dx*dx),
              (-12, -6*dx, 12, -6*dx),
              (6*dx, 2*dx*dx, -6*dx, 4*dx*dx))
+    mass_shape=((156,22*dx,54,-13*dx),(22*dx,4*dx*dx,13*dx,-3*dx*dx),
+                (54,13*dx,156,-22*dx),(-13*dx,-3*dx*dx,-22*dx,4*dx*dx))
     for e in range(elements):
         indexes = [2*e, 2*e+1, 2*e+2, 2*e+3]
         for r in range(4):
             f[indexes[r]] += uniform*dx*(dx/12 if r in (1, 3) else .5)*(1 if r != 3 else -1)
             for c in range(4):
                 k[indexes[r]][indexes[c]] += young*inertia/dx**3*shape[r][c]
+                mass[indexes[r]][indexes[c]] += density*width*height*dx/420*mass_shape[r][c]
     f[-2] += tip
     displacement = [0.0, 0.0] + _solve([row[2:] for row in k[2:]], f[2:])
     # End curvature of the Hermite interpolants, not a stress-smoothed FEM fit.
@@ -116,6 +152,12 @@ def beam_fem(p: dict) -> dict:
             curvature = ((-6+12*t)*w1 + (6-12*t)*w2)/dx**2 + ((-4+6*t)*theta1+(-2+6*t)*theta2)/dx
             max_moment = max(max_moment, abs(young*inertia*curvature))
     stress = max_moment*height/(2*inertia)
+    modal = _first_bending_mode([row[2:] for row in k[2:]],[row[2:] for row in mass[2:]])
+    mode = modal['first_mode_tip_normalized']
+    modal['generalized_mass_kg'] = sum(mode[i]*mass[i][j]*mode[j]
+                                      for i in range(ndof) for j in range(ndof))
+    curvature = (-6*mode[0]+6*mode[2])/dx**2+(-4*mode[1]-2*mode[3])/dx
+    modal['root_stress_per_tip_displacement_Pa_m'] = abs(young*height*.5*curvature)
     return {'solver': 'Euler-Bernoulli cubic Hermite finite elements + pivoted Gaussian elimination',
             'frame': 'cantilever root at x=0; loads in transverse positive y',
             'elements': elements, 'second_moment_m4': inertia,
@@ -125,9 +167,11 @@ def beam_fem(p: dict) -> dict:
             'max_abs_bending_moment_N_m': max_moment,
             'max_abs_bending_stress_Pa': stress,
             'yield_safety_factor': yield_strength/stress if stress else None,
+            'mass_kg':density*width*height*length,
+            'modal':modal,
             'samples': [{'x_m': i*dx, 'deflection_m': displacement[2*i],
                          'rotation_rad': displacement[2*i+1]} for i in range(elements+1)],
-            'limits': 'Linear-elastic small-deflection beam, rectangular uniform section, perfectly fixed root; not 3-D FEM or structural certification.'}
+            'limits': 'Linear-elastic small-deflection Euler-Bernoulli beam with consistent mass and first undamped bending eigenmode. Uniform rectangular section and fixed root; no shear deformation, rotary inertia, torsion, buckling or 3-D FEM. Independent study, no modal feedback into flight.'}
 
 
 def thermal_fvm(p: dict) -> dict:

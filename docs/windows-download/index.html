@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07121f">
+  <title>ASTRA Desktop · Windows 11</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07121f;--panel:#0c1d2e;--line:#1e415a;--cyan:#75e3ff;--blue:#9cbfff;--text:#eef7ff;--muted:#a5bbd0}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 78% 10%,#164567 0,transparent 34%),linear-gradient(150deg,#07121f,#030910 72%);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+    main{max-width:920px;margin:0 auto;padding:7vh 24px 48px}.eyebrow{letter-spacing:.22em;color:var(--cyan);font-size:.76rem;font-weight:700}.hero{padding:42px 0 34px}.hero h1{font-size:clamp(2.6rem,8vw,5.5rem);line-height:.98;margin:16px 0 22px;letter-spacing:-.055em}.hero h1 span{color:var(--cyan)}.hero p{max-width:680px;color:var(--muted);font-size:1.15rem}
+    .card{background:linear-gradient(145deg,#10253aee,#081522ee);border:1px solid var(--line);border-radius:20px;padding:clamp(24px,5vw,44px);box-shadow:0 24px 80px #0008}.tag{display:inline-block;border:1px solid #35627d;border-radius:999px;padding:5px 12px;color:var(--blue);font-size:.78rem;letter-spacing:.08em}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0}.button{display:inline-block;text-decoration:none;font-weight:700;padding:13px 19px;border-radius:10px;color:#04121b;background:linear-gradient(100deg,#78dcff,#a5c7ff)}.button.secondary{color:var(--text);background:#142a3e;border:1px solid #31526a}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin-top:28px}.grid h2{font-size:1rem;color:var(--cyan);margin-bottom:6px}.grid p{font-size:.92rem;color:var(--muted);margin:0}.footer{padding-top:24px;color:#8199ae;font-size:.83rem}.footer a{color:var(--blue)}
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div class="eyebrow">ASTRA FLIGHT SYSTEMS · DESKTOP</div>
+      <h1>FLIGHT <span>BEYOND</span><br>THE ORDINARY.</h1>
+      <p>Simulatore aerospaziale nativo per Windows 11 x64. Spazio, aereo, drone e modelli scientifici in un’app desktop utilizzabile anche senza connessione.</p>
+    </header>
+    <section class="card" aria-labelledby="release">
+      <span class="tag">WINDOWS 11 · x64 · OFFLINE</span>
+      <h2 id="release">Installa ASTRA Desktop</h2>
+      <p>Il setup contiene motore, renderer 3D, veicoli, texture, effetti e audio. Per installare e usare il simulatore non servono browser, Python o Internet.</p>
+      <div class="actions">
+        <a class="button" href="https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/latest">SCARICA L’ULTIMA RELEASE WINDOWS</a>
+        <a class="button secondary" href="https://github.com/Eleman07/ASTRA-Aerospace-Simulator">GUIDA E CODICE SORGENTE</a>
+      </div>
+      <div class="grid">
+        <div><h2>Tre modalità Gioca</h2><p>Campagne Spazio, Aereo e Drone con obiettivi verificati dalla telemetria e progressione locale.</p></div>
+        <div><h2>Motore scientifico</h2><p>13 discipline, unità SI, dinamica, guida, controlli manuali e missioni aerospaziali.</p></div>
+        <div><h2>API Python opzionale</h2><p>Il wheel della stessa release permette di pilotare la simulazione desktop tramite script.</p></div>
+      </div>
+    </section>
+    <p class="footer">Per usare l’SDK Python scarica anche il wheel dagli asset della release. La pagina Internet serve solo a trovare i download; il simulatore funziona offline. <a href="https://elemanprojects.com">Portfolio</a>.</p>
+  </main>
+</body>
+</html>

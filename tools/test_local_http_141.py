@@ -37,7 +37,7 @@ class Http141Tests(unittest.TestCase):
 
     def test_local_http_version_and_mode(self):
         result=self.call('/api/v1/status')
-        self.assertEqual(result['version'],'1.4.1')
+        self.assertEqual(result['version'],'1.5.0')
         self.assertEqual(result['execution_mode'],'local-http')
         self.assertEqual(result['api'],'local-http')
 
@@ -52,7 +52,7 @@ class Http141Tests(unittest.TestCase):
             }
         })
         self.assertEqual(s['environment']['wind_profile_model'],'MONIN_OBUKHOV_SURFACE_LAYER')
-        self.assertEqual(s['version'],'1.4.1')
+        self.assertEqual(s['version'],'1.5.0')
         analysis=self.call('/api/v1/engineering/live',{'analysis':'wind_shear'})
         self.assertTrue(analysis['mission_context']['coupled_into_flight_dynamics'])
         self.assertEqual(analysis['model'],'MONIN_OBUKHOV_WIND_PROFILE')

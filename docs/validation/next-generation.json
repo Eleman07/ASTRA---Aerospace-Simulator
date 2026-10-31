@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "source": "ASTRA local deterministic solvers; analytical checks, not measured vehicle data",
+  "beam": {
+    "equations": "K phi = omega^2 M phi; f1 = beta1^2/(2*pi*L^2)*sqrt(E I/(rho A))",
+    "parameters": {
+      "length_m": 2.0,
+      "width_m": 0.1,
+      "height_m": 0.08,
+      "young_modulus_Pa": 70000000000.0,
+      "density_kg_m3": 2700.0
+    },
+    "assumptions": "Uniform small-deflection Euler-Bernoulli clamped-free beam, no shear/rotary inertia",
+    "method": "Hermite consistent mass, banded Cholesky inverse iteration",
+    "convergence": [
+      {
+        "elements": 2,
+        "reference_Hz": 16.45043530482281,
+        "computed_Hz": 16.458388059778244,
+        "relative_error": 0.00048343735640243857,
+        "relative_eigen_residual": 1.9683894013176254e-09,
+        "status": "PASS"
+      },
+      {
+        "elements": 4,
+        "reference_Hz": 16.45043530482281,
+        "computed_Hz": 16.45097336690243,
+        "relative_error": 3.270807547939292e-05,
+        "relative_eigen_residual": 2.63326619397806e-09,
+        "status": "PASS"
+      },
+      {
+        "elements": 8,
+        "reference_Hz": 16.45043530482281,
+        "computed_Hz": 16.450469571252523,
+        "relative_error": 2.083010514741801e-06,
+        "relative_eigen_residual": 2.837071220300797e-09,
+        "status": "PASS"
+      },
+      {
+        "elements": 16,
+        "reference_Hz": 16.45043530482281,
+        "computed_Hz": 16.450437456444632,
+        "relative_error": 1.3079421790074264e-07,
+        "relative_eigen_residual": 2.879783098164182e-09,
+        "status": "PASS"
+      }
+    ]
+  },
+  "nozzle": {
+    "equations": "mdot = rho_e A_e V_e; h0 = cp Te + Ve^2/2; normal-shock Rankine-Hugoniot + isentropic segments",
+    "parameters": {
+      "specific_heat_ratio": 1.22,
+      "gas_constant_J_kgK": 355.0,
+      "chamber_temperature_K": 3400.0,
+      "throat_area_m2": 0.03,
+      "altitude_m": 0.0
+    },
+    "assumptions": "Steady calorically perfect gas; no viscous separation, combustion or oblique shocks",
+    "method": "Bracketed Mach and internal-shock area roots; 90 bisections",
+    "cases": [
+      {
+        "chamber_pressure_Pa": 102000.0,
+        "expansion_ratio": 4.0,
+        "regime": "UNCHOKED_SUBSONIC",
+        "mass_flow_kg_s": 1.276502046189405,
+        "exit_mach": 0.10436079612541897,
+        "continuity_relative_error": 1.7394770779089274e-16,
+        "status": "PASS"
+      },
+      {
+        "chamber_pressure_Pa": 150000.0,
+        "expansion_ratio": 4.0,
+        "regime": "CHOKED_INTERNAL_NORMAL_SHOCK",
+        "mass_flow_kg_s": 2.6721680359683435,
+        "exit_mach": 0.21802543001371238,
+        "continuity_relative_error": 4.985718007316104e-16,
+        "status": "PASS"
+      },
+      {
+        "chamber_pressure_Pa": 7000000.0,
+        "expansion_ratio": 4.0,
+        "regime": "CHOKED_SUPERSONIC",
+        "mass_flow_kg_s": 124.70117501185604,
+        "exit_mach": 2.6496070709768533,
+        "continuity_relative_error": 7.977148811705767e-16,
+        "status": "PASS"
+      }
+    ]
+  },
+  "references": [
+    "https://www.grc.nasa.gov/www/k-12/airplane/mflchk.html",
+    "https://www.grc.nasa.gov/www/k-12/airplane/normal.html",
+    "https://lampz.tugraz.at/~hadley/memm/mechanics/cbeam.php"
+  ],
+  "coupling": "New nozzle and beam modal calculations are independent Engineering Studio/snapshot studies. Existing live pressure-thrust coupling is retained; applied thrust telemetry drives graphics only.",
+  "status": "PASS"
+}

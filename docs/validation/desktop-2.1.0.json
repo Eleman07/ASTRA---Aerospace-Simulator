@@ -1,0 +1,462 @@
+{
+  "version": "2.1.0",
+  "release_kind": "NATIVE_DESKTOP_PREVIEW",
+  "native": true,
+  "offline_assets_bundled": true,
+  "browser_required": false,
+  "science_sources_preserved": {
+    "astra/mission_science.py": true,
+    "astra/science_models.py": true,
+    "astra/planetary_mission.py": true,
+    "astra/engine.py": true,
+    "astra/attitude.py": true,
+    "astra/engineering.py": true
+  },
+  "python_tests": 94,
+  "python_passed": 92,
+  "python_installer_tests_skipped": 2,
+  "native_installer_test": {
+    "version": "2.1.0",
+    "installer": "ASTRA-Desktop-2.1.0-Windows-x64-Setup.exe",
+    "bytes": 166788332,
+    "sha256": "6302992c8ee76e46726da938056c85f4d39032a2c175f0814d345ca9ff367338",
+    "payload_manifest_sha256": "1fe5884ad5236021949b25d25d6040d3a4ff98443bc55c7ccda5fadfb6596df5",
+    "runtime_self_test": "PASS",
+    "installer_test": "PASS",
+    "sdk": "astra_simulator_client-2.1.0-py3-none-any.whl",
+    "sdk_sha256": "727af65e2431d8de7228b28220882d818dcaa0dcd045916d33fba1b28d530dce",
+    "installed_files_verified": 135,
+    "uninstaller_test": "PASS",
+    "user_files_preserved": true
+  },
+  "exact_state_parity_scenarios": 5,
+  "scientific_disciplines": 13,
+  "engineering_solvers": 18,
+  "native_graphics": {
+    "high": {
+      "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+      "asset_imports": [
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\assets/vehicles/sls-block1-high.glb",
+          "screenshot": true,
+          "vehicle": "space"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\assets/vehicles/innerscene-twin-turboprop-high.glb",
+          "screenshot": true,
+          "vehicle": "aircraft"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\assets/vehicles/desktop-quadcopter.glb",
+          "screenshot": true,
+          "vehicle": "drone"
+        }
+      ],
+      "browser_required": false,
+      "cases": [
+        {
+          "asset_dimensions_m": [
+            2.96296000480652,
+            13.0,
+            1.50274038314819
+          ],
+          "asset_id": "nasa-sls-block1",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "space-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "space-x-crew-dragon",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "space-orbital",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "nasa-insight",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "space-planetary",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "innerscene-twin-turboprop",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "aircraft-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "innerscene-quadcopter",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "drone-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        }
+      ],
+      "native": true,
+      "procedural_vehicles": false,
+      "renderer": "forward_plus",
+      "secondary_models": [
+        {
+          "asset_id": "innerscene-propeller-aircraft",
+          "launch_vertical": true,
+          "loaded": true,
+          "model_id": "corvo-t2",
+          "rotor_pivots": 1
+        },
+        {
+          "asset_id": "px4-typhoon-h480",
+          "launch_vertical": true,
+          "loaded": true,
+          "model_id": "merlo-h6",
+          "rotor_pivots": 6
+        },
+        {
+          "asset_id": "space-x-crew-dragon",
+          "launch_vertical": true,
+          "loaded": true,
+          "model_id": "dardo-lifting-body",
+          "rotor_pivots": 0
+        }
+      ],
+      "solvers": 18,
+      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\ASTRA-Renderer.exe",
+      "renderer_sha256": "53d78ee56487bd9d6c4cff2b25536de8c9e1c5e454df3f7409d5391fad7996d8"
+    },
+    "low": {
+      "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+      "asset_imports": [
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\assets/vehicles/sls-block1.glb",
+          "screenshot": true,
+          "vehicle": "space"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\assets/vehicles/innerscene-twin-turboprop.glb",
+          "screenshot": true,
+          "vehicle": "aircraft"
+        },
+        {
+          "loaded": true,
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\assets/vehicles/desktop-quadcopter.glb",
+          "screenshot": true,
+          "vehicle": "drone"
+        }
+      ],
+      "browser_required": false,
+      "cases": [
+        {
+          "asset_dimensions_m": [
+            2.96304869651794,
+            13.0,
+            1.50278532505035
+          ],
+          "asset_id": "nasa-sls-block1",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "space-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "space-x-crew-dragon",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "space-orbital",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "nasa-insight",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "space-planetary",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "innerscene-twin-turboprop",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "aircraft-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        },
+        {
+          "asset_dimensions_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "asset_id": "innerscene-quadcopter",
+          "disciplines": 13,
+          "launch_vertical": true,
+          "loaded": true,
+          "name": "drone-mission",
+          "screenshot": true,
+          "time_s": 0.2
+        }
+      ],
+      "native": true,
+      "procedural_vehicles": false,
+      "renderer": "gl_compatibility",
+      "secondary_models": [
+        {
+          "asset_id": "innerscene-propeller-aircraft",
+          "launch_vertical": true,
+          "loaded": true,
+          "model_id": "corvo-t2",
+          "rotor_pivots": 1
+        },
+        {
+          "asset_id": "px4-typhoon-h480",
+          "launch_vertical": true,
+          "loaded": true,
+          "model_id": "merlo-h6",
+          "rotor_pivots": 6
+        },
+        {
+          "asset_id": "space-x-crew-dragon",
+          "launch_vertical": true,
+          "loaded": true,
+          "model_id": "dardo-lifting-body",
+          "rotor_pivots": 0
+        }
+      ],
+      "solvers": 18,
+      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.1.0\\ASTRA-Renderer.exe",
+      "renderer_sha256": "53d78ee56487bd9d6c4cff2b25536de8c9e1c5e454df3f7409d5391fad7996d8"
+    }
+  },
+  "packaged_sdk": {
+    "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "api_url": "http://127.0.0.1:62862",
+    "browser_required": false,
+    "fps": 30.0,
+    "frame_p95_ms": 33.3333333333333,
+    "frames": 349,
+    "native": true,
+    "physics_clock_owner": "external",
+    "renderer": "forward_plus",
+    "scenario": "mission",
+    "science_disciplines": 13,
+    "screenshot_saved": true,
+    "solvers": 18,
+    "time_s": 0.4,
+    "vehicle": "drone",
+    "frozen_host": "PASS",
+    "offline_wheel": "PASS",
+    "wheel_import_path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\desktop-sdk-installed\\astra\\client.py",
+    "exact_external_clock": "PASS",
+    "python_mode": "PASS",
+    "camera_api": "PASS",
+    "real_png_capture": {
+      "id": "5525675f6495bb06e9af01bb",
+      "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\sdk-real-capture.png",
+      "include_ui": false,
+      "status": "CAPTURED",
+      "error": "",
+      "bytes": 355537,
+      "width": 1440,
+      "height": 900
+    },
+    "presentation_does_not_advance_physics": true,
+    "desktop_version": "2.1.0",
+    "host_sha256": "7a01502f8b57e1deda11411ba12261227d75c3df9b44bdb74b196b9c9ea7d688",
+    "renderer_sha256": "53d78ee56487bd9d6c4cff2b25536de8c9e1c5e454df3f7409d5391fad7996d8",
+    "sdk_sha256": "727af65e2431d8de7228b28220882d818dcaa0dcd045916d33fba1b28d530dce"
+  },
+  "visual_api": {
+    "version": "2.1.0",
+    "camera_api": "PASS",
+    "png_capture": "PASS",
+    "physics_unchanged": true,
+    "shots": [
+      {
+        "model": "nasa-orion-spacecraft",
+        "capture": {
+          "id": "2a8609d369e67a7ddb2d2cfe",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\modern-nasa-orion-spacecraft.png",
+          "include_ui": false,
+          "status": "CAPTURED",
+          "error": "",
+          "bytes": 701975,
+          "width": 1440,
+          "height": 900
+        },
+        "render": {
+          "connected": true,
+          "age_s": 0.05193950000102632,
+          "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+          "asset_error": "",
+          "asset_file": "sls-orion-spacecraft.glb",
+          "asset_id": "nasa-orion-spacecraft",
+          "asset_loaded": true,
+          "backend": "forward_plus",
+          "cache_hits": 0,
+          "cache_loads": 3,
+          "camera": {
+            "azimuth_deg": 55.0,
+            "distance_m": 13.0,
+            "elevation_deg": 18.0
+          },
+          "draw_calls": 12,
+          "fps": 26.0,
+          "objects": 12,
+          "primitives": 60000,
+          "resolution_scale": 1.0,
+          "view_revision": 1
+        }
+      },
+      {
+        "model": "space-x-crew-dragon",
+        "capture": {
+          "id": "72cdd16998a411932b688f3d",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\modern-space-x-crew-dragon.png",
+          "include_ui": false,
+          "status": "CAPTURED",
+          "error": "",
+          "bytes": 610584,
+          "width": 1440,
+          "height": 900
+        },
+        "render": {
+          "connected": true,
+          "age_s": 0.006881499997689389,
+          "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
+          "asset_error": "",
+          "asset_file": "crew-dragon-kubaha.glb",
+          "asset_id": "space-x-crew-dragon",
+          "asset_loaded": true,
+          "backend": "forward_plus",
+          "cache_hits": 0,
+          "cache_loads": 4,
+          "camera": {
+            "azimuth_deg": 47.8380275608647,
+            "distance_m": 13.0,
+            "elevation_deg": 16.8540844097384
+          },
+          "draw_calls": 14,
+          "fps": 26.0,
+          "objects": 14,
+          "primitives": 85948,
+          "resolution_scale": 1.0,
+          "view_revision": 2
+        }
+      }
+    ],
+    "renderer_sha256": "53d78ee56487bd9d6c4cff2b25536de8c9e1c5e454df3f7409d5391fad7996d8"
+  },
+  "rocket_alignment": [
+    {
+      "dimensions_m": [
+        2.96304869651794,
+        13.0,
+        1.50278532505035
+      ],
+      "file": "sls-block1.glb",
+      "vertical": true
+    },
+    {
+      "dimensions_m": [
+        2.96296000480652,
+        13.0,
+        1.50274038314819
+      ],
+      "file": "sls-block1-high.glb",
+      "vertical": true
+    },
+    {
+      "dimensions_m": [
+        0.962772607803345,
+        13.0,
+        0.958783805370331
+      ],
+      "file": "falcon-9-block5.glb",
+      "vertical": true
+    },
+    {
+      "dimensions_m": [
+        0.962768197059631,
+        13.0000009536743,
+        0.958779275417328
+      ],
+      "file": "falcon-9-block5-high.glb",
+      "vertical": true
+    },
+    {
+      "dimensions_m": [
+        5.76283931732178,
+        13.0000019073486,
+        5.76298427581787
+      ],
+      "file": "sls-upper-stack.glb",
+      "vertical": true
+    }
+  ],
+  "readme_unchanged": true,
+  "limits": [
+    "No Star Citizen visual parity claimed",
+    "No universal FPS guarantee",
+    "Offscreen GPU tests on NVIDIA RTX 5080 Laptop; not a universal benchmark",
+    "No physical Xbox/HOTAS device validation claimed",
+    "SSR is not hardware ray tracing",
+    "Visual reference models do not supply certified vehicle physics"
+  ]
+}

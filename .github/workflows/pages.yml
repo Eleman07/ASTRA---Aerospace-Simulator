@@ -1,4 +1,4 @@
-name: Deploy ASTRA Browser to GitHub Pages
+name: Publish ASTRA Windows download page
 on:
   push:
     branches: [main]
@@ -19,23 +19,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Download Pyodide core for on-device Python and offline mode
-        run: python3 tools/prepare_pyodide.py
-      - name: Check assets and JavaScript syntax
-        run: |
-          python3 -m unittest discover -s tools -p 'test_*.py' -q
-          node --check app.js
-          node --check engineering-studio.js
-          node --check disciplines.js
-          node --check browser-api.js
-          node --check browser-engine-worker.js
-          node --check service-worker.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload static site
+      - name: Upload Windows download page only
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: docs/windows-download
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

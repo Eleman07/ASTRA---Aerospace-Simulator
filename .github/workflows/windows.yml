@@ -1,0 +1,30 @@
+name: Build ASTRA Windows offline
+on:
+  workflow_dispatch:
+  push:
+    tags: ['windows-*']
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install pyinstaller==6.22.3
+      - run: python -m unittest discover -s tools -p 'test_*.py' -q
+      - run: node --test tools/controllers.test.mjs tools/rendering.test.mjs
+      - run: python tools/build_windows.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ASTRA-Windows-Offline
+          path: |
+            dist/ASTRA-Windows-Offline.zip
+            dist/windows-build.json

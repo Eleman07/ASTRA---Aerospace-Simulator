@@ -1,0 +1,332 @@
+{
+  "defaults": {
+    "asteria-capsule": "nasa-sls-block1",
+    "dardo-lifting-body": "space-x-crew-dragon",
+    "astra-custom-stack": "nasa-sls-block1",
+    "astra-leo-servicer": "space-x-crew-dragon",
+    "astra-lunar-lander": "nasa-insight",
+    "aquila-x4": "innerscene-twin-turboprop",
+    "corvo-t2": "innerscene-propeller-aircraft",
+    "falco-q8": "innerscene-quadcopter",
+    "merlo-h6": "px4-typhoon-h480"
+  },
+  "models": [
+    {
+      "id": "nasa-sls-block1",
+      "name": "NASA SLS Block 1 \u00b7 stack Orion",
+      "role": "modern-launcher",
+      "url": "assets/vehicles/sls-block1.glb?v=3",
+      "stage_url": "assets/vehicles/sls-upper-stack.glb",
+      "orbit_url": "assets/vehicles/sls-orion-spacecraft.glb",
+      "recovery_url": "assets/vehicles/orion-capsule.glb",
+      "source": "NASA 3D Resources \u00b7 Space Launch System Block 1",
+      "source_url": "https://science.nasa.gov/3d-resources/space-launch-system-block-1/",
+      "license": "NASA Usage Guidelines",
+      "orientation": "z",
+      "recovery_orientation": "z",
+      "scale": 0.00010243325493531,
+      "stage_scale": 2.5085695086198368e-05,
+      "orbit_scale": 8.570945821117775e-06,
+      "recovery_scale": 3.5538068038781017e-06,
+      "summary": "Stack NASA SLS Block 1 con Orion. Dopo la separazione passa allo stadio superiore e poi al veicolo Orion; al rientro resta la capsula. La sequenza fisica resta il profilo ASTRA selezionato.",
+      "reference_length_m": 98.0,
+      "stage_reference_length_m": 24.0,
+      "orbit_reference_length_m": 8.2,
+      "recovery_reference_length_m": 3.4,
+      "high_url": "assets/vehicles/sls-block1-high.glb",
+      "category": "space",
+      "file": "vehicles/sls-block1.glb",
+      "high_file": "vehicles/sls-block1-high.glb",
+      "stage_file": "vehicles/sls-upper-stack.glb",
+      "orbit_file": "vehicles/sls-orion-spacecraft.glb",
+      "recovery_file": "vehicles/orion-capsule.glb",
+      "rotation_deg": [
+        0,
+        0,
+        0
+      ],
+      "file_rotations": {
+        "sls-upper-stack.glb": [
+          -90,
+          0,
+          0
+        ],
+        "sls-orion-spacecraft.glb": [
+          0,
+          0,
+          -90
+        ],
+        "orion-capsule.glb": [
+          0,
+          0,
+          0
+        ]
+      },
+      "omit_materials_by_file": {
+        "sls-orion-spacecraft.glb": [
+          "NASA SLS WH_Box"
+        ]
+      },
+      "remove_print_stand": true
+    },
+    {
+      "id": "space-x-crew-dragon",
+      "name": "SpaceX Falcon 9 Block 5 \u00b7 Crew Dragon",
+      "role": "modern-launcher",
+      "url": "assets/vehicles/falcon-9-block5.glb",
+      "orbit_url": "assets/vehicles/crew-dragon-kubaha.glb",
+      "recovery_url": "assets/vehicles/crew-dragon-capsule.glb",
+      "source": "Falcon 9 Block 5 \u00b7 Fac-tory-o",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Falcon_9.stl",
+      "license": "CC BY-SA 4.0 \u00b7 Fac-tory-o",
+      "orientation": "z",
+      "recovery_orientation": "z",
+      "scale": 7.316661066807857e-05,
+      "orbit_scale": 8.361898362066122e-06,
+      "recovery_scale": 3.867377992455582e-06,
+      "summary": "Stack Falcon 9 Block 5 completo nella fase di lancio; in orbita passa alla Dragon 2 con trunk e al rientro mostra la capsula. La mesh \u00e8 solo visuale: la dinamica usa il profilo ASTRA selezionato.",
+      "reference_length_m": 70.0,
+      "orbit_reference_length_m": 8.0,
+      "recovery_reference_length_m": 3.7,
+      "high_url": "assets/vehicles/falcon-9-block5-high.glb",
+      "category": "space",
+      "file": "vehicles/falcon-9-block5.glb",
+      "high_file": "vehicles/falcon-9-block5-high.glb",
+      "orbit_file": "vehicles/crew-dragon-kubaha.glb",
+      "recovery_file": "vehicles/crew-dragon-capsule.glb",
+      "rotation_deg": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "nasa-x57-maxwell",
+      "name": "NASA X-57 Maxwell \u00b7 aereo elettrico sperimentale",
+      "role": "full",
+      "url": "assets/vehicles/x57-maxwell.glb",
+      "source": "NASA 3D Resources \u00b7 X-57 Maxwell",
+      "source_url": "https://science.nasa.gov/3d-resources/x-57-maxwell/",
+      "license": "NASA Usage Guidelines",
+      "orientation": "y",
+      "summary": "Dimostratore NASA a propulsione elettrica. Modello pre-realizzato con mesh ottimizzata per il browser.",
+      "scale": 0.5277777777777778,
+      "reference_length_m": 9.5,
+      "category": "aircraft",
+      "file": "vehicles/x57-maxwell.glb",
+      "rotation_deg": [
+        0,
+        90,
+        0
+      ]
+    },
+    {
+      "id": "innerscene-propeller-aircraft",
+      "name": "Monomotore a elica \u00b7 Innerscene CC0",
+      "role": "full",
+      "url": "assets/vehicles/innerscene-propeller-aircraft.glb",
+      "source": "Innerscene \u00b7 Single-engine propeller aircraft",
+      "source_url": "https://www.innerscene.com/tools/library/3d-parts/single-engine-propeller-aircraft-d6091ef1",
+      "license": "CC0 1.0 Universal",
+      "orientation": "y",
+      "summary": "Aereo monomotore pre-realizzato con cabina, carrello e propulsore separato animato in base al comando motore; animazione visiva, dinamica ASTRA.",
+      "scale": 0.6175555555555555,
+      "reference_length_m": 8.318,
+      "rotor_animation": {
+        "axis": "x",
+        "hubs_source_m": [
+          [
+            3.79,
+            1.49,
+            0.0
+          ]
+        ],
+        "blade_radius_range_m": [
+          0.3,
+          0.9
+        ],
+        "node_name_groups": [
+          [
+            "Propeller finite twisted blade"
+          ]
+        ],
+        "visual_controller": "throttle",
+        "visual_idle_rpm": 650,
+        "visual_max_rpm": 2500,
+        "visual_only": true
+      },
+      "high_url": "assets/vehicles/innerscene-propeller-aircraft-high.glb",
+      "category": "aircraft",
+      "file": "vehicles/desktop-propeller-aircraft.glb",
+      "high_file": "vehicles/desktop-propeller-aircraft-high.glb",
+      "rotation_deg": [
+        0,
+        90,
+        0
+      ],
+      "animation_axis": "x"
+    },
+    {
+      "id": "innerscene-quadcopter",
+      "name": "Quadricottero X-frame \u00b7 elettronica di volo e gimbal",
+      "role": "full",
+      "url": "assets/vehicles/quadrotor-innerscene.glb",
+      "source": "Innerscene \u00b7 Quadcopter with flight electronics",
+      "source_url": "https://www.innerscene.com/tools/library/3d-parts/quadcopter-with-flight-electronics-a25968c1",
+      "license": "CC0 1.0 Universal",
+      "orientation": "y",
+      "scale": 0.0411,
+      "reference_length_m": 0.74,
+      "summary": "Quadricottero pre-realizzato a scala nominale con quattro rotori, motori, ESC, flight controller, batteria, GPS e pattini.",
+      "rotor_animation": {
+        "axis": "y",
+        "hubs_source_m": [
+          [
+            0.22,
+            0.215,
+            0.22
+          ],
+          [
+            -0.22,
+            0.215,
+            0.22
+          ],
+          [
+            -0.22,
+            0.215,
+            -0.22
+          ],
+          [
+            0.22,
+            0.215,
+            -0.22
+          ]
+        ],
+        "blade_radius_range_m": [
+          0.03,
+          0.15
+        ],
+        "blade_regions": [
+          {
+            "material_index": 4,
+            "rotor_indices": [
+              0,
+              1
+            ],
+            "min_height_m": 0.23,
+            "max_height_m": 0.245
+          },
+          {
+            "material_index": 1,
+            "rotor_indices": [
+              2,
+              3
+            ],
+            "min_height_m": 0.205,
+            "max_height_m": 0.25
+          }
+        ],
+        "minimum_triangles_per_rotor": 16
+      },
+      "category": "drone",
+      "file": "vehicles/desktop-quadcopter.glb",
+      "rotation_deg": [
+        0,
+        0,
+        0
+      ],
+      "animation_axis": "y"
+    },
+    {
+      "id": "innerscene-twin-turboprop",
+      "name": "Bimotore turboprop \u00b7 Innerscene",
+      "category": "aircraft",
+      "file": "vehicles/innerscene-twin-turboprop.glb",
+      "high_file": "vehicles/innerscene-twin-turboprop-high.glb",
+      "rotation_deg": [
+        0,
+        90,
+        0
+      ],
+      "animation_axis": "x",
+      "source": "Innerscene",
+      "source_url": "https://www.innerscene.com/tools/library/3d-parts/twin-turboprop-aircraft-f8c5fa80",
+      "license": "CC0 1.0"
+    },
+    {
+      "id": "nasa-orion-spacecraft",
+      "name": "Orion spacecraft \u00b7 NASA",
+      "category": "orbital",
+      "file": "vehicles/sls-orion-spacecraft.glb",
+      "rotation_deg": [
+        0,
+        0,
+        -90
+      ],
+      "source": "NASA",
+      "source_url": "https://science.nasa.gov/3d-resources/space-launch-system-sls-block-1/",
+      "license": "NASA Usage Guidelines",
+      "omit_materials_by_file": {
+        "sls-orion-spacecraft.glb": [
+          "NASA SLS WH_Box"
+        ]
+      }
+    },
+    {
+      "id": "px4-typhoon-h480",
+      "name": "Typhoon H480 \u00b7 PX4",
+      "category": "drone",
+      "file": "vehicles/px4-typhoon-h480.glb",
+      "high_file": "vehicles/px4-typhoon-h480-high.glb",
+      "rotation_deg": [
+        0,
+        -90,
+        0
+      ],
+      "animation_axis": "y",
+      "source": "PX4 / Lorenz Meier et al.",
+      "source_url": "https://github.com/PX4/PX4-SITL_gazebo-classic/tree/main/models/typhoon_h480",
+      "license": "BSD (upstream package.xml)"
+    },
+    {
+      "id": "nasa-iss",
+      "name": "International Space Station \u00b7 NASA",
+      "category": "station",
+      "file": "vehicles/nasa-iss-b.glb",
+      "rotation_deg": [
+        0,
+        0,
+        0
+      ],
+      "source": "NASA / Michael D. Carbajal",
+      "source_url": "https://science.nasa.gov/3d-resources/international-space-station-iss-b/",
+      "license": "NASA Usage Guidelines"
+    },
+    {
+      "id": "nasa-insight",
+      "name": "InSight \u00b7 lander robotico NASA",
+      "category": "planetary",
+      "file": "vehicles/nasa-insight-descent.glb",
+      "landed_file": "vehicles/nasa-insight-landed.glb",
+      "rotation_deg": [
+        0,
+        0,
+        0
+      ],
+      "source": "NASA / Brian E. Kumanchik",
+      "source_url": "https://science.nasa.gov/3d-resources/insight-cruise-lander/",
+      "license": "NASA Usage Guidelines",
+      "summary": "Riferimento grafico del lander InSight; la missione di discesa resta il profilo ASTRA sul corpo selezionato."
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "nasa-mobile-launcher",
+      "name": "NASA Artemis Mobile Launcher",
+      "file": "vehicles/nasa-mobile-launcher.glb",
+      "source": "NASA / Samuel H. Neblett",
+      "source_url": "https://science.nasa.gov/3d-resources/mobile-launcher/",
+      "license": "NASA Usage Guidelines"
+    }
+  ]
+}
