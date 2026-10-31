@@ -1,8 +1,8 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-if exist "dist\ASTRA-Desktop-2.4.0\ASTRA.exe" (
-  "dist\ASTRA-Desktop-2.4.0\ASTRA.exe" %*
+if exist "dist\ASTRA-Desktop-2.4.1\ASTRA.exe" (
+  "dist\ASTRA-Desktop-2.4.1\ASTRA.exe" %*
   exit /b
 )
 where py >nul 2>nul

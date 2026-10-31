@@ -27,7 +27,7 @@ from astra.celestial import celestial_catalog
 from astra.gameplay import GameSession, find_mission, mission_catalog
 from datetime import datetime,timedelta,timezone
 
-DESKTOP_VERSION='2.4.0'
+DESKTOP_VERSION='2.4.1'
 
 
 def unit(v):

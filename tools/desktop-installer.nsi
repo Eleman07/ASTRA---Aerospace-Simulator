@@ -13,7 +13,7 @@ RequestExecutionLevel user
 SetCompressor /SOLID zlib
 BrandingText "ASTRA Desktop - Windows offline"
 !ifndef PRODUCT_VERSION
-!define PRODUCT_VERSION "2.4.0.0"
+!define PRODUCT_VERSION "2.4.1.0"
 !endif
 VIProductVersion "${PRODUCT_VERSION}"
 VIAddVersionKey /LANG=1040 "ProductName" "ASTRA Desktop"

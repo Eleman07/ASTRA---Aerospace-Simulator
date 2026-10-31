@@ -1,4 +1,4 @@
-# ASTRA Desktop 2.4.0 — guida utente
+# ASTRA Desktop 2.4.1 — guida utente
 
 ## Stick e menu separati
 
@@ -34,11 +34,11 @@ Getti e luce dei motori sono guidati dalla spinta applicata dal motore fisico, i
 
 Il basamento di stampa 3D presente sotto i motori nel modello NASA SLS/Orion è escluso dal veicolo: vengono rimossi solo i 12 triangoli del supporto, conservando gli ugelli. La rampa NASA resta ancorata al sito terrestre e non accompagna più il veicolo. La versione orbitale elimina anche il piccolo accessorio WH_Box e corregge l'asse dell'ugello. I modelli restano riferimenti visivi, non certificazioni del veicolo reale.
 
-## SDK Python 2.4.0
+## SDK Python 2.4.1
 
-Scarica `astra_simulator_client-2.4.0-py3-none-any.whl` dalla release GitHub e installalo con **lo stesso interprete Python dell'editor**:
+Scarica `astra_simulator_client-2.4.1-py3-none-any.whl` dalla release GitHub e installalo con **lo stesso interprete Python dell'editor**:
 ```powershell
-python -m pip install --no-index --upgrade --force-reinstall --no-deps .\astra_simulator_client-2.4.0-py3-none-any.whl
+python -m pip install --no-index --upgrade --force-reinstall --no-deps .\astra_simulator_client-2.4.1-py3-none-any.whl
 ```
 Poi usa l'import indipendente:
 ```python

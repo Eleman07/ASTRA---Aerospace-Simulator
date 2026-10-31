@@ -303,14 +303,15 @@ func build_environment():
     if is_instance_valid(planet):planet.queue_free()
     planet = null
     sky_material.set_shader_parameter("planet_visible",true)
-    var file="celestial/moon-4k.webp" if domain=="moon" and quality in ["high","ultra"] else "celestial/moon-2k.webp" if domain=="moon" else "earth-natural-8k.webp" if quality in ["high","ultra"] else "earth-natural-2k.webp"
+    var earth_file="earth-natural-8k.webp" if quality in ["high","ultra"] else "earth-natural-5.4k.webp" if quality=="balanced" else "earth-natural-2k.webp"
+    var file="celestial/moon-4k.webp" if domain=="moon" and quality in ["high","ultra"] else "celestial/moon-2k.webp" if domain=="moon" else earth_file
     var texture=surface_texture(file)
     if texture!=null:sky_material.set_shader_parameter("planet_texture",texture)
     sky_material.set_shader_parameter("lunar_planet",domain=="moon")
     sky_material.set_shader_parameter("planet_radius",1.7374 if domain=="moon" else 6.378137)
     sky_material.set_shader_parameter("companion_visible",domain in ["earth","orbit","moon"])
     sky_material.set_shader_parameter("companion_radius",6.378137 if domain=="moon" else 1.7374)
-    var companion_texture=surface_texture("earth-natural-2k.webp" if domain=="moon" else "celestial/moon-2k.webp")
+    var companion_texture=surface_texture(earth_file if domain=="moon" else "celestial/moon-2k.webp")
     if companion_texture!=null:sky_material.set_shader_parameter("companion_texture",companion_texture)
     environment.sdfgi_enabled = advanced_renderer and quality=="ultra" and domain in ["air","moon"]
     if domain in ["air","earth","moon"]:
@@ -534,7 +535,7 @@ func inspect_body(catalogue,body_id):
         if body.id!=body_id:continue
         var sphere=SphereMesh.new();sphere.radius=100;sphere.height=200;sphere.radial_segments=128 if quality!="low" else 64;sphere.rings=64 if quality!="low" else 32
         var material=mat(Color.WHITE,0,.94).duplicate()
-        var file="earth-natural-8k.webp" if body_id=="earth" else "celestial/moon-4k.webp" if body_id=="moon" else "celestial/venus_atmosphere-2k.webp" if body_id=="venus" else "celestial/"+body_id+"-2k.webp"
+        var file="earth-natural-8k.webp" if body_id=="earth" and quality in ["high","ultra"] else "earth-natural-5.4k.webp" if body_id=="earth" and quality=="balanced" else "earth-natural-2k.webp" if body_id=="earth" else "celestial/moon-4k.webp" if body_id=="moon" and quality in ["high","ultra"] else "celestial/moon-2k.webp" if body_id=="moon" else "celestial/venus_atmosphere-2k.webp" if body_id=="venus" else "celestial/"+body_id+"-2k.webp"
         var texture=surface_texture(file)
         if texture!=null:material.albedo_texture=texture
         else:material.albedo_color=Color(body.get("color","#a8b9ce"))

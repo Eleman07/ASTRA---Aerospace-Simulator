@@ -16,9 +16,10 @@ from astra.client import AstraClient
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--renderer',type=Path,default=ROOT/'build/toolchain/godot/Godot_v4.7.2-stable_win64.exe');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--renderer',type=Path,default=ROOT/'build/toolchain/godot/Godot_v4.7.2-stable_win64.exe');parser.add_argument('--quality',choices=['balanced','high'],default='high');args=parser.parse_args()
     runtime=DesktopRuntime()
-    runtime.visuals.update({'quality':'high','resolution_scale':1.0})
+    scale=.67 if args.quality=='balanced' else 1.0
+    runtime.visuals.update({'quality':args.quality,'resolution_scale':scale})
     runtime.start()
     server=ThreadingHTTPServer(('127.0.0.1',0),make_handler(runtime));server.daemon_threads=True
     thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
@@ -27,7 +28,7 @@ def main():
     if args.renderer.name.startswith('Godot_'):command+=['--path',str(ROOT/'desktop')]
     assets=args.renderer.parent/'assets' if (args.renderer.parent/'assets').is_dir() else ROOT/'assets'
     url=f'http://127.0.0.1:{server.server_port}'
-    command+=['--','--api',url,'--assets',str(assets.resolve()),'--quality','high']
+    command+=['--','--api',url,'--assets',str(assets.resolve()),'--quality',args.quality]
     process=subprocess.Popen(command,cwd=ROOT,creationflags=subprocess.CREATE_NO_WINDOW)
     client=AstraClient(url);shots=[]
     try:
@@ -38,7 +39,7 @@ def main():
         client.pause();client.reset('space','orbital',advanced_models=True);client.launch();client.step(.2)
         before=client.state()
         for model in ['nasa-orion-spacecraft','space-x-crew-dragon']:
-            view=client.set_view(model=model,show_ui=False,azimuth_deg=55,elevation_deg=18,distance_m=13,exposure=.8)
+            view=client.set_view(model=model,show_ui=False,azimuth_deg=55,elevation_deg=18,distance_m=13,exposure=.8,depth_of_field=False)
             deadline=time.monotonic()+30
             while True:
                 report=client.renderer_status()

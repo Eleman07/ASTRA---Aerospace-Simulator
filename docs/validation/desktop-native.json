@@ -1,5 +1,5 @@
 {
-  "version": "2.4.0",
+  "version": "2.4.1",
   "release_kind": "NATIVE_DESKTOP_PREVIEW",
   "native": true,
   "offline_assets_bundled": true,
@@ -11,23 +11,23 @@
     "astra/engineering.py": true
   },
   "audited_orbital_control_sources": {
-    "astra/attitude.py": true,
-    "astra/engine.py": true
+    "astra/engine.py": true,
+    "astra/attitude.py": true
   },
   "orbital_attitude_and_gioca_tests_present": true,
   "python_tests": 111,
   "python_passed": 109,
   "python_installer_tests_skipped": 2,
   "native_installer_test": {
-    "version": "2.4.0",
-    "installer": "ASTRA-Desktop-2.4.0-Windows-x64-Setup.exe",
-    "bytes": 182504557,
-    "sha256": "743564a479b42dc4eaa3a83512cd9a7fe5ba5979b0d66670f2303ff6ab718672",
-    "payload_manifest_sha256": "f2b7bd1c81a1858834bd835aaf557d2bd934e4f73314b3c4178f12ae2979028d",
+    "version": "2.4.1",
+    "installer": "ASTRA-Desktop-2.4.1-Windows-x64-Setup.exe",
+    "bytes": 182502738,
+    "sha256": "a3567cd11f338275dc580d28dab90546000146117a2a98b349bc6bfa277f98b6",
+    "payload_manifest_sha256": "6c9011e2cf3fa797c00648e907b7030de477e7727362200158b5e1039bd9690a",
     "runtime_self_test": "PASS",
     "installer_test": "PASS",
-    "sdk": "astra_simulator_client-2.4.0-py3-none-any.whl",
-    "sdk_sha256": "b8a83f9ac8c85a58d5354dbee4a19e094f271186b5091b4b7b7f72032d3e8238",
+    "sdk": "astra_simulator_client-2.4.1-py3-none-any.whl",
+    "sdk_sha256": "a73302ea2c8c1f2e1856f297265e731e497e9a27fb5567ace8e74675d182cee0",
     "installed_files_verified": 154,
     "uninstaller_test": "PASS",
     "user_files_preserved": true
@@ -41,19 +41,19 @@
       "asset_imports": [
         {
           "loaded": true,
-          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\assets/vehicles/sls-block1-high.glb",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\assets/vehicles/sls-block1-high.glb",
           "screenshot": true,
           "vehicle": "space"
         },
         {
           "loaded": true,
-          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\assets/vehicles/innerscene-twin-turboprop-high.glb",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\assets/vehicles/innerscene-twin-turboprop-high.glb",
           "screenshot": true,
           "vehicle": "aircraft"
         },
         {
           "loaded": true,
-          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\assets/vehicles/desktop-quadcopter.glb",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\assets/vehicles/desktop-quadcopter.glb",
           "screenshot": true,
           "vehicle": "drone"
         }
@@ -142,13 +142,13 @@
         {
           "manual": true,
           "mode": "free",
-          "time_s": 0.14,
+          "time_s": 0.16,
           "vehicle": "aircraft"
         },
         {
           "manual": true,
           "mode": "free",
-          "time_s": 0.16,
+          "time_s": 0.14,
           "vehicle": "drone"
         }
       ],
@@ -197,27 +197,27 @@
         }
       ],
       "solvers": 18,
-      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\ASTRA-Renderer.exe",
-      "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481"
+      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\ASTRA-Renderer.exe",
+      "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77"
     },
     "low": {
       "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
       "asset_imports": [
         {
           "loaded": true,
-          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\assets/vehicles/sls-block1.glb",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\assets/vehicles/sls-block1.glb",
           "screenshot": true,
           "vehicle": "space"
         },
         {
           "loaded": true,
-          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\assets/vehicles/innerscene-twin-turboprop.glb",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\assets/vehicles/innerscene-twin-turboprop.glb",
           "screenshot": true,
           "vehicle": "aircraft"
         },
         {
           "loaded": true,
-          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\assets/vehicles/desktop-quadcopter.glb",
+          "path": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\assets/vehicles/desktop-quadcopter.glb",
           "screenshot": true,
           "vehicle": "drone"
         }
@@ -361,13 +361,13 @@
         }
       ],
       "solvers": 18,
-      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.0\\ASTRA-Renderer.exe",
-      "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481"
+      "renderer_executable": "C:\\ASTRA-Aerospace-Simulator\\dist\\ASTRA-Desktop-2.4.1\\ASTRA-Renderer.exe",
+      "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77"
     }
   },
   "polish": {
     "high": {
-      "audio_peak": 0.190134257078171,
+      "audio_peak": 0.199586138129234,
       "cc0_hdr_flipbooks": true,
       "chunk_residency": [
         {
@@ -387,7 +387,7 @@
           ]
         },
         {
-          "chunks": 91,
+          "chunks": 97,
           "covered": true,
           "position_m": [
             50000.0,
@@ -395,7 +395,7 @@
           ]
         },
         {
-          "chunks": 77,
+          "chunks": 97,
           "covered": true,
           "position_m": [
             180000.0,
@@ -403,7 +403,7 @@
           ]
         },
         {
-          "chunks": 63,
+          "chunks": 79,
           "covered": true,
           "position_m": [
             -50000.0,
@@ -412,24 +412,24 @@
         }
       ],
       "cinematic_reentry": true,
-      "frame_p95_ms": 33.367,
+      "frame_p95_ms": 33.3573333333334,
       "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
       "graphics": "high",
       "launch_exhaust": true,
-      "mean_frame_ms": 33.3113236245954,
+      "mean_frame_ms": 32.1078000000001,
       "orbital_exhaust": true,
       "orion_rectangle_removed": true,
       "printing_stand_removed_triangles": 12,
       "renderer": "forward_plus",
       "resolution_scale": 1.0,
-      "sampled_frames": 103,
+      "sampled_frames": 110,
       "scaling_3d_mode": 0,
       "unlimited_fps": true,
       "vsync_disabled": true,
-      "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481"
+      "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77"
     },
     "low": {
-      "audio_peak": 0.179095342755318,
+      "audio_peak": 0.202744022011757,
       "cc0_hdr_flipbooks": true,
       "chunk_residency": [
         {
@@ -474,40 +474,40 @@
         }
       ],
       "cinematic_reentry": true,
-      "frame_p95_ms": 33.3366666666667,
+      "frame_p95_ms": 33.35,
       "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
       "graphics": "low",
       "launch_exhaust": true,
-      "mean_frame_ms": 18.4517061111111,
+      "mean_frame_ms": 21.0584179586563,
       "orbital_exhaust": true,
       "orion_rectangle_removed": true,
       "printing_stand_removed_triangles": 12,
       "renderer": "gl_compatibility",
       "resolution_scale": 0.649999976158142,
-      "sampled_frames": 200,
+      "sampled_frames": 172,
       "scaling_3d_mode": 0,
       "unlimited_fps": true,
       "vsync_disabled": true,
-      "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481"
+      "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77"
     }
   },
   "python_gnc": {
-    "version": "2.4.0",
+    "version": "2.4.1",
     "installed_wheel": true,
     "closed_loop": "PASS",
     "commands": 400,
     "simulated_seconds": 7.999999999999917,
-    "wall_seconds": 10.779222800003481,
+    "wall_seconds": 11.876427399998647,
     "target_altitude_m": 3.0,
     "actual_altitude_m": 3.31237601945181,
     "final_error_m": 0.3123760194518099,
     "clock_owner": "external",
     "live_renderer_fps": [
       5.0,
-      84.0,
-      185.0,
-      135.0,
-      31.0,
+      142.0,
+      196.0,
+      46.0,
+      30.0,
       30.0,
       30.0,
       30.0
@@ -521,18 +521,18 @@
       "time_s": 7.99999999999992,
       "vehicle": "drone"
     },
-    "png_sha256": "ffca34bb5dcbc5b00f1105298f948de376128273c4a3e0a42023d77be1c5e0ae",
-    "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481",
-    "host_sha256": "fd1e20ff7fceee6981aea5487a8a7558c8ef82c8723824d57c6d46294f95d237",
-    "sdk_sha256": "b8a83f9ac8c85a58d5354dbee4a19e094f271186b5091b4b7b7f72032d3e8238"
+    "png_sha256": "cba344febf0d35854dd281ae1e632ced84383600b8761198feb6ed68994148e9",
+    "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77",
+    "host_sha256": "051c3153cceac6018466e7e7f72515532e765b1067f2b2a142cc7b3f33232cf3",
+    "sdk_sha256": "a73302ea2c8c1f2e1856f297265e731e497e9a27fb5567ace8e74675d182cee0"
   },
   "packaged_sdk": {
     "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
-    "api_url": "http://127.0.0.1:53787",
+    "api_url": "http://127.0.0.1:56331",
     "browser_required": false,
     "fps": 30.0,
     "frame_p95_ms": 33.3333333333333,
-    "frames": 550,
+    "frames": 657,
     "native": true,
     "physics_clock_owner": "external",
     "renderer": "forward_plus",
@@ -565,27 +565,27 @@
     "python_mode": "PASS",
     "camera_api": "PASS",
     "real_png_capture": {
-      "id": "3397312251dafd78ea4e5357",
+      "id": "94e2dda2a64d000a03a78eb7",
       "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\sdk-real-capture.png",
       "include_ui": false,
       "status": "CAPTURED",
       "error": "",
-      "bytes": 359644,
+      "bytes": 367215,
       "width": 1440,
       "height": 900
     },
     "presentation_does_not_advance_physics": true,
-    "desktop_version": "2.4.0",
-    "host_sha256": "fd1e20ff7fceee6981aea5487a8a7558c8ef82c8723824d57c6d46294f95d237",
-    "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481",
-    "sdk_sha256": "b8a83f9ac8c85a58d5354dbee4a19e094f271186b5091b4b7b7f72032d3e8238"
+    "desktop_version": "2.4.1",
+    "host_sha256": "051c3153cceac6018466e7e7f72515532e765b1067f2b2a142cc7b3f33232cf3",
+    "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77",
+    "sdk_sha256": "a73302ea2c8c1f2e1856f297265e731e497e9a27fb5567ace8e74675d182cee0"
   },
   "input_routing": {
-    "version": "2.4.0",
+    "version": "2.4.1",
     "result": "PASS",
     "test_backend": "Godot headless with injected GUI events",
     "source_sha256": {
-      "desktop/main.gd": "d94e49dcab97e3f9c37c0581ef3cc36dfe2b4f5c93e498ac3464fe5d24165bf5",
+      "desktop/main.gd": "4c0cecd2e8fda1d4c9612dd9c6e2b5eb8aab7ee3723b2c04644e742e30e0757c",
       "desktop/native_input.gd": "d9ac4ffbf1956fa24f687d977413e6b28bb0a8e770d00bbb90ee9fded632005e",
       "desktop/menu_window.gd": "336fd5719e947f9ee46e39d75288125c7ed14c87538d3b49b6bd42fb875a1472",
       "tools/test_input_pipeline.gd": "2297f860b523d88928762ee257ae927567cb7346bb211d826feec3f00089d71a"
@@ -600,7 +600,7 @@
     "physical_controller_test": false
   },
   "visual_api": {
-    "version": "2.4.0",
+    "version": "2.4.1",
     "camera_api": "PASS",
     "png_capture": "PASS",
     "physics_unchanged": true,
@@ -608,18 +608,18 @@
       {
         "model": "nasa-orion-spacecraft",
         "capture": {
-          "id": "9c437466494bb3048e3387d6",
+          "id": "46e7d85724dfe446b2b56a82",
           "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\modern-nasa-orion-spacecraft.png",
           "include_ui": false,
           "status": "CAPTURED",
           "error": "",
-          "bytes": 822659,
+          "bytes": 789843,
           "width": 1440,
           "height": 900
         },
         "render": {
           "connected": true,
-          "age_s": 0.003991100005805492,
+          "age_s": 0.003249599991249852,
           "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
           "asset_error": "",
           "asset_file": "sls-orion-spacecraft.glb",
@@ -634,8 +634,8 @@
             "elevation_deg": 18.0
           },
           "draw_calls": 11,
-          "fps": 77.0,
-          "input_revision": "2.4.0",
+          "fps": 88.0,
+          "input_revision": "2.4.1",
           "input_rtt_ms": 0.0,
           "objects": 11,
           "primitives": 59072,
@@ -646,18 +646,18 @@
       {
         "model": "space-x-crew-dragon",
         "capture": {
-          "id": "1d834ab9e7eb6b401559f3ea",
+          "id": "055081537e5494cb02c2153e",
           "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\modern-space-x-crew-dragon.png",
           "include_ui": false,
           "status": "CAPTURED",
           "error": "",
-          "bytes": 780432,
+          "bytes": 748418,
           "width": 1440,
           "height": 900
         },
         "render": {
           "connected": true,
-          "age_s": 0.03528400001232512,
+          "age_s": 0.06211659999098629,
           "adapter": "NVIDIA GeForce RTX 5080 Laptop GPU",
           "asset_error": "",
           "asset_file": "crew-dragon-kubaha.glb",
@@ -672,8 +672,8 @@
             "elevation_deg": 18.0
           },
           "draw_calls": 15,
-          "fps": 77.0,
-          "input_revision": "2.4.0",
+          "fps": 145.0,
+          "input_revision": "2.4.1",
           "input_rtt_ms": 0.0,
           "objects": 15,
           "primitives": 86188,
@@ -684,19 +684,19 @@
     ],
     "aircraft_preview": {
       "capture": {
-        "id": "e710694d5fbc058479523a4d",
+        "id": "02f468abe00003fab289ba78",
         "path": "C:\\ASTRA-Aerospace-Simulator\\test-results\\README-aircraft.png",
         "include_ui": false,
         "status": "CAPTURED",
         "error": "",
-        "bytes": 810060,
+        "bytes": 807816,
         "width": 1440,
         "height": 900
       },
       "altitude_m": 57.233757382985615,
       "time_s": 59.99999999999873
     },
-    "renderer_sha256": "06cdf486440925940e6bbb5941c14c21e692ca24c730fd59b1b9f4314ee4f481"
+    "renderer_sha256": "ef282892a027c5107412d68f0ecf1641f8c9e69bf700f72259ef95ce9c4dea77"
   },
   "rocket_alignment": [
     {
@@ -746,7 +746,7 @@
     }
   ],
   "celestial_views": {
-    "source_scene_sha256": "ad3e081c619ca280082efb0589a392521c8429479267a8acf53722f0f72006af",
+    "source_scene_sha256": "c40927f221183d1f3fced5c7e487f359b9a05a9b1caa25e735bddbf03dafe38f",
     "source_renderer": true,
     "cases": [
       {

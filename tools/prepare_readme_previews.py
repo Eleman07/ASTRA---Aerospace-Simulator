@@ -14,7 +14,7 @@ def main():
     for name in ['visual-api-validation.json','python-gnc-validation.json']:
         proof=json.loads((ROOT/'test-results'/name).read_text())
         assert proof['renderer_sha256']==build['renderer_sha256']
-    pairs=[('modern-nasa-orion-spacecraft.png','desktop-2.4-space.webp'),('README-aircraft.png','desktop-2.4-aircraft.webp'),('python-gnc.png','desktop-2.4-python.webp')]
+    pairs=[('modern-nasa-orion-spacecraft.png','desktop-2.4.1-space.webp'),('README-aircraft.png','desktop-2.4.1-aircraft.webp'),('python-gnc.png','desktop-2.4.1-python.webp')]
     rows=[]
     for source,file in pairs:
         original=ROOT/'test-results'/source;target=ROOT/'docs/images'/file

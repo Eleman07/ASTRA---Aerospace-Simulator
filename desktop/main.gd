@@ -515,7 +515,7 @@ func render_report():
         "objects":RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
         "asset_id":scene.active_asset_id,"asset_file":scene.selected_asset.get_file(),"asset_loaded":scene.last_model_import_ok,"asset_error":scene.asset_error,
         "cache_loads":scene.assets.loads,"cache_hits":scene.assets.cache_hits,"view_revision":view_revision,"resolution_scale":get_viewport().scaling_3d_scale,
-        "input_revision":"2.4.0","input_rtt_ms":pilot_rtt_ms,
+        "input_revision":"2.4.1","input_rtt_ms":pilot_rtt_ms,
         "camera":{"azimuth_deg":rad_to_deg(scene.azimuth),"elevation_deg":rad_to_deg(scene.elevation),"distance_m":scene.distance}})
     render_pending=false
 

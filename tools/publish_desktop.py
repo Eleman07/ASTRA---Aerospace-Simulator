@@ -11,7 +11,7 @@ from urllib.request import Request,urlopen
 
 ROOT=Path(__file__).resolve().parents[1]
 REPO='Eleman07/ASTRA-Aerospace-Simulator'
-TAG='v2.4.0-desktop'
+TAG='v2.4.1-desktop'
 
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 

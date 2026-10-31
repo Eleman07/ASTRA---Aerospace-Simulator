@@ -2,11 +2,11 @@
 
 Simulatore aerospaziale **nativo per Windows 11 x64**, utilizzabile offline. Motore scientifico Python, grafica 3D Godot, tastiera, controller e API per controllare la stessa simulazione da script.
 
-**Desktop 2.4.0 · SDK Python 2.4.0 · release Windows x64.**
+**Desktop 2.4.1 · SDK Python 2.4.1 · release Windows x64.**
 
-[Scarica l’installer Windows](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.4.0-desktop/ASTRA-Desktop-2.4.0-Windows-x64-Setup.exe) · [Scarica il wheel Python](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.4.0-desktop/astra_simulator_client-2.4.0-py3-none-any.whl) · [Note della release](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/tag/v2.4.0-desktop)
+[Scarica l’installer Windows](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.4.1-desktop/ASTRA-Desktop-2.4.1-Windows-x64-Setup.exe) · [Scarica il wheel Python](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/download/v2.4.1-desktop/astra_simulator_client-2.4.1-py3-none-any.whl) · [Note della release](https://github.com/Eleman07/ASTRA-Aerospace-Simulator/releases/tag/v2.4.1-desktop)
 
-![ASTRA Desktop: veicolo orbitale, Terra e nebulosa azzurra](docs/images/desktop-2.4-space.webp)
+![ASTRA Desktop: veicolo orbitale, Terra e nebulosa azzurra](docs/images/desktop-2.4.1-space.webp)
 
 ## Trailer cinematografico
 
@@ -18,7 +18,7 @@ Musica: **“Horizons” di Scott Buckley**, pubblicata in [CC BY 4.0](https://c
 
 ## Installare e avviare
 
-1. Scarica `ASTRA-Desktop-2.4.0-Windows-x64-Setup.exe` dagli asset della release.
+1. Scarica `ASTRA-Desktop-2.4.1-Windows-x64-Setup.exe` dagli asset della release.
 2. Chiudi eventuali istanze precedenti di ASTRA e avvia l’installer.
 3. Apri **ASTRA Desktop** dal menu Start. Il simulatore include motore, modelli, texture e audio: non richiede Internet, browser o Python installato.
 4. Usa il profilo principale su GPU Vulkan; se necessario scegli **Grafica leggera** per il backend OpenGL. Aggiorna il driver della GPU se il renderer non si avvia.
@@ -42,7 +42,7 @@ Nel menu **OPERAZIONI DI VOLO** seleziona **SIMULATORE** per le procedure tecnic
 
 Scegli una delle sole tre discipline per aprire la bacheca, leggi il briefing di controllo missione, gli obiettivi e le ricompense. Le 12 operazioni sono divise in tre campagne tecniche per categoria: ingegneria, esplorazione, pilotaggio e scienza; ogni campagna verifica i dati reali del volo. La progressione sblocca le missioni in sequenza; crediti, reputazione, scienza, tecnologie e strutture vengono salvati localmente. Quota, distanza, mantenimento della quota, rendezvous e touchdown sono misurati dal motore, non da timer fittizi. In Gioca la tastiera è attiva all'avvio; i controller si armano dal pannello **CONTROLLER**. Carburante, batteria, stallo e urti restano attivi.
 
-![Aereo realistico nella scena di volo ASTRA Desktop](docs/images/desktop-2.4-aircraft.webp)
+![Aereo realistico nella scena di volo ASTRA Desktop](docs/images/desktop-2.4.1-aircraft.webp)
 
 ## Tastiera, controller e camera
 
@@ -81,7 +81,7 @@ Da **GRAFICA** seleziona Basso/Medio/Alto/Ultra e regola esposizione, audio ed e
 È richiesto **Python 3.10 o successivo** solo per usare gli script. Scarica il wheel della stessa release e installalo con l’interprete usato dal tuo editor:
 
 ```powershell
-python -m pip install --no-index --upgrade --force-reinstall --no-deps .\astra_simulator_client-2.4.0-py3-none-any.whl
+python -m pip install --no-index --upgrade --force-reinstall --no-deps .\astra_simulator_client-2.4.1-py3-none-any.whl
 ```
 
 Con ASTRA Desktop aperto:
@@ -124,7 +124,7 @@ client.set_view(audio_volume=0.5, cinematic_effects=True)
 client.capture("C:/percorso/esistente/volo.png", overwrite=True)
 ```
 
-![Controllo GNC Python realmente eseguito tramite il wheel, con script e telemetria del veicolo](docs/images/desktop-2.4-python.webp)
+![Controllo GNC Python realmente eseguito tramite il wheel, con script e telemetria del veicolo](docs/images/desktop-2.4.1-python.webp)
 
 Nella cattura: controllo di quota del drone tramite SDK installato, con navigazione stimata, 400 comandi e 8 secondi simulati. La vista 3D e i valori mostrati provengono dalla stessa istanza del motore.
 

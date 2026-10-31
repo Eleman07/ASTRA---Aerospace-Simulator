@@ -14,13 +14,13 @@ uniform sampler2D nebula_transmission : filter_linear_mipmap, repeat_enable;
 uniform bool planet_visible = false;
 uniform float planet_radius=6.378137;
 uniform bool lunar_planet=false;
-uniform sampler2D planet_texture : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D planet_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 global uniform vec3 planet_center;
 global uniform mat3 planet_rotation;
 uniform bool companion_visible=false;
 global uniform vec3 companion_center;
 uniform float companion_radius=1.7374;
-uniform sampler2D companion_texture : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D companion_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 
 float hash(vec3 p){p=fract(p*vec3(.1031,.11369,.13787));p+=dot(p,p.yzx+19.19);return fract((p.x+p.y)*p.z);}
 float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1)),f.x),f.y),f.z);}
@@ -44,8 +44,22 @@ vec3 planet_background(vec3 ray,vec3 behind){
         vec3 mapped=planet_rotation*normal;
         vec2 uv=vec2(atan(mapped.z,mapped.x)/6.2831853+.5,.5-asin(clamp(mapped.y,-1.,1.))/3.14159265);
         float nl=max(dot(normal,normalize(sun_direction)),0.);
-        surface=texture(planet_texture,uv).rgb*(.006+nl*1.5);
-        if(lunar_planet){surface=texture(planet_texture,uv).rgb*(.007+nl*1.15);}
+        vec3 texel=texture(planet_texture,uv).rgb;
+        surface=texel*(.004+nl*1.52);
+        if(!lunar_planet){
+            // The NASA surface map already includes cloud cover; avoid adding
+            // synthetic noise over it so land, coastlines and cloud bands stay sharp.
+            // A restrained ocean glint adds scale cues near the day-side limb.
+            float ocean=smoothstep(.025,.12,texel.b-texel.r)*smoothstep(.015,.09,texel.b-texel.g);
+            vec3 half_vector=normalize(normalize(sun_direction)-ray);
+            float glint=pow(max(dot(normal,half_vector),0.0),48.0)*ocean*nl;
+            surface+=vec3(.10,.25,.42)*glint*.42;
+            // Thin blue airglow follows the curvature, strongest at the limb.
+            float limb=pow(1.0-clamp(abs(dot(normal,-ray)),0.0,1.0),4.0);
+            float sunlit_limb=.22+.78*max(dot(normal,normalize(sun_direction)),0.0);
+            surface+=vec3(.055,.25,.78)*limb*sunlit_limb*.42;
+        }
+        if(lunar_planet){surface=texel*(.007+nl*1.15);}
         vec3 h=normalize(normalize(sun_direction)-ray);
         surface+=vec3(.9,.8,.65)*pow(max(dot(normal,h),0.),110.)*.06;
     }
@@ -102,15 +116,16 @@ void sky(){
     }
     if(bake_component>=0){COLOR=bake_component==0?light:T;}else{
     vec2 star_uv=vec2(atan(ray.z,ray.x)/6.2831853+.5,acos(clamp(ray.y,-1.,1.))/3.14159265);
-    float faint=star_layer(star_uv,vec2(1440.,720.),.035,.0035,.8,vec3(11.,17.,29.));
-    float medium=star_layer(star_uv,vec2(620.,310.),.052,.009,3.5,vec3(37.,43.,59.));
-    float bright=star_layer(star_uv,vec2(240.,120.),.068,.022,11.,vec3(71.,83.,101.));
-    float temp=hash(vec3(floor(star_uv*vec2(240.,120.)),113.));
-    vec3 star_color=mix(vec3(.62,.77,1.08),vec3(1.12,.71,.39),smoothstep(.15,.92,temp));
+    float faint=star_layer(star_uv,vec2(1440.,720.),.035,.0016,.7,vec3(11.,17.,29.));
+    float medium=star_layer(star_uv,vec2(620.,310.),.052,.0038,1.8,vec3(37.,43.,59.));
+    float bright=star_layer(star_uv,vec2(240.,120.),.04,.006,2.7,vec3(71.,83.,101.));
     float galactic_plane=exp(-pow(ray.y+.10+.16*sin(atan(ray.z,ray.x)*2.),2.)*48.);
     float galactic_dust=fbm(ray*18.+vec3(6.,2.,9.));
     vec3 milky_way=vec3(.003,.006,.014)*galactic_plane*(.35+galactic_dust*1.3);
-    vec3 space=(vec3(.0003,.00055,.001)+star_color*(faint+medium+bright)+milky_way)*T+light;
+    vec3 white_stars=vec3(1.0)*(faint+medium+bright);
+    // Extinction colors the nebula and galactic background; keep point stars
+    // outside that transmittance so every star stays neutral white.
+    vec3 space=(vec3(.0003,.00055,.001)+milky_way)*T+light+white_stars;
     if(companion_visible){
         vec2 other=sphere_hit(-companion_center,ray,companion_radius);
         if(other.x>0.){
